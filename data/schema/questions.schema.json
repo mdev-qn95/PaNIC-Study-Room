@@ -1,0 +1,253 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "questions.schema.json",
+ "title": "PaNIC Study Room question bank (schema 2)",
+ "type": "object",
+ "required": [
+  "schema",
+  "certification",
+  "language",
+  "questions"
+ ],
+ "properties": {
+  "$schema": {
+   "type": "string"
+  },
+  "schema": {
+   "const": 2
+  },
+  "certification": {
+   "type": "string",
+   "pattern": "^[a-z0-9-]+$"
+  },
+  "language": {
+   "type": "string"
+  },
+  "note": {
+   "type": "string"
+  },
+  "translates": {
+   "type": "string",
+   "description": "Translation files only: the source bank this file translates."
+  },
+  "about": {
+   "type": "string"
+  },
+  "domains": {
+   "type": "array",
+   "description": "Source bank only. Every question's 'domain' must be one of these names.",
+   "items": {
+    "type": "object",
+    "required": [
+     "name"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "name": {
+      "type": "string",
+      "minLength": 1
+     },
+     "weight": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Share of the exam, in percent."
+     },
+     "description": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "questions": {
+   "type": "array",
+   "minItems": 1,
+   "items": {
+    "anyOf": [
+     {
+      "$ref": "#/$defs/sourceQuestion"
+     },
+     {
+      "$ref": "#/$defs/translatedQuestion"
+     }
+    ]
+   }
+  }
+ },
+ "$defs": {
+  "sourceQuestion": {
+   "type": "object",
+   "required": [
+    "id",
+    "type",
+    "question"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "type": "integer",
+     "minimum": 1,
+     "description": "1..n in order. Progress is stored by id — never renumber a published bank."
+    },
+    "source": {
+     "type": "integer",
+     "description": "Original numbering in the source material, if different."
+    },
+    "type": {
+     "enum": [
+      "single",
+      "multiple",
+      "classification"
+     ]
+    },
+    "domain": {
+     "type": "string",
+     "minLength": 1
+    },
+    "question": {
+     "type": "string",
+     "minLength": 1
+    },
+    "explanation": {
+     "type": "string",
+     "minLength": 1
+    },
+    "options": {
+     "type": "array",
+     "minItems": 2,
+     "items": {
+      "type": "object",
+      "required": [
+       "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "text": {
+        "type": "string",
+        "minLength": 1
+       },
+       "correct": {
+        "const": true
+       }
+      }
+     }
+    },
+    "statements": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "text",
+       "answer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "text": {
+        "type": "string",
+        "minLength": 1
+       },
+       "answer": {
+        "type": "string",
+        "description": "Must equal one of 'choices'."
+       }
+      }
+     }
+    },
+    "choices": {
+     "type": "array",
+     "minItems": 2,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    }
+   },
+   "oneOf": [
+    {
+     "properties": {
+      "type": {
+       "enum": [
+        "single",
+        "multiple"
+       ]
+      }
+     },
+     "required": [
+      "options"
+     ],
+     "not": {
+      "required": [
+       "statements"
+      ]
+     }
+    },
+    {
+     "properties": {
+      "type": {
+       "const": "classification"
+      }
+     },
+     "required": [
+      "statements",
+      "choices"
+     ],
+     "not": {
+      "required": [
+       "options"
+      ]
+     }
+    }
+   ]
+  },
+  "translatedQuestion": {
+   "type": "object",
+   "required": [
+    "id",
+    "question"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "question": {
+     "type": "string",
+     "minLength": 1
+    },
+    "explanation": {
+     "type": "string",
+     "minLength": 1
+    },
+    "options": {
+     "type": "array",
+     "items": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "description": "Same order as the source options. null = show the source text alone."
+    },
+    "statements": {
+     "type": "array",
+     "items": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "choices": {
+     "type": "array",
+     "items": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    }
+   }
+  }
+ }
+}

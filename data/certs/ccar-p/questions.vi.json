@@ -1,0 +1,1484 @@
+{
+ "$schema": "../../schema/questions.schema.json",
+ "schema": 2,
+ "certification": "ccar-p",
+ "language": "vi",
+ "translates": "questions.en.json",
+ "about": "Vietnamese translation of questions.en.json, matched by id and array position. A null entry means the source text is shown on its own (no translation line).",
+ "questions": [
+  {
+   "id": 1,
+   "question": "Bạn là solution architect đang đánh giá các use case tiềm năng cho một chương trình dựa trên Claude. Với mỗi tình huống, chọn Có nếu Claude phù hợp làm giải pháp chính ở cấp độ kiến trúc; nếu không, chọn Không.",
+   "statements": [
+    "Soạn bản nháp đầu tiên của báo cáo điều tra từ incident log bán cấu trúc để chuyên viên phân tích rà soát",
+    "Tính điểm gian lận theo thời gian thực với độ trễ dưới 50 mili giây trên streaming pipeline",
+    "Rà soát hợp đồng có context dài, trích xuất điều khoản có cấu trúc và đánh dấu các điểm sai lệch",
+    "Thay thế vector index để thực hiện semantic retrieval trên kho dữ liệu gồm nhiều triệu tài liệu",
+    "Phân luồng ticket hỗ trợ đầu vào thành 30 nhóm, kèm lập luận cho lựa chọn phân luồng"
+   ],
+   "choices": [
+    null,
+    null
+   ],
+   "explanation": "Có — Soạn bản nháp báo cáo từ log bán cấu trúc là tổng hợp ngôn ngữ trên đầu vào chưa chuẩn hóa, có người rà soát ở bước sau; đây là công việc rất phù hợp với Claude. Không — Chấm điểm với độ trễ dưới 50 ms trên streaming pipeline thấp hơn độ trễ inference của LLM và nên dùng mô hình chấm điểm đã huấn luyện hoặc rules engine. Có — Rà soát hợp đồng có context dài, trích xuất điều khoản và đánh dấu sai lệch tận dụng đúng thế mạnh suy luận với context dài và structured output của Claude. Không — Mô hình không thay thế vector index; embeddings kết hợp kho ANN đảm nhiệm retrieval ở quy mô nhiều triệu tài liệu, còn Claude hoạt động trên kết quả retrieval đó thay vì thay thế nó. Có — Phân luồng ticket thành 30 nhóm kèm lý do là phân loại ngôn ngữ tự nhiên, trong đó phần lập luận cũng là một thành phần bắt buộc của đầu ra."
+  },
+  {
+   "id": 2,
+   "question": "Một triển khai managed agent dùng để phân loại hồ sơ yêu cầu bồi thường đã tăng từ 6 tool lên 34 tool trong 18 tháng khi các nhóm sản phẩm bổ sung năng lực. Độ chính xác phân loại giảm từ 91% xuống 78%, còn độ trễ chọn tool trung bình tăng 2,3 giây. Một kỹ sư ít kinh nghiệm đề xuất thêm tool router agent phía trước agent hiện tại để lọc danh sách tool theo từng request. Bạn nên trình bày hai phát hiện nào để chứng minh cần phân rã năng lực trước khi thêm router? (Chọn hai.) Mỗi đáp án đúng trình bày một phần của giải pháp.",
+   "options": [
+    "Một số tool không được gọi trong lưu lượng của 90 ngày gần nhất.",
+    "Router được đề xuất bổ sung một lần gọi mô hình cho mỗi request đầu vào.",
+    "Mô tả tool bị chồng lấn giữa nhiều nhóm yêu cầu bồi thường trong bộ tool của agent.",
+    "34 tool phục vụ bốn miền workflow yêu cầu bồi thường riêng biệt trong phạm vi phân loại.",
+    "Mẫu router được mô tả đầy đủ trong tài liệu công khai về agent."
+   ],
+   "explanation": "Bằng chứng ngay trong bộ tool cho thấy cần phân rã: mô tả tool chồng lấn giữa các nhóm yêu cầu bồi thường (C) gây mơ hồ khi lựa chọn, và 34 tool trải trên bốn miền workflow riêng biệt (D) cho thấy các ranh giới năng lực tự nhiên. A là dọn dẹp tool không còn dùng; B là chi phí của router chứ không phải lập luận cho việc phân rã; E là lập luận dựa vào mức độ phổ biến."
+  },
+  {
+   "id": 3,
+   "question": "Bạn đang rà soát thiết kế end-to-end của một đồng nghiệp cho nền tảng dựa trên Claude, dự kiến mở rộng tới hàng nghìn người dùng đồng thời. Với mỗi nhận định, chọn Có nếu nhận định phản ánh thực hành kiến trúc hợp lý; nếu không, chọn Không.",
+   "statements": [
+    "Authentication và authorization được thực hiện trước retrieval để retrieval có thể lọc theo danh tính.",
+    "Một hàng đợi bất đồng bộ hấp thụ lưu lượng tăng đột biến giữa lớp tiếp nhận và lớp gọi mô hình.",
+    "Phép tính thuế được mã hóa trực tiếp trong system prompt thay vì trong code.",
+    "Conversation log chứa các mã định danh do chính phủ cấp chưa được che/xóa để tối đa hóa tín hiệu phục vụ tuning."
+   ],
+   "choices": [
+    null,
+    null
+   ],
+   "explanation": "Có — Xác định danh tính trước retrieval cho phép access control lọc tập ứng viên, bảo đảm nội dung không được phép không bao giờ đi vào prompt hoặc context của mô hình; đây là điểm thực thi kiểm soát đúng. Có — Hàng đợi bất đồng bộ giữa khâu tiếp nhận và gọi mô hình hấp thụ lưu lượng đột biến, điều hòa tải theo rate limit của nhà cung cấp và giữ khâu tiếp nhận phản hồi tốt khi có hàng nghìn người dùng đồng thời. Không — Tính thuế đòi hỏi phép tính tất định, có thể kiểm toán và phải đặt trong code hoặc rules engine; mô hình xác suất không bảo đảm độ chính xác hay khả năng tái lập. Không — Lưu các mã định danh do chính phủ cấp chưa được che/xóa trong conversation log tạo ra nguy cơ lộ PII không cần thiết ở kho log và mọi tuning pipeline phía sau; hãy che/xóa hoặc tokenize ngay khi tiếp nhận theo nguyên tắc tối thiểu hóa dữ liệu."
+  },
+  {
+   "id": 4,
+   "question": "Bạn đang so sánh các mẫu thiết kế cho một tác vụ phân loại tài liệu theo lô với các bước cố định: trích xuất metadata, phân loại, tóm tắt và lưu bền vững. Mẫu nào phù hợp nhất và vì sao?",
+   "options": [
+    "Mẫu workflow, vì các bước đã được xác định rõ và chi phí token có thể dự đoán trên mỗi request được ưu tiên hơn tính linh hoạt.",
+    "Mẫu agentic, vì agent luôn chính xác hơn workflow và do đó luôn được ưu tiên bất kể mức độ có thể dự đoán của các bước.",
+    "Mẫu agentic, vì năng lực lập kế hoạch mở của agent tạo ra structured output nhất quán hơn một đồ thị workflow cố định trong các tác vụ phân loại.",
+    "Mẫu workflow, vì các mẫu agentic không hỗ trợ gọi tool nên không thể thực hiện bước lưu kết quả vào kho dữ liệu phía sau."
+   ],
+   "explanation": "Bốn bước là cố định và được biết trước, nên workflow cung cấp trình tự tất định, chi phí token có thể dự đoán và việc đánh giá đơn giản hơn. B và C khẳng định agent vượt trội mà không có cơ sở; D sai về mặt thực tế vì agent có thể gọi tool."
+  },
+  {
+   "id": 5,
+   "question": "Một nhóm nền tảng vận hành hệ thống multi-agent tự lưu trữ trên Kubernetes, điều phối bảy agent chuyên biệt để xử lý hóa đơn. Nhóm dành khoảng 40% năng lực kỹ thuật cho bảo trì hạ tầng, độ tin cậy của message bus và khôi phục trạng thái agent. CFO yêu cầu bạn đánh giá việc chuyển sang hạ tầng managed agent để giải phóng năng lực kỹ thuật. Cán bộ phụ trách bảo mật yêu cầu toàn bộ dữ liệu tài chính của khách hàng phải nằm trong ranh giới mạng được phê duyệt. Yếu tố nào nên có ảnh hưởng lớn nhất tới đề xuất của bạn?",
+   "options": [
+    "Liệu bảy agent hiện tại có ánh xạ thuận lợi sang các mẫu mà managed agent hỗ trợ hay không",
+    "Liệu managed agent có hỗ trợ topology của bus hiện tại mà nhóm nền tảng sử dụng hay không",
+    "Liệu managed agent có giảm chi phí token trên mỗi hóa đơn ở khối lượng xử lý hiện tại hay không",
+    "Liệu cách xử lý dữ liệu của managed agent có đáp ứng ranh giới mạng do bộ phận bảo mật yêu cầu hay không"
+   ],
+   "explanation": "Một ràng buộc bảo mật bắt buộc là điều kiện phải vượt qua, không phải yếu tố để đánh đổi. Nếu cách xử lý dữ liệu của managed agent không thể giữ dữ liệu tài chính trong ranh giới mạng được phê duyệt, lợi ích tiết kiệm năng lực kỹ thuật không còn ý nghĩa. Các yếu tố còn lại chỉ có ý nghĩa sau khi đáp ứng yêu cầu ranh giới đó."
+  },
+  {
+   "id": 6,
+   "question": "Bạn đang chọn mẫu thiết kế cho trợ lý hỏi đáp về tuân thủ, phải trả lời câu hỏi chính sách kèm trích dẫn tới tập nguồn nội bộ có thẩm quyền. Độ trễ, chi phí và khả năng dự đoán phục vụ kiểm toán được ưu tiên. Mẫu nào phù hợp nhất?",
+   "options": [
+    "Điều phối multi-agent với một planner agent, một researcher agent và một writer agent cho mọi truy vấn",
+    "Một prompt tĩnh nối toàn bộ kho chính sách vào mọi request",
+    "Augmented LLM sử dụng retrieval-augmented generation trên kho nguồn có thẩm quyền đã được lập chỉ mục và hiển thị trích dẫn trong từng câu trả lời",
+    "Một agent loop thuần túy dùng tool duyệt web mở để tìm thông tin chính sách mới nhất, không giới hạn retrieval vào kho nội bộ có thẩm quyền"
+   ],
+   "explanation": "RAG trên kho nguồn có thẩm quyền đã lập chỉ mục, kèm trích dẫn cho từng câu trả lời, tạo ra câu trả lời có căn cứ và có thể kiểm toán chỉ với một lần gọi mô hình. Điều phối multi-agent (A) làm tăng độ trễ và chi phí; nối toàn bộ kho tài liệu (B) tốn kém và chạm giới hạn context; duyệt web mở (D) vi phạm yêu cầu về nguồn có thẩm quyền và kiểm toán."
+  },
+  {
+   "id": 7,
+   "question": "Bạn là solution architect đang thiết kế trợ lý dựa trên Claude có quyền truy cập 60 tool nội bộ thuộc nhiều miền nghiệp vụ. Nạp định nghĩa của mọi tool trong mỗi request làm tăng mức sử dụng token và thời gian tới phản hồi đầu tiên. Mẫu thiết kế nào giải quyết vấn đề này tốt nhất mà không thu hẹp phạm vi năng lực?",
+   "options": [
+    "Dùng một lần gọi mô hình riêng để tóm tắt định nghĩa của cả 60 tool trước mỗi lượt người dùng.",
+    "Áp dụng progressive tool discovery: ban đầu chỉ cung cấp một tập con được tuyển chọn, rồi nạp thêm tool theo nhu cầu của tác vụ.",
+    "Hard-code một tập cố định gồm năm tool cho mỗi request để giảm token, bất kể các tool đó có liên quan tới tác vụ hiện tại hay không.",
+    "Tăng độ dài context tối đa và nạp định nghĩa của cả 60 tool trong mọi request, chấp nhận chi phí token và độ trễ cao hơn là điều cần thiết để có đầy đủ năng lực."
+   ],
+   "explanation": "Progressive tool discovery cung cấp trước một tập con nhỏ, có liên quan và nạp thêm định nghĩa khi cần; cách này giảm token của prompt và thời gian tới token đầu tiên trong khi vẫn cho phép tiếp cận đủ 60 tool. A thêm một lần gọi và vẫn đọc toàn bộ định nghĩa; C tùy tiện loại bỏ năng lực; D chấp nhận chi phí thay vì khắc phục."
+  },
+  {
+   "id": 8,
+   "question": "Bạn đang sắp xếp trình tự các thành phần đã phân rã trong pipeline xử lý hóa đơn. Với mỗi thành phần, chọn lớp thực thi tương ứng: “Pre-Processing”, “Model Stage” hoặc “Post-Processing”.",
+   "statements": [
+    "Phân loại loại hóa đơn bằng Claude",
+    "Lưu bền vững các bản ghi đã được xác thực vào system of record",
+    "Schema validation đối với các trường đã trích xuất",
+    "Trích xuất các trường hóa đơn có cấu trúc bằng Claude",
+    "Che/xóa PII trong văn bản đã trích xuất trước khi gọi mô hình",
+    "Nhận dạng ký tự quang học trên ảnh hóa đơn được quét"
+   ],
+   "choices": [
+    "Pre-Processing",
+    "Model Stage",
+    "Post-Processing"
+   ],
+   "explanation": "Model Stage — Phân loại loại hóa đơn bằng Claude là inference của mô hình. Post-Processing — Lưu vào system of record là hành động phía sau trên đầu ra đã được xác thực, sau khi mô hình trả kết quả. Post-Processing — Schema validation kiểm tra các trường mô hình đã trích xuất và phải chạy trên đầu ra, làm điều kiện trước khi lưu. Model Stage — Trích xuất các trường có cấu trúc bằng Claude là inference của mô hình. Pre-Processing — Che/xóa PII được thực hiện rõ ràng trên văn bản đã trích xuất trước khi gọi mô hình, nên thuộc chuẩn bị đầu vào. Pre-Processing — OCR chuyển ảnh quét thành văn bản và là bước đầu tiên giúp mô hình sử dụng được đầu vào. Thứ tự pipeline là: OCR, che/xóa dữ liệu, trích xuất, phân loại, xác thực, lưu bền vững."
+  },
+  {
+   "id": 9,
+   "question": "Bạn đang rà soát cấu hình của một agent hỗ trợ khách hàng. Mỗi tool ứng viên thuộc một trong bốn nhóm: (1) cần thiết để hoàn thành các tác vụ đã xác định; (2) thường xuyên sử dụng và giảm số lần hand-off; (3) đôi khi hữu ích cho công việc không liên quan; (4) có thể hữu ích trong tương lai theo dự đoán. Thông thường nên giữ những nhóm nào trong cấu hình agent?",
+   "options": [
+    "Chỉ nhóm 3, vì các tool đôi khi hữu ích cho công việc không liên quan cung cấp phạm vi bao phủ rộng hơn và nên được ưu tiên hơn các tool cần cho tác vụ đã xác định của agent.",
+    "Chỉ nhóm 1 và 2, vì chúng gắn với các tác vụ đã xác định và các lần hand-off thường xuyên của agent.",
+    "Cả bốn nhóm, vì quyền truy cập tool rộng hơn luôn tốt hơn cho hiệu năng agent, bất kể tool có gắn với các tác vụ đã xác định hoặc hand-off thường xuyên hay không.",
+    "Chỉ nhóm 4, vì các tool dự kiến hữu ích trong tương lai cung cấp tính linh hoạt cao nhất và nên được cấu hình ngay cả khi hiện không có tác vụ đã xác định nào cần chúng."
+   ],
+   "explanation": "Áp dụng least privilege cho tool: giữ các tool cần cho tác vụ đã xác định (nhóm 1) và các tool giảm đáng kể hand-off trong phạm vi của chính agent (nhóm 2). Tool đôi khi hữu ích nhưng không liên quan (3) và tool mang tính dự đoán (4) mở rộng không gian lựa chọn, làm loãng mô tả tool và tăng attack surface mà không đem lại lợi ích đã xác định."
+  },
+  {
+   "id": 10,
+   "question": "Bạn đang phân loại các chiến thuật quản lý token theo giai đoạn áp dụng trong vòng đời request. Với mỗi chiến thuật, chọn giai đoạn tương ứng: “Input Preparation”, “Prompt Construction” hoặc “Output Handling”.",
+   "statements": [
+    "Lưu bền vững đầu ra đã được xác thực để sử dụng ở bước sau và phục vụ kiểm toán.",
+    "Sắp xếp các phần của prompt để nội dung có thể cache đứng trước nội dung riêng của từng request.",
+    "Tóm tắt lịch sử hội thoại trước đó khi không còn cần toàn bộ lịch sử.",
+    "Xác thực structured output của mô hình theo schema kỳ vọng.",
+    "Đưa nội dung ổn định, lặp lại vào một prefix có thể cache ở đầu prompt.",
+    "Cắt các đoạn đã retrieval để chỉ giữ phần liên quan tới câu hỏi của người dùng."
+   ],
+   "choices": [
+    "Input Preparation",
+    "Prompt Construction",
+    "Output Handling"
+   ],
+   "explanation": "Output Handling — Lưu đầu ra đã được xác thực để sử dụng ở bước sau và kiểm toán là thao tác trên kết quả mô hình trả về. Prompt Construction — Sắp xếp nội dung có thể cache trước nội dung riêng của request là quyết định khi lắp ghép prompt, xác định bao nhiêu phần prefix có thể được cache. Input Preparation — Tóm tắt lịch sử hội thoại trước đó nén nội dung trước khi đưa vào request. Output Handling — Schema validation kiểm tra cấu trúc trả về và quyết định việc retry nếu cần. Prompt Construction — Chuyển nội dung ổn định, lặp lại vào prefix có thể cache ở đầu prompt là bố trí prefix. Input Preparation — Cắt các đoạn đã retrieval để giữ phần liên quan giúp giảm đầu vào trước khi lắp ghép prompt."
+  },
+  {
+   "id": 11,
+   "question": "Bạn đang rà soát bản nháp system prompt của đồng nghiệp có các chỉ dẫn mâu thuẫn: một phần yêu cầu không bao giờ suy đoán vượt quá nguồn được cung cấp, còn phần khác yêu cầu tự tin điền vào mọi chỗ thiếu. Cách xử lý nào phù hợp nhất?",
+   "options": [
+    "Thêm chỉ dẫn về thứ tự ưu tiên, yêu cầu mô hình đánh giá mọi chỉ dẫn có sẵn và áp dụng chỉ dẫn phù hợp nhất với ngữ cảnh ở mỗi request.",
+    "Tăng thiết lập temperature để tính ngẫu nhiên của đầu ra che lấp các mâu thuẫn.",
+    "Giải quyết mâu thuẫn bằng cách bỏ hoặc viết lại chỉ dẫn điền chỗ thiếu, để prompt nhất quán giới hạn mô hình ở nội dung được nguồn hỗ trợ.",
+    "Giữ nguyên cả hai chỉ dẫn mâu thuẫn và dựa vào mô hình để chọn chỉ dẫn cần làm theo ở từng request, chấp nhận hành vi không nhất quán."
+   ],
+   "explanation": "Các chỉ dẫn mâu thuẫn tạo ra hành vi không tất định. Cách sửa là giải quyết xung đột ngay trong prompt để nhất quán giới hạn mô hình ở nội dung được nguồn hỗ trợ. A và D giao việc giải quyết xung đột cho mô hình; B sử dụng temperature sai mục đích và không loại bỏ mâu thuẫn."
+  },
+  {
+   "id": 12,
+   "question": "Một dịch vụ phân tích tài liệu xử lý các hồ sơ pháp lý dài trung bình 80.000 token mỗi hồ sơ. Trong một vụ việc, luật sư truy vấn mỗi hồ sơ trung bình 14 lần. Kiến trúc hiện tại gửi toàn bộ hồ sơ trong mỗi truy vấn. CFO yêu cầu bạn giảm chi phí trên mỗi truy vấn mà vẫn giữ chất lượng phản hồi. Cán bộ phụ trách bảo mật yêu cầu không lưu nội dung hồ sơ bên ngoài tenancy của Fabrikam. Bạn nên đề xuất cách tối ưu nào?",
+   "options": [
+    "Tóm tắt mỗi hồ sơ một lần khi tiếp nhận và thực hiện mọi truy vấn sau đó trên bản tóm tắt.",
+    "Chuyển workload sang một mô hình Claude nhỏ hơn để giảm chi phí trên mỗi token.",
+    "Cache hồ sơ dưới dạng prompt prefix để tái sử dụng trong 14 truy vấn của mỗi vụ việc.",
+    "Lập chỉ mục hồ sơ trong vector store và chỉ retrieval những đoạn liên quan cho mỗi truy vấn."
+   ],
+   "explanation": "Hồ sơ được truy vấn lại khoảng 14 lần, nên cache nó dưới dạng prompt prefix tĩnh giúp giảm chi phí của 80.000 token lặp lại trong mọi truy vấn tiếp theo, đồng thời giữ nguyên đầy đủ nội dung và giữ dữ liệu trong tenancy. A làm mất chi tiết luật sư cần; B đánh đổi chất lượng để giảm chi phí; D thêm một chỉ mục bên ngoài và có nguy cơ bỏ sót context đối với câu hỏi về toàn bộ tài liệu."
+  },
+  {
+   "id": 13,
+   "question": "Bạn đang phân loại các chiến lược chunking theo loại kho tài liệu mà chúng phù hợp nhất. Với mỗi chiến lược chunking, chọn giai đoạn trong vòng đời request mà chiến lược đó áp dụng: “Long Structured Documents”, “Heterogeneous Short Records” hoặc “Code or Hierarchical Specs”.",
+   "statements": [
+    "Chunking ở cấp hàm hoặc cấp phần cho các module code",
+    "Chunking nhận biết cấu trúc cây, tuân theo phân cấp của code hoặc đặc tả",
+    "Chunking theo từng bản ghi, mỗi bản ghi là một chunk",
+    "Semantic chunking theo ranh giới điều khoản hoặc đoạn văn",
+    "Chunking kích thước cố định có overlap cho các bản ghi ngắn có độ dài tương tự",
+    "Hierarchical chunking phản ánh cấu trúc các phần của tài liệu"
+   ],
+   "choices": [
+    "Tài liệu dài có cấu trúc",
+    "Bản ghi ngắn không đồng nhất",
+    "Code hoặc đặc tả phân cấp"
+   ],
+   "explanation": "Code or Hierarchical Specs — Chunking ở cấp hàm giữ nguyên từng đơn vị có thể gọi cùng signature, là ranh giới tự nhiên trong module code. Code or Hierarchical Specs — Chunking nhận biết cây tuân theo AST hoặc hệ phân cấp đặc tả để các phần con vẫn gắn với context của phần cha. Heterogeneous Short Records — Mỗi bản ghi vốn đã độc lập, nên mỗi bản ghi một chunk giúp tránh ghép các mục không liên quan. Long Structured Documents — Ranh giới điều khoản và đoạn văn là đơn vị ngữ nghĩa trong hợp đồng, chính sách và báo cáo. Heterogeneous Short Records — Chunking kích thước cố định có overlap chỉ phù hợp tương đối khi các bản ghi ngắn và có độ dài tương tự như đã nêu. Long Structured Documents — Hierarchical chunking phản ánh cấu trúc các phần giúp giữ context của tiêu đề mà retrieval trên tài liệu dài cần đến."
+  },
+  {
+   "id": 14,
+   "question": "Bạn đang thiết kế prompt cho bộ phân loại ticket với ba mươi nhóm đã xác định rõ và mô tả nhóm rõ ràng trong prompt. Kỹ thuật nào phù hợp nhất để bắt đầu?",
+   "options": [
+    "Prompt yêu cầu mô hình tạo ra nhóm mới khi các nhóm đã cung cấp không phù hợp",
+    "Prompt chain-of-thought cho một quyết định phân luồng không cần suy luận nhiều bước",
+    "Prompt zero-shot nêu các nhóm cùng mô tả của chúng và định dạng đầu ra bắt buộc",
+    "Prompt không có mô tả nhóm, kỳ vọng mô hình tự suy ra tập nhóm"
+   ],
+   "explanation": "Với ba mươi nhóm được xác định rõ và đã có mô tả cụ thể, prompt zero-shot nêu các nhóm và định dạng đầu ra bắt buộc là điểm khởi đầu đúng; chỉ thêm ví dụ nếu kết quả đánh giá cho thấy thiếu sót. B làm tăng độ trễ cho quyết định không cần suy luận nhiều bước; A và D loại bỏ tập nhãn đã xác định."
+  },
+  {
+   "id": 15,
+   "question": "Bạn đang đánh giá các nhận định về chiến lược retrieval của một nhóm đồng nghiệp. Với mỗi nhận định, chọn Có nếu nhìn chung nhận định chính xác; nếu không, chọn Không.",
+   "statements": [
+    "Dense vector retrieval phù hợp để tìm lại ý định được diễn đạt lại trong văn bản phi cấu trúc.",
+    "Sparse term-matching retrieval tìm lại các thuật ngữ chính xác, như mã định danh và token hiếm, đáng tin cậy hơn so với chỉ dùng dense retrieval.",
+    "Structured query retrieval phù hợp với workload lọc và tổng hợp trên kho dữ liệu quan hệ có schema và index.",
+    "Hybrid retrieval giống hệt dense-only retrieval và có cùng đặc tính recall.",
+    "Lấy mẫu ngẫu nhiên từ kho dữ liệu là một chiến lược retrieval hợp lý cho hệ thống hỏi đáp production."
+   ],
+   "choices": [
+    null,
+    null
+   ],
+   "explanation": "Có — Embeddings nắm bắt độ tương đồng ngữ nghĩa, nên dense retrieval khớp được ý định diễn đạt lại ngay cả khi truy vấn không dùng chung từ ngữ bề mặt với đoạn văn. Có — Phương pháp sparse như BM25 khớp token theo nghĩa đen, nhờ đó tìm lại các mã định danh hiếm, mã linh kiện và mã lỗi đáng tin cậy hơn chỉ dùng dense retrieval. Có — Công việc lọc và tổng hợp trên kho quan hệ có schema và index thuộc về SQL, không phải tìm kiếm tương đồng xấp xỉ. Không — Hybrid kết hợp tín hiệu dense và sparse chính vì đặc tính recall của chúng khác nhau; nếu giống dense-only thì không có lý do để sử dụng. Không — Lấy mẫu ngẫu nhiên không có liên hệ với truy vấn và không thể tìm ra đáng tin cậy các đoạn mà câu trả lời phụ thuộc vào."
+  },
+  {
+   "id": 16,
+   "question": "Bạn đang thiết kế bộ phân loại kiểm duyệt nội dung xử lý lượng lớn bình luận do người dùng tạo, với giới hạn độ trễ nghiêm ngặt cho mỗi thông điệp và các nhãn phân loại đã xác định rõ. Lựa chọn mô hình nào phù hợp nhất với workload này?",
+   "options": [
+    "Sonnet bật extended thinking, vì nên áp dụng suy luận sâu hơn cho mọi yêu cầu kiểm duyệt để xử lý tốt hơn các trường hợp biên.",
+    "Sonnet, vì các mô hình đa dụng lớn hơn được ưu tiên ngay cả khi yêu cầu độ trễ của workload rất nghiêm ngặt.",
+    "Opus, vì mọi quyết định kiểm duyệt đều đòi hỏi độ sâu suy luận tối đa bất kể mức độ phức tạp của phân loại.",
+    "Haiku, vì đặc tính độ trễ và chi phí phù hợp với workload phân loại khối lượng lớn chỉ cần độ sâu suy luận hạn chế."
+   ],
+   "explanation": "Khối lượng lớn, giới hạn độ trễ chặt chẽ trên mỗi thông điệp và nhãn rõ ràng là kiểu workload điển hình phù hợp với Haiku. Extended thinking (A) và các tầng mô hình nặng hơn (B, C) làm tăng độ trễ và chi phí trong khi không có yêu cầu suy luận đủ để biện minh cho chúng."
+  },
+  {
+   "id": 17,
+   "question": "Bạn đang đánh giá các nhận định về prompting trong tài liệu thiết kế của đồng nghiệp. Với mỗi nhận định, chọn Có nếu nhận định phản ánh thực hành hợp lý; nếu không, chọn Không.",
+   "statements": [
+    "Zero-shot phù hợp để bắt đầu phân loại tập đóng khi các nhóm và mô tả đã được cung cấp trong prompt.",
+    "Thêm tập ví dụ few-shot với tên trường chính xác giúp định hướng định dạng đầu ra trong tác vụ trích xuất.",
+    "Chain-of-thought nên là mặc định cho mọi tác vụ bất kể độ phức tạp.",
+    "Cách giảm tác động của câu hỏi dẫn dắt tốt nhất là yêu cầu so sánh cân bằng dựa trên các tiêu chí đã nêu.",
+    "Có thể bỏ qua khác biệt hành vi giữa các phiên bản mô hình sau khi một prompt đã được xác thực trên một phiên bản."
+   ],
+   "choices": [
+    null,
+    null
+   ],
+   "explanation": "Có — Với tập nhóm đóng và mô tả đã nằm trong prompt, zero-shot là điểm khởi đầu đúng; chỉ thêm ví dụ ở nơi đánh giá cho thấy thiếu sót. Có — Ví dụ few-shot dùng đúng tên trường giúp neo cấu trúc đầu ra và giảm sai lệch định dạng trong tác vụ trích xuất. Không — Chain-of-thought làm tăng độ trễ và token, nhưng không cải thiện độ chính xác đối với phân luồng hoặc phân loại đơn giản; nên dành cho suy luận thực sự cần nhiều bước. Có — Prompt dẫn dắt làm câu trả lời thiên về cách đặt vấn đề, nên yêu cầu so sánh cân bằng theo tiêu chí đã nêu là biện pháp giảm thiểu đúng. Không — Hành vi thay đổi giữa các phiên bản mô hình, nên phải xác thực lại prompt trên bộ đánh giá ở mỗi lần nâng cấp thay vì mặc định chúng ổn định."
+  },
+  {
+   "id": 18,
+   "question": "Bạn đang đánh giá các nhận định về lựa chọn mô hình của một nhóm đồng nghiệp. Với mỗi nhận định, chọn Có nếu nhìn chung nhận định đúng; nếu không, chọn Không.",
+   "statements": [
+    "Các mô hình có năng lực suy luận nặng hơn thường tiêu thụ nhiều hạn mức rate limit hơn và chạy chậm hơn mô hình nhẹ trên cùng đầu vào.",
+    "Đánh giá trên mẫu đại diện của workload mục tiêu là cơ sở đúng để xác nhận lựa chọn mô hình.",
+    "Mô hình có năng lực cao nhất luôn là lựa chọn đúng bất kể đặc điểm workload.",
+    "Tiered routing có thể dùng mô hình nhẹ phục vụ lưu lượng thông thường, đồng thời dành mô hình nặng hơn cho lưu lượng cần năng lực của nó.",
+    "Chọn mô hình dựa trên phiên bản được công bố gần đây nhất là cơ sở đúng cho quyết định production."
+   ],
+   "choices": [
+    null,
+    null
+   ],
+   "explanation": "Có — Mô hình nặng hơn sinh đầu ra chậm hơn và sử dụng nhiều hơn hạn mức rate limit tính theo token trên cùng đầu vào, vì vậy workload khối lượng lớn nhạy với độ trễ ưu tiên các tầng mô hình nhẹ hơn. Có — Xác nhận lựa chọn đòi hỏi chạy các mô hình ứng viên trên mẫu đại diện của workload thực tế, không dựa vào benchmark công bố. Không — Năng lực chỉ là một chiều; mức độ chấp nhận độ trễ, khối lượng và trần chi phí đều quan trọng, và quy tắc đúng là chọn mô hình nhẹ nhất đạt ngưỡng chất lượng. Có — Phân luồng theo tầng dựa trên độ phức tạp tác vụ là mẫu phổ biến giúp giảm chi phí và độ trễ cho lưu lượng thông thường mà vẫn giữ năng lực khi cần. Không — Thời điểm công bố gần đây không cho biết mức phù hợp với workload cụ thể; phiên bản mới là lý do để đánh giá lại, không phải lý do tự động áp dụng."
+  },
+  {
+   "id": 19,
+   "question": "Bạn đang lựa chọn mô hình cho workload production mới và phải hoàn thành các bước chuẩn bị trước khi kiểm thử thực nghiệm các mô hình ứng viên. Hai bước nào phải được hoàn thành TRƯỚC khi chạy mẫu đại diện trên một mô hình ứng viên? (Chọn hai.) Mỗi đáp án đúng trình bày một phần của giải pháp.",
+   "options": [
+    "Phê duyệt kế hoạch triển khai production với nhóm nền tảng và bảo mật.",
+    "Chọn mô hình nhẹ nhất luôn đạt ngưỡng chất lượng trên toàn bộ mẫu.",
+    "Chọn một mô hình ứng viên dựa trên bộ yêu cầu và năng lực đã biết.",
+    "Kiểm thử lại lựa chọn mô hình khi có phiên bản mô hình mới.",
+    "Xác định ngưỡng chất lượng, mức độ chấp nhận độ trễ và khối lượng kỳ vọng của workload."
+   ],
+   "explanation": "Trước kiểm thử thực nghiệm, bạn cần bộ yêu cầu: ngưỡng chất lượng, mức độ chấp nhận độ trễ và khối lượng kỳ vọng (E), cùng một mô hình ứng viên được chọn theo bộ yêu cầu đó và năng lực đã biết (C). B là kết quả của kiểm thử; A là triển khai; D là đánh giá lại liên tục."
+  },
+  {
+   "id": 20,
+   "question": "Bạn đang điều tra một MCP server thất bại ở lần khởi chạy đầu tiên nhưng thành công ở các lần sau. Hộp thoại cấp quyền hệ thống đã xuất hiện ở lần khởi chạy đầu tiên. Cách xử lý nào phù hợp nhất?",
+   "options": [
+    "Nhận biết việc cấp quyền ở lần chạy đầu là nguyên nhân, ghi lại hành vi dự kiến này trong hướng dẫn onboarding và xác nhận các lần chạy sau thành công.",
+    "Tắt hoàn toàn hộp thoại cấp quyền của hệ điều hành, chấp nhận hệ quả bảo mật và tiếp tục mà không xác nhận lỗi có lặp lại hay không.",
+    "Cài lại hệ điều hành để xóa mọi trạng thái quyền mà không xác nhận trước việc cấp quyền một lần có thực sự là nguyên nhân lỗi hay không.",
+    "Coi lỗi ở lần chạy đầu là lỗi vĩnh viễn, thay MCP server bằng triển khai khác và không xác minh các lần chạy tiếp theo có thành công hay không."
+   ],
+   "explanation": "Hộp thoại cấp quyền của hệ điều hành ở lần chạy đầu là cơ chế cấp quyền một lần đã biết; cách xử lý đúng là nhận ra nguyên nhân, ghi lại trong hướng dẫn onboarding và xác minh các lần chạy sau thành công. B đánh đổi bảo mật; C quá mức cần thiết; D loại bỏ một thành phần hoạt động được mà không chẩn đoán."
+  },
+  {
+   "id": 21,
+   "question": "Bạn đang tổng hợp các yếu tố nên chi phối việc lựa chọn giữa Model Context Protocol (MCP), tích hợp API trực tiếp và agent-to-agent handoff. Hai yếu tố nào nên có trong danh sách? (Chọn hai.) Mỗi đáp án đúng trình bày một giải pháp hoàn chỉnh.",
+   "options": [
+    "Liệu transport bên dưới có hỗ trợ mã hóa khi truyền giữa các dịch vụ được tích hợp hay không",
+    "Liệu tương tác là stateless và nhạy với độ trễ, hay stateful và chạy lâu hơn",
+    "Liệu nhà cung cấp có công bố tài liệu tham khảo chi tiết cho từng giao thức ứng viên hay không",
+    "Liệu nhóm có kinh nghiệm triển khai trước đó với bất kỳ giao thức ứng viên nào hay không",
+    "Liệu tích hợp có cần khả năng sử dụng trên nhiều AI client trong hệ sinh thái hay không"
+   ],
+   "explanation": "Việc chọn giao thức được quyết định bởi kiểu tương tác — stateless và nhạy với độ trễ hay stateful và chạy lâu (B) — và yêu cầu tái sử dụng tích hợp trên nhiều AI client, chính là điều MCP cung cấp (E). A áp dụng cho mọi lựa chọn; C và D là sự thuận tiện của nhóm hoặc nhà cung cấp, không phải động lực kiến trúc."
+  },
+  {
+   "id": 22,
+   "question": "Bạn đang chọn giao thức cho một lần gọi tool stateless có độ trễ thấp từ trợ lý dựa trên Claude tới dịch vụ định giá nội bộ đã cung cấp HTTP API ổn định. Cơ chế tích hợp nào phù hợp nhất?",
+   "options": [
+    "Một giao thức streaming tự thiết kế đặt trên message bus bất đồng bộ không liên quan",
+    "Agent-to-agent handoff bổ sung một agent dựa trên Claude khác phía trước dịch vụ định giá",
+    "Một giao thức session stateful tồn tại lâu cho tương tác stateless chỉ có một lần gọi",
+    "Gọi API trực tiếp tới endpoint hiện có bằng credentials có phạm vi quyền phù hợp"
+   ],
+   "explanation": "Một lần gọi stateless, độ trễ thấp tới HTTP endpoint ổn định hiện có phù hợp nhất với gọi API trực tiếp bằng credentials có phạm vi quyền phù hợp. Giao thức session kiểu MCP (C), thêm một bước chuyển qua agent (B) hoặc bus tự thiết kế (A) đều làm tăng độ trễ và thành phần vận hành mà không đem lại lợi ích."
+  },
+  {
+   "id": 23,
+   "question": "Bạn đang đánh giá hệ thống dựa trên Claude có rủi ro chính là chất lượng đầu ra liên quan tới an toàn âm thầm thay đổi sau khi nâng cấp phiên bản mô hình. Hoạt động đánh giá nào giải quyết trực tiếp nhất rủi ro này?",
+   "options": [
+    "Tắt hoàn toàn adversarial evaluation trong các chu kỳ nâng cấp phiên bản mô hình để giảm chi phí đánh giá, chấp nhận rằng sai lệch về an toàn sẽ không được phát hiện cho tới khi xuất hiện trên production.",
+    "Bỏ qua đánh giá ở mỗi lần nâng cấp phiên bản mô hình và dựa vào khiếu nại do người dùng gửi để phát hiện sai lệch về an toàn sau khi mô hình nâng cấp đã phục vụ lưu lượng production.",
+    "Luân chuyển đầu vào adversarial một cách ngẫu nhiên để không có hai lần nâng cấp nào được chấm trên cùng một tập.",
+    "Duy trì bộ adversarial evaluation với kết quả chấm điểm gắn với từng phiên bản, để mỗi lần nâng cấp đều được đo trên cùng một tập trước khi đưa vào sử dụng."
+   ],
+   "explanation": "Phát hiện silent drift bằng cách chấm mọi phiên bản trên cùng một bộ adversarial ổn định, gắn kết quả với từng phiên bản và kiểm tra trước khi đưa phiên bản vào sử dụng. C làm mất khả năng so sánh; A và B loại bỏ hoàn toàn cơ chế phát hiện."
+  },
+  {
+   "id": 24,
+   "question": "Bạn đang thiết kế workflow xác thực human-in-the-loop. Hai yếu tố thiết kế nào nên nằm trong workflow? (Chọn hai.) Mỗi đáp án đúng trình bày một giải pháp hoàn chỉnh.",
+   "options": [
+    "Ghi nhận quyết định của người rà soát thành dữ liệu gán nhãn để bổ sung vào bộ đánh giá theo thời gian",
+    "Bắt buộc người rà soát đồng ý với đầu ra của mô hình để duy trì sự nhất quán giữa người rà soát và mô hình",
+    "Công bố hàng tuần các chỉ số tổng hợp về năng suất rà soát cho lãnh đạo để lập kế hoạch nhân sự",
+    "Lấy mẫu đồng đều mọi đầu ra của mô hình để mỗi request có cơ hội được rà soát như nhau",
+    "Lấy mẫu phân tầng theo rủi ro, tập trung sự chú ý của người rà soát vào đầu ra có độ tin cậy thấp và tác động lớn"
+   ],
+   "explanation": "Lấy mẫu phân tầng theo rủi ro (E) phân bổ năng lực rà soát vào nơi có tác động và mức độ bất định cao nhất; ghi nhận quyết định của người rà soát thành dữ liệu gán nhãn (A) giúp bộ đánh giá tích lũy giá trị theo thời gian. B làm mất ý nghĩa của rà soát độc lập; C là chỉ số quản lý; D phân bổ đồng đều năng lực rà soát vốn khan hiếm."
+  },
+  {
+   "id": 25,
+   "question": "Bạn đang thiết kế chiến lược kiểm thử cho pipeline dựa trên Claude xử lý dữ liệu tài chính nhạy cảm. Nên ưu tiên hai loại kiểm thử nào để bao phủ cả tính an toàn khi bị tấn công và tính đúng đắn xuyên suốt các thành phần? (Chọn hai.)",
+   "options": [
+    "Integration test xác minh hành vi end-to-end của pipeline trên tất cả thành phần",
+    "Unit test chỉ nhắm tới logic render từng prompt template",
+    "Adversarial test sử dụng các tình huống prompt injection và đầu vào sai định dạng",
+    "Smoke test để xác minh các luồng cốt lõi sau mỗi lần triển khai",
+    "Regression test trên tập tham chiếu ổn định gồm các đầu ra đã biết là đúng trước đó"
+   ],
+   "explanation": "Adversarial test với prompt injection và đầu vào sai định dạng bao phủ tính an toàn khi bị tấn công (C); integration test kiểm tra hành vi end-to-end giữa các thành phần bao phủ tính đúng đắn xuyên suốt thành phần (A). B quá hẹp; D và E có giá trị nhưng không trực tiếp nhắm tới hai khía cạnh này."
+  },
+  {
+   "id": 26,
+   "question": "Một trợ lý nghiên cứu dựa trên Claude bắt đầu đưa ra các phản hồi tự tin nhưng mâu thuẫn với tài liệu nguồn đã retrieval, dù retrieval pipeline không thay đổi. Hai hành động chẩn đoán nào xác định trực tiếp nhất nguyên nhân gốc rễ của hành vi này? (Chọn hai.)",
+   "options": [
+    "Chuyển retrieval index sang một embedding model có biểu diễn dày đặc hơn để cải thiện điểm liên quan của các chunk.",
+    "Kiểm tra riêng xem lỗi có tái hiện trên phiên bản model trước hay không để xác định sự không phù hợp của model.",
+    "Kiểm tra các chỉ dẫn grounding trong system prompt để xác định liệu các ràng buộc trích dẫn còn nguyên vẹn hay không.",
+    "Giảm thiết lập temperature để giảm độ biến thiên của phản hồi trên mọi loại truy vấn.",
+    "Tăng kích thước context window để cho phép đưa vào nhiều chunk đã retrieval hơn cho mỗi truy vấn."
+   ],
+   "explanation": "Retrieval pipeline không thay đổi, nên nguyên nhân có thể nằm ở các thành phần upstream của retrieval: thay đổi phiên bản model (B, tái hiện trên phiên bản trước) hoặc các ràng buộc grounding/trích dẫn trong system prompt bị suy yếu (C). A, D và E là các thay đổi tinh chỉnh mang tính phỏng đoán, không cô lập được nguyên nhân."
+  },
+  {
+   "id": 27,
+   "question": "Một trợ lý AI thử nghiệm dành cho chuyên viên thu mua có tỷ lệ chấp nhận phản hồi đầu tiên là 89%, nhưng khảo sát tiếp theo cho thấy các chuyên viên thường bác bỏ đề xuất nhà cung cấp của trợ lý sau khi tham khảo những tiêu chí khác mà trợ lý chưa xét đến. Người phụ trách thử nghiệm muốn triển khai nguyên trạng trợ lý vì tỷ lệ chấp nhận cao. Bạn nên nêu hai nhận xét nào thuộc năng lực Discernment TRƯỚC KHI phê duyệt ra mắt? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Tỷ lệ chấp nhận không đo lường liệu các đề xuất có đúng sau khi chuyên viên rà soát hay không.",
+    "Tỷ lệ phản hồi khảo sát có thể không đại diện về mặt thống kê cho toàn bộ chuyên viên.",
+    "Những tiêu chí chưa được xét đến trực tiếp thể hiện một khoảng trống phạm vi trong không gian đầu vào của trợ lý.",
+    "Chỉ riêng tỷ lệ chấp nhận đã đủ chứng minh mức độ sẵn sàng để sử dụng rộng rãi trong production.",
+    "Thời gian thử nghiệm có thể quá ngắn để xác lập độ tin cậy trong cả năm."
+   ],
+   "explanation": "Việc chấp nhận phản hồi đầu tiên không phải là thước đo tính đúng đắn khi chuyên viên sau đó bác bỏ phản hồi đó (A), và những tiêu chí trợ lý chưa từng được cung cấp thực sự là khoảng trống phạm vi đầu vào (C). D lặp lại lập luận sai; B và E là những lưu ý chung về khảo sát/thời lượng, không phải các phát hiện thuộc năng lực Discernment."
+  },
+  {
+   "id": 28,
+   "question": "Nhóm nền tảng tại Trenova Systems, Inc. cần giảm chi phí mỗi truy vấn và độ trễ p95 cho một Claude pipeline lưu lượng lớn mà không làm giảm chất lượng đầu ra của use case cốt lõi. Hai phương án tối ưu nào trực tiếp nhắm đến đồng thời cả chi phí và độ trễ? (Chọn hai.)",
+   "options": [
+    "Thêm một bước retrieval lấy toàn bộ corpus nguồn vào context window trước khi sinh phản hồi.",
+    "Mở rộng system prompt để thêm các ví dụ few-shot cho mọi request.",
+    "Tăng max_tokens để giảm tần suất phản hồi bị cắt ngắn khiến phải gọi bổ sung.",
+    "Bật prompt caching cho prefix tĩnh của system prompt để giảm số input token bị tính phí trên các lần gọi lặp lại.",
+    "Định tuyến các loại truy vấn đơn giản đến một Claude model nhỏ hơn, nhanh hơn và dành model đầy đủ cho các trường hợp phức tạp."
+   ],
+   "explanation": "Prompt caching trên prefix tĩnh (D) giảm input token bị tính phí và thời gian prefill; định tuyến truy vấn đơn giản đến model nhỏ hơn (E) giảm cả giá mỗi token lẫn độ trễ sinh phản hồi. A, B và C đều làm tăng token hoặc khối lượng xử lý."
+  },
+  {
+   "id": 29,
+   "question": "Sau khi cập nhật prompt template, một số test case trước đó đạt yêu cầu nay tạo ra đầu ra ngoài dự kiến. Loại kiểm thử nào được thiết kế riêng để phát hiện dạng lỗi này?",
+   "options": [
+    "regression test được chấm điểm đối chiếu với một bộ tham chiếu ổn định về hành vi đã được xác nhận là đúng",
+    "adversarial test thăm dò các lỗ hổng prompt injection",
+    "integration test xác thực hành vi của pipeline xuyên các thành phần",
+    "smoke test xác nhận tính sẵn sàng tổng thể của hệ thống sau thay đổi"
+   ],
+   "explanation": "Regression test được chấm điểm theo một bộ tham chiếu ổn định đã được xác nhận là đúng nhằm phát hiện chính những thay đổi hành vi do chỉnh sửa prompt hoặc template gây ra. Các loại kiểm thử khác nhắm đến injection, kết nối giữa các thành phần và tính sẵn sàng."
+  },
+  {
+   "id": 30,
+   "question": "Bạn đang tích hợp hoạt động rà soát của con người vào một classification pipeline lưu lượng lớn, nơi việc rà soát mọi đầu ra là không khả thi. Chiến lược lấy mẫu nào cân bằng tốt nhất giữa throughput và giám sát chất lượng?",
+   "options": [
+    "không lấy mẫu, hoàn toàn dựa vào khiếu nại do người dùng gửi để phát hiện vấn đề chất lượng và an toàn sau khi chúng đã ảnh hưởng đến người dùng cuối trên diện rộng",
+    "lấy mẫu phân tầng theo rủi ro: rà soát mọi đầu ra có độ tin cậy thấp và tác động lớn, đồng thời rà soát một mẫu ngẫu nhiên nhỏ hơn từ các đầu ra thông thường có độ tin cậy cao",
+    "lấy mẫu ngược: chỉ rà soát các đầu ra thông thường có độ tin cậy cao và bỏ qua mọi đầu ra có độ tin cậy thấp và tác động lớn",
+    "lấy mẫu toàn bộ: rà soát mọi đầu ra bất kể mức độ tin cậy hay ảnh hưởng đến throughput, coi mọi đầu ra đều cần con người rà soát như nhau"
+   ],
+   "explanation": "Lấy mẫu phân tầng theo rủi ro rà soát mọi đầu ra có độ tin cậy thấp và tác động lớn, cùng một mẫu ngẫu nhiên nhỏ hơn từ các đầu ra thông thường có độ tin cậy cao, nhờ đó tập trung giám sát nơi quan trọng trong ngân sách rà soát khả thi. A không có giám sát, C đảo ngược thứ tự ưu tiên, D không khả thi ở quy mô lưu lượng lớn."
+  },
+  {
+   "id": 31,
+   "question": "Bạn đang triển khai monitoring cho một hệ thống dựa trên Claude và phải hoàn tất các bước đặc tả trước khi bổ sung instrumentation. Hai bước nào phải hoàn tất TRƯỚC KHI bổ sung instrumentation để hệ thống phát ra metrics và traces? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Lập tài liệu về dashboard, cảnh báo và runbook cho nhóm trực luân phiên sẽ xử lý sự cố.",
+    "Xây dựng các dashboard hiển thị metrics theo các lát cắt với nhịp cập nhật phù hợp hoạt động của nhóm.",
+    "Xác định service-level objectives (SLOs) và error budgets mà hệ thống triển khai phải tuân thủ.",
+    "Tinh chỉnh các ngưỡng cảnh báo dựa trên phân phối quan sát được ở trạng thái bình thường để giảm false positive.",
+    "Xác định metrics và các lát cắt mà hệ thống sẽ giám sát trên cả lưu lượng bình thường lẫn lưu lượng đối kháng."
+   ],
+   "explanation": "Instrumentation phải được đặc tả trước khi xây dựng: xác định SLOs và error budgets mà hệ thống phải tuân thủ (C), cùng metrics và các lát cắt cần phát ra trên lưu lượng bình thường và đối kháng (E). Dashboard, tinh chỉnh cảnh báo và runbook (A, B, D) được thực hiện sau khi có telemetry."
+  },
+  {
+   "id": 32,
+   "question": "Bạn là kiến trúc sư hỗ trợ giai đoạn cải tiến lặp của một hệ thống dựa trên Claude đã triển khai. Hoạt động nào phù hợp trực tiếp nhất với giai đoạn này?",
+   "options": [
+    "Loại bỏ evaluation framework và bộ tham chiếu khi hệ thống đã vào production, chấp nhận rằng các vòng cải tiến sau sẽ không có cơ sở có cấu trúc để đo tác động của thay đổi.",
+    "Xây dựng lại toàn bộ kiến trúc hệ thống từ đầu ở đầu mỗi chu kỳ cải tiến, bất kể production telemetry, kết quả đánh giá và phản hồi của các bên liên quan cho thấy cần điều gì.",
+    "Rà soát production telemetry, đánh giá mẫu đầu ra và phản hồi của các bên liên quan để xác định thay đổi có tác động lớn nhất cho chu kỳ tiếp theo, rồi lập kế hoạch thay đổi dựa trên evaluation framework.",
+    "Ngừng đo lường kết quả trong production khi hệ thống đã ra mắt thành công, coi mốc go-live là điểm kết thúc chu kỳ đánh giá và cải tiến."
+   ],
+   "explanation": "Cải tiến lặp bao gồm rà soát telemetry, đánh giá mẫu đầu ra và phản hồi của các bên liên quan, chọn thay đổi có tác động lớn nhất và lập kế hoạch theo evaluation framework hiện có. A và D loại bỏ việc đo lường; B loại bỏ tính liên tục."
+  },
+  {
+   "id": 33,
+   "question": "Một kiến trúc sư Claude tại tổ chức dịch vụ y tế đang xác định metrics đánh giá cho pipeline tóm tắt lâm sàng. Pipeline phải nằm trong mức trần chi phí mỗi truy vấn và tuyệt đối không đưa dữ liệu bệnh nhân đến các vai trò không được cấp quyền. Hai metrics nào trực tiếp đáp ứng các yêu cầu này? (Chọn hai.)",
+   "options": [
+    "tỷ lệ thực thi role-based access control đo trên một red-team dataset",
+    "độ trễ phản hồi ở phân vị thứ 95 trên khoảng thời gian lấy mẫu một tuần",
+    "điểm BLEU tính đối chiếu với bộ tóm tắt tham chiếu do con người gán nhãn",
+    "throughput đo bằng số request được xử lý thành công mỗi phút",
+    "chi phí token mỗi truy vấn được đo đối chiếu với mức trần chi phí đã xác định"
+   ],
+   "explanation": "Chi phí token mỗi truy vấn so với mức trần đã xác định (E) tương ứng với yêu cầu chi phí; tỷ lệ thực thi RBAC đo trên red-team dataset (A) tương ứng với yêu cầu tuyệt đối không đưa PHI đến vai trò không được cấp quyền. B, C và D đo các thuộc tính khác."
+  },
+  {
+   "id": 34,
+   "question": "Một trợ lý dự báo doanh thu đã vượt mục tiêu chi phí hằng tháng 38%. Profiling cho thấy ba yếu tố đóng góp: phần mở đầu chính sách dài 6.000 token lặp lại trong mọi lần gọi (45% chi phí), retrieval các chunk doanh số lịch sử trung bình 3.000 token mỗi lần gọi (30%) và inference trên model cấp cao nhất (25%). Các bên liên quan yêu cầu độ chính xác dự báo không thay đổi. Bạn nên ưu tiên thực hiện hai phương án tối ưu nào để giảm chi phí mà không ảnh hưởng độ chính xác? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Cache các chunk doanh số thường được retrieval và được truy cập qua nhiều truy vấn hằng ngày.",
+    "Cắt ngắn phần mở đầu chính sách để loại bỏ các điều khoản không thiết yếu khỏi prompt.",
+    "Bật prompt caching cho phần mở đầu chính sách tĩnh trên các lần gọi lặp lại.",
+    "Chuyển workload sang cấp Claude model nhỏ hơn, nhanh hơn trên mọi truy vấn.",
+    "Giảm số chunk doanh số lịch sử được retrieval trong mỗi lần chạy truy vấn."
+   ],
+   "explanation": "Chỉ caching giảm chi phí mà không thay đổi những gì model nhìn thấy: prompt caching cho phần mở đầu tĩnh dài 6.000 token (C) nhắm đến yếu tố đóng góp lớn nhất, còn caching các chunk doanh số thường được retrieval (A) nhắm đến yếu tố thứ hai. B, D và E đều thay đổi nội dung prompt, độ sâu retrieval hoặc cấp model, gây rủi ro cho yêu cầu giữ nguyên độ chính xác."
+  },
+  {
+   "id": 35,
+   "question": "Bạn đang vận hành một trợ lý tương tác có ràng buộc hiệu năng chủ yếu là độ trễ mỗi lượt. Chất lượng các lượt thông thường đã đạt mức chấp nhận được. Điều chỉnh cấu hình nào trực tiếp cải thiện độ trễ nhất mà không làm suy giảm chất lượng quá mức?",
+   "options": [
+    "Giảm độ sâu retrieval xuống top-k đoạn mà dữ liệu lịch sử cho thấy thường chứa câu trả lời, đồng thời cache nội dung system prompt ổn định.",
+    "Tăng độ sâu retrieval lên mức tối đa của corpus để cải thiện recall bất kể độ trễ.",
+    "Tắt hoàn toàn prompt caching để bảo đảm context được xử lý mới ở mọi request, ngăn nội dung prefix cũ ảnh hưởng đến những tương tác nhạy cảm với độ trễ.",
+    "Chuyển mọi lượt sang model nặng nhất hiện có để tối đa hóa chất lượng đầu ra, chấp nhận rằng độ trễ model tăng sẽ làm xấu đi SLO mỗi lượt thay vì cải thiện nó."
+   ],
+   "explanation": "Giới hạn retrieval ở top-k đoạn mà dữ liệu lịch sử cho thấy đủ bao phủ câu trả lời sẽ giảm prefill token, còn caching prefix hệ thống ổn định loại bỏ prefill lặp lại — cả hai đều giảm độ trễ với tác động chất lượng tối thiểu đối với các lượt thông thường vốn đã đạt yêu cầu. B, C và D đều làm tăng độ trễ."
+  },
+  {
+   "id": 36,
+   "question": "Bạn đang thẩm định một evaluation set dùng để chấm điểm công cụ hỗ trợ tuyển dụng dựa trên Claude. Bộ dữ liệu được lấy từ một khu vực địa lý và một nhóm thâm niên. Cách xử lý nào phù hợp nhất?",
+   "options": [
+    "Mở rộng evaluation set để bao phủ các khu vực địa lý và nhóm thâm niên mà công cụ sẽ phục vụ, rồi chấm điểm lại hệ thống trên bộ dữ liệu mở rộng trước khi phát hành rộng rãi hơn.",
+    "Tiếp tục sử dụng evaluation set hẹp chỉ lấy từ một khu vực và một nhóm thâm niên vì điểm benchmark hiện tại trên tập con đó đã cao.",
+    "Thu hẹp evaluation set thêm nữa xuống một nhóm nhân khẩu học duy nhất để đơn giản hóa việc diễn giải điểm số, giảm độ bao phủ thay vì mở rộng cho phù hợp với tập người dùng dự kiến.",
+    "Loại bỏ mọi đánh giá định lượng và thay bằng các nhận xét định tính thu thập từ một nhóm nhỏ được chọn theo sự thuận tiện, có thể không đại diện cho toàn bộ tập người dùng của công cụ."
+   ],
+   "explanation": "Một evaluation set lấy từ một khu vực và một nhóm thâm niên không thể làm cơ sở cho khẳng định về toàn bộ nhóm người mà công cụ sẽ phục vụ; cần mở rộng độ bao phủ đến các lát cắt dự kiến và chấm lại trước khi phát hành rộng hơn. B giữ lại benchmark thiên lệch, C thu hẹp thêm, D loại bỏ việc đo lường."
+  },
+  {
+   "id": 37,
+   "question": "Bạn đang rà soát instrumentation trong một hệ thống multi-agent. Hai phát hiện nào thực sự là khoảng trống về observability trong instrumentation? (Chọn hai.) Mỗi đáp án đúng là một giải pháp hoàn chỉnh.",
+   "options": [
+    "Danh tính và phiên bản model ở mỗi lượt không được ghi lại cùng các artifact của lượt đó.",
+    "Payload và kết quả của tool call được ghi lại, đồng thời che bỏ dữ liệu ở những trường đã biết là nhạy cảm.",
+    "Độ trễ và mức sử dụng token trên mọi span được phát về metrics pipeline tập trung.",
+    "Các correlation identifier trong phạm vi request không được truyền xuyên suốt qua các lần gọi agent và tool.",
+    "Trace span của mỗi bước agent được xuất đến backend distributed tracing dùng chung."
+   ],
+   "explanation": "Không ghi danh tính và phiên bản model mỗi lượt (A) khiến không thể quy nguyên nhân của drift và sự cố; correlation ID không được truyền xuyên các lần gọi agent và tool (D) làm đứt end-to-end tracing. B, C và E mô tả instrumentation đã có và đúng."
+  },
+  {
+   "id": 38,
+   "question": "Bạn đang xây dựng evaluation pipeline cho một hệ thống dựa trên Claude và phải hoàn tất các bước đặc tả trước khi chạy hệ thống với dataset. Hai bước nào phải hoàn tất TRƯỚC KHI chạy hệ thống với evaluation dataset? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Chấm điểm đầu ra của hệ thống đối chiếu với nhãn tham chiếu và tổng hợp metrics.",
+    "Công bố metrics tổng hợp lên dashboard và đặt điều kiện phát hành dựa trên việc kiểm tra các ngưỡng.",
+    "Rà soát các trường hợp thất bại cùng chuyên gia lĩnh vực để tinh chỉnh scoring rubric.",
+    "Xác định metrics và các lát cắt mà framework sẽ báo cáo cho các trường hợp đại diện, edge case và đối kháng.",
+    "Tuyển chọn và gán nhãn evaluation dataset cho phù hợp với các lát cắt đã xác định."
+   ],
+   "explanation": "Đặc tả phải đi trước thực thi: xác định metrics và các lát cắt cho những trường hợp đại diện, edge case và đối kháng (D), sau đó tuyển chọn và gán nhãn dataset phù hợp với các lát cắt đó (E). A, B và C đều diễn ra sau khi chạy."
+  },
+  {
+   "id": 39,
+   "question": "Bạn đang xác định phương án tối ưu có tác động lớn nhất cho một hệ thống mà chi phí token chủ yếu đến từ system prompt dài bị lặp lại và lượng context retrieval lớn trong mỗi request. Phương án nào trực tiếp nhắm đến yếu tố chi phí chủ yếu?",
+   "options": [
+    "Thêm nội dung lặp lại vào system prompt để cung cấp thêm hướng dẫn cho model.",
+    "Tăng độ sâu retrieval ở mọi request để tối đa hóa recall, làm trầm trọng thêm yếu tố chi phí chủ yếu bằng cách thêm token retrieval mỗi request thay vì giảm chúng.",
+    "Chuyển mọi request sang model nặng nhất hiện có để tối đa hóa chất lượng đầu ra, chấp nhận rằng chi phí inference mỗi request cao hơn làm trầm trọng thêm thay vì xử lý yếu tố chi phí chủ yếu.",
+    "Đưa system prompt dài, lặp lại vào một prefix có thể cache và rút gọn context retrieval xuống những đoạn liên quan đến từng truy vấn."
+   ],
+   "explanation": "Hai yếu tố chủ yếu là system prompt lặp lại và context retrieval quá lớn, vì vậy hãy chuyển prompt vào prefix có thể cache và giới hạn retrieval ở các đoạn liên quan. A, B và C đều làm tăng yếu tố chủ yếu hoặc chi phí inference mỗi request."
+  },
+  {
+   "id": 40,
+   "question": "Một kỹ sư vận hành báo cáo rằng pipeline dựa trên Claude bắt đầu trả về JSON sai định dạng sau một đợt bảo trì theo lịch, gây lỗi xử lý downstream. Hai bước điều tra nào cô lập trực tiếp nhất nguyên nhân gốc rễ? (Chọn hai.)",
+   "options": [
+    "So sánh system prompt và cấu hình output schema hiện tại với phiên bản gần nhất đã được xác nhận hoạt động đúng trước đợt bảo trì.",
+    "Chuyển sang một cấp Claude model khác để loại trừ khả năng các thay đổi phía nhà cung cấp là yếu tố đóng góp.",
+    "Tăng giới hạn max tokens để xác định liệu việc cắt ngắn đầu ra có gây ra cấu trúc JSON không hoàn chỉnh hay không.",
+    "Chạy lại một tập request trước bảo trì trên cấu hình hiện tại và kiểm tra đầu ra thô của model trước khi downstream parsing.",
+    "Xóa prompt cache và gửi lại mọi request đang chờ để loại bỏ các prefix cũ trong cache."
+   ],
+   "explanation": "Có điều gì đó đã thay đổi trong đợt bảo trì, vì vậy hãy đối chiếu khác biệt giữa system prompt và cấu hình output schema hiện tại với phiên bản gần nhất hoạt động đúng (A), đồng thời chạy lại request trước bảo trì và kiểm tra đầu ra thô của model trước parsing (D). B, C và E là các phỏng đoán khắc phục không cô lập được thay đổi."
+  },
+  {
+   "id": 41,
+   "question": "Bạn đang thực hiện một thí nghiệm có đối chứng để so sánh hai prompt và phải hoàn tất các bước thiết kế trước khi thực thi. Hai bước nào phải hoàn tất TRƯỚC KHI chạy thí nghiệm với phân nhóm ngẫu nhiên? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Phân tích kết quả theo metric thành công và ngưỡng ý nghĩa thống kê đã xác định trước.",
+    "Xác định mức ảnh hưởng tối thiểu có thể phát hiện và cỡ mẫu cần thiết để đạt statistical power.",
+    "Ghi lại khuyến nghị, các đánh đổi đã chấp nhận và những phương án thay thế đã cân nhắc.",
+    "Quyết định áp dụng, loại bỏ hay tiếp tục cải tiến phương án ứng viên dựa trên phân tích.",
+    "Xác định giả thuyết và metric thành công chính cho phép so sánh."
+   ],
+   "explanation": "Thiết kế thí nghiệm phải đi trước: nêu giả thuyết và metric thành công chính (E), rồi xác định mức ảnh hưởng tối thiểu có thể phát hiện và cỡ mẫu cần thiết để đạt statistical power (B). A, C và D là các bước sau thực thi."
+  },
+  {
+   "id": 42,
+   "question": "Một kiến trúc sư đang rà soát công cụ sàng lọc ứng viên dựa trên Claude trước khi triển khai. Một bên liên quan khẳng định rằng vì model không được huấn luyện bằng dữ liệu công ty nên không cần đánh giá bias. Hai phản hồi nào phản biện chính xác nhất khẳng định này? (Chọn hai.)",
+   "options": [
+    "Model có thể mang bias nhân khẩu học từ pretraining, biểu hiện trong kết quả sàng lọc bất kể có fine-tuning hay không.",
+    "Nghĩa vụ minh bạch được đáp ứng chỉ bằng việc công bố đang sử dụng hệ thống AI, không cần đánh giá thêm.",
+    "Hệ thống cần được đánh giá bằng metrics về chênh lệch kết quả giữa các nhóm được bảo vệ trước khi triển khai.",
+    "Chỉ cần kiểm thử fairness khi biết rõ training dataset có chứa nhãn của các nhóm được bảo vệ.",
+    "Không cần đánh giá bias khi nhà cung cấp model đã công bố chính sách sử dụng có trách nhiệm."
+   ],
+   "explanation": "Bias từ pretraining có thể xuất hiện trong kết quả sàng lọc bất kể dữ liệu công ty có được dùng để huấn luyện hay không (A), nên hệ thống cần kiểm thử chênh lệch kết quả giữa các nhóm được bảo vệ trước khi triển khai (C). B, D và E đều lặp lại khẳng định đang bị phản biện."
+  },
+  {
+   "id": 43,
+   "question": "Bạn đang xây dựng checklist rà soát đạo đức cho các hệ thống triển khai được hỗ trợ bởi trí tuệ nhân tạo (AI). Hai mục kiểm tra nào thuộc danh sách này? (Chọn hai.) Mỗi đáp án đúng là một giải pháp hoàn chỉnh.",
+   "options": [
+    "Xác minh rằng đầu ra không dựa vào những khái quát hóa về con người mà dữ liệu nền tảng không hỗ trợ.",
+    "Xác nhận các điều khoản cấp phép của nhà cung cấp cho phép cách sử dụng model dự kiến trong production.",
+    "Xác nhận các mục tiêu độ trễ và throughput được đáp ứng trên các nhóm người dùng được hỗ trợ.",
+    "Giới hạn rà soát đạo đức ở những đầu ra vượt một ngưỡng độ tin cậy của model đã xác định.",
+    "Xác nhận rằng các quyết định có tác động lớn vẫn có con người chịu trách nhiệm giải trình, thay vì quy trách nhiệm cho model."
+   ],
+   "explanation": "Kiểm tra đạo đức: đầu ra không được dựa trên các khái quát hóa thiếu căn cứ về con người (A), và các quyết định có tác động lớn phải duy trì trách nhiệm giải trình của con người được chỉ định rõ (E). B thuộc pháp lý/cấp phép, C thuộc hiệu năng, D sẽ loại bỏ chính các đầu ra có độ tin cậy thấp cần được rà soát."
+  },
+  {
+   "id": 44,
+   "question": "Bạn đang xác định những vị trí bắt buộc duy trì rà soát của con người trong một pipeline tự động hóa dự kiến. Cách bố trí nào thể hiện thiết kế human-in-the-loop hợp lý?",
+   "options": [
+    "Loại bỏ mọi bước rà soát của con người khỏi pipeline để tối đa hóa throughput, chấp nhận rằng các hành động có tác động lớn và không thể đảo ngược sẽ được thực hiện mà không có bất kỳ sự phê duyệt hay giám sát nào của con người.",
+    "Đưa người rà soát vào vòng xử lý một mẫu request được chọn ngẫu nhiên, nhưng không xác định tiêu chí cần kiểm tra hay nhóm đầu ra nào bắt buộc phải rà soát.",
+    "Đặt người rà soát giữa đầu ra của model và mọi hành động có tác động lớn, không thể đảo ngược, với các tiêu chí rõ ràng về những gì phải kiểm tra trước khi phê duyệt.",
+    "Chỉ đặt người rà soát sau khi hành động không thể đảo ngược đã thực thi, biến việc rà soát thành kiểm toán hậu kiểm thay vì bước kiểm tra hoặc cổng phê duyệt có ý nghĩa trước hành động."
+   ],
+   "explanation": "Đặt người rà soát giữa đầu ra của model và mọi hành động có tác động lớn, không thể đảo ngược, với tiêu chí rõ ràng về những gì phải kiểm tra trước khi phê duyệt. A loại bỏ giám sát, B thiếu cấu trúc, D rà soát sau khi thiệt hại đã xảy ra."
+  },
+  {
+   "id": 45,
+   "question": "Một kỹ sư vô tình commit API key vào repository bằng cách đặt nó trong .claude/settings.json. Nguyên tắc thiết kế cấu hình nào đã bị vi phạm?",
+   "options": [
+    "Cấu hình ở project scope phải luôn ghi đè cấu hình ở user scope.",
+    "Các định nghĩa MCP server phải nằm trong biến môi trường để tránh xung đột scope.",
+    "Credentials phải được lấy tại runtime từ secret store và tuyệt đối không lưu trong các file được quản lý phiên bản.",
+    "Managed configuration phải được áp dụng trước khi đọc cấu hình ở project scope."
+   ],
+   "explanation": "Secrets phải được lấy tại runtime từ secret store và tuyệt đối không ghi vào các file cấu hình được quản lý phiên bản. Các lựa chọn còn lại mô tả quy tắc ưu tiên cấu hình, không phải nguyên tắc đã bị vi phạm."
+  },
+  {
+   "id": 46,
+   "question": "Một tổ chức kỹ thuật đang áp dụng Claude Code cho 200 lập trình viên. Trưởng nhóm đề xuất cho phép pull request do AI tạo bỏ qua quy trình code review tiêu chuẩn với thay đổi dưới 50 dòng, với lý do thay đổi nhỏ có rủi ro thấp và năng lực rà soát hạn chế. Bạn nên nêu hai phản đối nào thuộc năng lực Diligence? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Cần mở rộng năng lực code review để xử lý mọi thay đổi mã nguồn được gửi trong toàn nhóm.",
+    "Nên nâng ngưỡng 50 dòng lên 200 dòng để bao gồm nhiều thay đổi hơn.",
+    "Số dòng là chỉ dấu kém cho rủi ro thực tế mà thay đổi mã nguồn đưa vào hệ thống.",
+    "Loại bỏ rà soát là loại bỏ cơ chế xác minh mà đầu ra do AI tạo cần có xuyên suốt workflow.",
+    "Nên mặc định từ chối pull request do AI tạo như một chính sách chung của toàn tổ chức kỹ thuật."
+   ],
+   "explanation": "Số dòng là chỉ dấu yếu về rủi ro — thay đổi hai dòng ở xác thực hoặc migration có thể nghiêm trọng (C) — và bỏ rà soát là bỏ bước xác minh mà đầu ra do AI tạo đặc biệt cần đến (D). A, B và E là các quan điểm chính sách không thực tế hoặc không liên quan, thay vì phản đối thuộc năng lực Diligence."
+  },
+  {
+   "id": 47,
+   "question": "Một nhóm kỹ thuật đang lập danh mục các rủi ro đặc thù khi sử dụng Claude trong hệ thống Q&A dựa trên tài liệu. Hai mục nào là failure mode vốn có của hệ thống dựa trên LLM, thay vì lỗi phần mềm nói chung? (Chọn hai.)",
+   "options": [
+    "model tạo ra câu trả lời nghe có vẻ hợp lý nhưng không được bất kỳ tài liệu retrieval nào hỗ trợ",
+    "model từ chối một truy vấn hợp lệ vì các đặc điểm bề mặt kích hoạt một mẫu an toàn quá rộng",
+    "TLS certificate hết hạn chặn các API call gửi ra Claude endpoint",
+    "database connection timeout khiến một retrieval call trả về tập kết quả rỗng",
+    "load balancer cấu hình sai định tuyến request đến một phiên bản API đã ngừng được khuyến nghị sử dụng"
+   ],
+   "explanation": "Đầu ra hợp lý nhưng không có căn cứ (A) và việc từ chối quá rộng một truy vấn hợp lệ (B) là hành vi xác suất của model, không có dạng tương đương trong phần mềm tất định. C, D và E là các lỗi hạ tầng thông thường."
+  },
+  {
+   "id": 48,
+   "question": "Bạn đang đánh giá một hệ thống dựa trên Claude về mức độ tuân thủ một quy định cụ thể. Hai bước nào phải hoàn tất TRƯỚC KHI ánh xạ luồng dữ liệu của hệ thống với các điều khoản cụ thể của quy định? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "So sánh các biện pháp kiểm soát hiện có với yêu cầu của quy định để xác định những khoảng trống tuân thủ.",
+    "Lập danh mục tooling hỗ trợ tuân thủ do nhà cung cấp cung cấp và xác nhận các khả năng hỗ trợ tuân thủ nào đã được áp dụng.",
+    "Xác định quy định có áp dụng hay không dựa trên loại dữ liệu, phạm vi tài phán và đối tượng sử dụng.",
+    "Ghi lại các khoảng trống đã xác định cùng biện pháp khắc phục được khuyến nghị và rủi ro còn lại để xin phê duyệt.",
+    "Lên lịch khắc phục với nhóm kỹ thuật dựa trên các khoảng trống đã được sắp xếp theo mức ưu tiên."
+   ],
+   "explanation": "Trước khi ánh xạ luồng dữ liệu với các điều khoản, phải xác định quy định có áp dụng hay không dựa trên loại dữ liệu, phạm vi tài phán và đối tượng sử dụng (C), đồng thời lập danh mục các khả năng hỗ trợ tuân thủ sẵn có do nhà cung cấp cung cấp (B). A, D và E diễn ra sau bước ánh xạ."
+  },
+  {
+   "id": 49,
+   "question": "Bạn đang rà soát một đặc tả tích hợp để tìm khoảng trống bảo mật. Hai phát hiện nào thực sự là khoảng trống bảo mật trong đặc tả? (Chọn hai.) Mỗi đáp án đúng là một giải pháp hoàn chỉnh.",
+   "options": [
+    "Đầu vào và đầu ra của tool được mã hóa khi truyền bằng transport layer security giữa các service.",
+    "Service credentials được đặt trong prompt context, nơi chúng có thể rò rỉ vào logs và traces.",
+    "Tool call được thực thi server-side dưới một service principal theo nguyên tắc least privilege, với phạm vi giới hạn ở hành động được yêu cầu.",
+    "Role-based access control (RBAC) chỉ được thực thi tại lớp render phản hồi sau khi model đã truy cập dữ liệu bị hạn chế.",
+    "OAuth token riêng cho từng người dùng được trao đổi với quyền giới hạn theo scope và được làm mới trong phiên đang hoạt động."
+   ],
+   "explanation": "Credentials trong prompt context (B) rò rỉ vào logs, traces và đầu ra của model. Chỉ thực thi RBAC lúc render (D) có nghĩa là dữ liệu bị hạn chế đã vào model context, nên biện pháp kiểm soát được áp dụng quá muộn. A, C và E mô tả các biện pháp kiểm soát hợp lý."
+  },
+  {
+   "id": 50,
+   "question": "Bạn đang thực hiện đánh giá rủi ro cho một hệ thống dựa trên Claude dự kiến triển khai và phải hoàn tất các bước kiểm kê trước khi đánh giá các mối đe dọa đối với tài sản. Hai bước nào phải hoàn tất TRƯỚC KHI đánh giá mối đe dọa đối với tài sản để ước lượng khả năng xảy ra và tác động? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Đề xuất biện pháp giảm thiểu và việc chấp nhận rủi ro còn lại đối với những rủi ro tồn tại sau phân tích.",
+    "Ghi lại kết quả đánh giá gồm rủi ro, biện pháp giảm thiểu, rủi ro còn lại và người chịu trách nhiệm chấp nhận.",
+    "Liệt kê các threat actor và attack vector liên quan đến hệ thống triển khai.",
+    "Xác định các tài sản mà hệ thống tương tác cùng mức độ nhạy cảm của từng tài sản.",
+    "Đề xuất biện pháp giảm thiểu và việc chấp nhận rủi ro còn lại đối với những rủi ro vẫn tồn tại."
+   ],
+   "explanation": "Đánh giá khả năng xảy ra và tác động của mối đe dọa trước hết cần cả hai phía của danh mục: các tài sản được tương tác cùng mức độ nhạy cảm (D), và các threat actor cùng attack vector liên quan (C). A, B và E là những đầu ra ở các bước sau."
+  },
+  {
+   "id": 51,
+   "question": "Bạn là platform architect đang thiết kế một trợ lý nội bộ dựa trên Claude phục vụ cả chuyên viên phân tích tài chính lẫn kiểm toán viên bên ngoài. Mỗi nhóm chỉ được truy cập các tài liệu mà vai trò của họ cho phép. Role-based access control nên được thực thi ở đâu trong pipeline?",
+   "options": [
+    "tại tầng retrieval, trước khi bất kỳ nội dung bị giới hạn theo vai trò nào đi tới bước xây dựng prompt hoặc tới model",
+    "sau khi phản hồi được tạo, bằng cách post-filter nội dung lẽ ra không được truy xuất",
+    "không ở đâu trong pipeline; dựa vào hành vi từ chối chung của model để từ chối truy cập tài liệu trái phép mà không có bất kỳ cơ chế kiểm soát truy cập được thực thi nào",
+    "bên trong system prompt, dưới dạng chỉ dẫn bằng ngôn ngữ tự nhiên yêu cầu Claude bỏ qua các tài liệu không được cấp quyền"
+   ],
+   "explanation": "Thực thi RBAC tại tầng retrieval để nội dung không được cấp quyền không bao giờ đi vào prompt hoặc context của model. Post-filtering (B) có nghĩa là dữ liệu đã bị đưa cho model; chỉ dẫn trong prompt (D) hoặc dựa vào hành vi từ chối (C) đều không phải cơ chế thực thi quyền truy cập."
+  },
+  {
+   "id": 52,
+   "question": "Một nhóm hỗ trợ khách hàng đề xuất giao các quyết định hoàn tiền cho một workflow do Claude điều khiển, không có con người xét duyệt đối với khoản hoàn tiền dưới 50 USD. Lý do của nhóm là các khoản hoàn tiền nhỏ có rủi ro thấp và việc con người xét duyệt sẽ làm mất lợi ích về hiệu suất. Nguyên tắc nào của năng lực Delegation nên định hướng phản hồi của bạn?",
+   "options": [
+    "Phạm vi ủy quyền cần phản ánh loại rủi ro liên quan, không chỉ quy mô giao dịch.",
+    "Phạm vi ủy quyền nên được xác định chủ yếu bằng cách tối đa hóa lợi ích về hiệu suất trên toàn workflow.",
+    "Việc ủy quyền luôn phải có con người xét duyệt mọi quyết định mà workflow tạo ra.",
+    "Cần tránh hoàn toàn việc ủy quyền ở bất kỳ nơi nào có giao dịch tài chính trong workflow."
+   ],
+   "explanation": "Phạm vi ủy quyền cần bám theo loại rủi ro và khả năng đảo ngược hậu quả, không phải số tiền; khoản hoàn tiền nhỏ vẫn có thể mang rủi ro gian lận, tuân thủ và tạo tiền lệ. B chỉ tối ưu hiệu suất; C và D là những khẳng định tuyệt đối bỏ qua việc phân tầng rủi ro."
+  },
+  {
+   "id": 53,
+   "question": "Một trợ lý tổng hợp nghiên cứu đã được triển khai sáu tháng. Một người dùng báo rằng bản tóm tắt được tạo có chứa một trích dẫn bịa đặt. Nhóm sản phẩm hỏi liệu sự cố này có cần hành động ở cấp kiến trúc hay chỉ là trường hợp đơn lẻ. Bạn nên thực hiện hai hành động nào thuộc năng lực Diligence? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Lấy mẫu các bản tóm tắt gần đây để ước tính tần suất bịa đặt trên toàn bộ tập bản tóm tắt.",
+    "Coi sự cố là một trường hợp đơn lẻ mang tính giai thoại và không điều tra thêm.",
+    "Rà soát xem có cơ chế kiểm soát citation grounding ở bất kỳ đâu trong pipeline tạo nội dung hiện tại hay không.",
+    "Lập tức vô hiệu hóa trợ lý đối với tất cả người dùng hiện tại mà không thực hiện phân tích chẩn đoán trước.",
+    "Thông báo với người dùng rằng trợ lý không bịa đặt đầu ra nhờ thiết kế của hệ thống."
+   ],
+   "explanation": "Xác định tần suất bằng cách lấy mẫu các bản tóm tắt gần đây (A), đồng thời xác định liệu có cơ chế kiểm soát citation grounding ở bất kỳ đâu trong pipeline hay không (C). B mặc định sẵn kết luận, D quá mức trước khi chẩn đoán, E khẳng định điều không đúng."
+  },
+  {
+   "id": 54,
+   "question": "Bạn đang đánh giá rủi ro data exfiltration trong một trợ lý dựa trên Claude có cả tool truy xuất tài liệu nội bộ và tool gọi HTTP ra bên ngoài. Kịch bản nào cho thấy trực tiếp nhất rủi ro data exfiltration?",
+   "options": [
+    "Tool HTTP ra bên ngoài trả về phản hồi 200 khi trợ lý gọi một domain trong allow-list để đáp ứng yêu cầu tra cứu dữ liệu do người dùng khởi tạo.",
+    "Nội dung đối kháng trong các tài liệu được truy xuất chỉ dẫn model gọi tool HTTP ra bên ngoài và gửi nội dung nhạy cảm tới một URL do kẻ tấn công kiểm soát.",
+    "Người dùng nhập một câu hỏi thông thường vào trợ lý và nhận câu trả lời thông thường.",
+    "Tool truy xuất tài liệu nội bộ trả về một tài liệu mà người dùng có quyền xem."
+   ],
+   "explanation": "Indirect prompt injection trong nội dung truy xuất khiến hệ thống gọi HTTP ra một URL do kẻ tấn công kiểm soát là con đường đánh cắp dữ liệu điển hình: đầu vào không đáng tin cậy kết hợp với một tool có khả năng gửi dữ liệu ra ngoài. A, C và D mô tả hành vi được cấp quyền bình thường."
+  },
+  {
+   "id": 55,
+   "question": "Bạn đang xác định tiêu chí escalation cho các trường hợp mơ hồ trong một workflow tự động. Tập tiêu chí nào hỗ trợ tốt nhất việc escalation nhất quán?",
+   "options": [
+    "confidence thấp hơn một ngưỡng xác định, xuất hiện các nhóm quyết định có tác động lớn, cờ mơ hồ do content classifier đưa ra và yêu cầu xét duyệt rõ ràng của người dùng",
+    "escalation tùy quyết định của bất kỳ ai đang có mặt khi kỹ sư trực của nhóm có thời gian rảnh, không có ngưỡng, nhóm trường hợp hay tiêu chí mơ hồ nào được xác định để kích hoạt",
+    "chỉ escalation sau khi một khách hàng bị ảnh hưởng đã liên hệ kênh hỗ trợ để khiếu nại, lúc đó workflow tự động đã hoàn tất mà không có con người xét duyệt",
+    "hoàn toàn không có tiêu chí escalation; model tự quyết định ở mỗi lượt có escalation hay không, không có ngưỡng confidence, nhóm tác động hay cờ mơ hồ dựa trên classifier được xác định rõ"
+   ],
+   "explanation": "Escalation nhất quán cần các điều kiện kích hoạt rõ ràng, có thể kiểm thử: ngưỡng confidence, các nhóm quyết định có tác động lớn được xác định, cờ mơ hồ do classifier đưa ra và yêu cầu xét duyệt của chính người dùng. B, C và D để escalation không được xác định, diễn ra quá muộn hoặc hoàn toàn theo quyết định của model."
+  },
+  {
+   "id": 56,
+   "question": "Một Claude architect nhận thấy rằng sau một lần nâng cấp phiên bản model gần đây, các phản hồi được grounding bắt đầu chứa những khẳng định không được tài liệu nguồn truy xuất hỗ trợ. Biện pháp giảm thiểu nào nhắm trực tiếp nhất vào dạng lỗi này?",
+   "options": [
+    "thay API key dùng chung bằng OAuth token riêng cho từng người dùng để hạn chế truy cập dữ liệu",
+    "chấm điểm từng phiên bản model mới dựa trên một tập adversarial evaluation ổn định",
+    "giới hạn phản hồi vào nội dung được nguồn hỗ trợ, kết hợp yêu cầu trích dẫn bắt buộc và một bước xác minh",
+    "coi dữ liệu truy xuất là không đáng tin cậy và áp dụng input classifier khi ingestion"
+   ],
+   "explanation": "Lỗi là các khẳng định thiếu grounding, nên cần giới hạn phản hồi vào nội dung có nguồn hỗ trợ, bắt buộc có trích dẫn và thêm bước xác minh. B phát hiện drift nhưng không ngăn chặn nó; A và D xử lý kiểm soát truy cập và injection."
+  },
+  {
+   "id": 57,
+   "question": "Bạn đang chuẩn bị một triển khai đủ điều kiện sử dụng theo HIPAA cho một khách hàng y tế. Cấu hình nào hỗ trợ tuân thủ HIPAA khi sử dụng các công cụ do Anthropic cung cấp?",
+   "options": [
+    "tắt toàn bộ audit logging để không có PHI nào được ghi vào bất kỳ kho log nào, với giả định rằng không có log là đáp ứng yêu cầu HIPAA mà không cần BAA đã ký",
+    "một tài khoản Claude cá nhân được các bác sĩ sử dụng theo nhu cầu cho các tác vụ liên quan đến PHI, không có Business Associate Agreement, không có Zero Data Retention và không cấu hình audit logging",
+    "Claude Enterprise với Business Associate Agreement đã ký, bật Zero Data Retention và cấu hình audit logging để theo dõi tuân thủ",
+    "Claude Free không có phụ lục hợp đồng, vì sản phẩm dành cho người tiêu dùng đáp ứng sẵn các yêu cầu HIPAA"
+   ],
+   "explanation": "Việc sử dụng đủ điều kiện theo HIPAA yêu cầu thỏa thuận enterprise với BAA đã ký, Zero Data Retention và audit logging để theo dõi tuân thủ. A nhầm lẫn việc không có log với tuân thủ; B và D dùng các gói dành cho người tiêu dùng mà không có cơ sở hợp đồng."
+  },
+  {
+   "id": 58,
+   "question": "Bạn đang kiểm toán một procurement-assistant agent có trách nhiệm được xác định là soạn bản nháp yêu cầu mua hàng để xét duyệt. Với mỗi tool hiện được cấu hình trên agent, chọn Có nếu tool nên được giữ lại sau đợt kiểm toán theo nguyên tắc least privilege. Nếu không, chọn Không nếu tool nên bị loại bỏ.",
+   "statements": [
+    "một tool tra cứu catalog chỉ đọc trả về thông tin nhà cung cấp và SKU",
+    "một tool inbox-send gửi email yêu cầu mua hàng trực tiếp cho nhà cung cấp",
+    "một tool draft-write tạo bản nháp yêu cầu mua hàng trong hàng đợi xét duyệt",
+    "một tool quản trị production database không liên quan đến mua hàng",
+    "Một tool đọc tài liệu chính sách chỉ đọc trả về các chính sách mua hàng liên quan"
+   ],
+   "choices": [
+    null,
+    null
+   ],
+   "explanation": "Có — tra cứu catalog chỉ đọc cung cấp dữ liệu nhà cung cấp và SKU cần cho bản nháp yêu cầu, không có quyền ghi. Không — gửi email yêu cầu trực tiếp cho nhà cung cấp là hành động ra bên ngoài, bên ngoài có thể nhìn thấy, bỏ qua bước con người xét duyệt mà phạm vi của agent phụ thuộc vào; việc gửi phải diễn ra sau phê duyệt, không thuộc agent soạn nháp. Có — ghi bản nháp vào hàng đợi xét duyệt chính là trách nhiệm được xác định của agent và là quyền ghi duy nhất agent nên có. Không — tool quản trị production database hoàn toàn nằm ngoài phạm vi mua hàng và cấp các đặc quyền mà không tác vụ được xác định nào cần tới, nên đây là tool rõ ràng cần loại bỏ nhất. Có — tra cứu chính sách chỉ đọc giúp bản nháp dựa trên các quy định mua hàng hiện hành mà không mở ra khả năng ghi."
+  },
+  {
+   "id": 59,
+   "question": "Bạn đang xác định các thực hành minh bạch cho một trợ lý phục vụ khách hàng có phản hồi chịu ảnh hưởng đáng kể từ AI. Thực hành minh bạch nào hỗ trợ trực tiếp nhất việc triển khai có trách nhiệm?",
+   "options": [
+    "Chỉ công khai sự tham gia của AI cho nhân viên và người vận hành nội bộ, đồng thời giấu thông tin đó với người dùng cuối có tương tác chịu ảnh hưởng đáng kể từ hệ thống AI.",
+    "Từ chối trả lời mọi câu hỏi của người dùng về cách tạo ra phản hồi hoặc liệu AI có tham gia hay không, coi vai trò của AI là thông tin vận hành mật.",
+    "Trình bày sai vai trò của AI trong việc tạo phản hồi để khiến trợ lý có vẻ đáng tin hoặc giống con người hơn, làm suy yếu sự đồng ý có đầy đủ thông tin của người dùng và tính minh bạch của tổ chức.",
+    "Công khai sự tham gia của AI cho người dùng cuối theo chính sách minh bạch của tổ chức và cung cấp một kênh được ghi thành tài liệu để liên hệ con người khi cần."
+   ],
+   "explanation": "Công khai sự tham gia của AI cho người dùng cuối theo chính sách minh bạch của tổ chức và cung cấp một kênh tiếp cận con người được ghi thành tài liệu. A giấu thông tin với người dùng bị ảnh hưởng, B từ chối các câu hỏi chính đáng, C trình bày sai sự thật."
+  },
+  {
+   "id": 60,
+   "question": "Một nhóm bảo mật đang đánh giá hai biện pháp kiểm soát được đề xuất. Biện pháp A bổ sung allow-list cho tool gọi ra bên ngoài, với hạn chế về đích đến và xét duyệt từng lần gọi. Biện pháp B chấm điểm phản hồi dựa trên một tập adversarial evaluation ổn định sau mỗi lần thay đổi phiên bản model. Hai nhóm rủi ro nào được ghép đúng với các biện pháp này? (Chọn hai.)",
+   "options": [
+    "Biện pháp A --> silent quality drift sau khi nâng cấp phiên bản model",
+    "Biện pháp A --> data exfiltration qua tool call ra bên ngoài",
+    "Biện pháp A --> prompt injection từ nội dung đối kháng trong dữ liệu truy xuất",
+    "Biện pháp B --> silent quality drift sau khi nâng cấp phiên bản model",
+    "Biện pháp B --> data exfiltration qua tool call ra bên ngoài"
+   ],
+   "explanation": "Allow-list cho kết nối ra bên ngoài với hạn chế đích đến và xét duyệt từng lần gọi trực tiếp giới hạn data exfiltration qua tool call (B). Chấm điểm từng phiên bản model dựa trên một tập đối kháng ổn định phát hiện chất lượng âm thầm suy giảm hoặc thay đổi, tức silent quality drift (D). Các cách ghép còn lại không khớp biện pháp với rủi ro."
+  },
+  {
+   "id": 61,
+   "question": "Bạn đang hỗ trợ một triển khai tại EU có nghĩa vụ tuân thủ GDPR. Tổ hợp biện pháp nào hỗ trợ tốt nhất mức độ tuân thủ GDPR của triển khai?",
+   "options": [
+    "tắt toàn bộ cấu hình lưu giữ dữ liệu, các biện pháp redaction và việc xử lý quyền của chủ thể dữ liệu để đơn giản hóa vận hành hằng ngày, chấp nhận rủi ro tuân thủ GDPR phát sinh",
+    "triển khai ở gói enterprise với Data Processing Addendum đã ký, cấu hình lưu giữ dữ liệu được xác định, redaction đối với dữ liệu cá nhân không cần cho tác vụ và quy trình xử lý quyền của chủ thể dữ liệu được ghi thành tài liệu",
+    "dán toàn bộ dữ liệu cá nhân EU vào mọi prompt để “cung cấp đầy đủ context cho Claude” mà không xem xét purpose limitation, data minimization hoặc nghĩa vụ theo Data Processing Addendum của tổ chức",
+    "sử dụng gói tài khoản Claude cá nhân để xử lý dữ liệu cá nhân EU ở quy mô lớn, không có Data Processing Addendum đã ký và không có quy trình xử lý quyền của chủ thể dữ liệu được ghi thành tài liệu"
+   ],
+   "explanation": "Mức độ tuân thủ GDPR được hỗ trợ bởi gói enterprise có DPA đã ký, cấu hình lưu giữ dữ liệu được xác định, che hoặc loại bỏ dữ liệu cá nhân không cần cho tác vụ (data minimisation và purpose limitation), cùng quy trình xử lý quyền của chủ thể dữ liệu được ghi thành tài liệu. A, C và D đều loại bỏ một hoặc nhiều yêu cầu đó."
+  },
+  {
+   "id": 62,
+   "question": "Bạn đang cấu hình quyền sử dụng tool cho một trợ lý dựa trên Claude. Các trách nhiệm được xác định của trợ lý yêu cầu quyền đọc một knowledge base và quyền ghi vào hàng đợi bản nháp, ngoài ra không cần quyền nào khác. Thiết kế giới hạn phạm vi nào áp dụng tốt nhất nguyên tắc least privilege?",
+   "options": [
+    "Cho phép truy cập toàn bộ tool có quyền đọc trên toàn hệ thống và giới hạn quyền ghi ở tool hàng đợi bản nháp, không giới hạn chỉ ở những tool cụ thể cần cho các tác vụ đã xác định.",
+    "Allow-list theo từng vai trò gồm chính xác tool đọc knowledge base và tool ghi hàng đợi bản nháp, được thực thi tại tầng orchestration.",
+    "Cho phép truy cập mọi tool trong catalog và dựa vào model để từ chối các tool mà nó không nên sử dụng.",
+    "Tắt hoàn toàn mọi tool để có phạm vi quyền tối thiểu, chấp nhận rằng trợ lý không còn thực hiện được tác vụ đọc knowledge base hoặc ghi hàng đợi bản nháp mà nó được thiết kế để làm."
+   ],
+   "explanation": "Least privilege có nghĩa là allow-list theo từng vai trò chứa chính xác hai tool cần thiết, được thực thi tại tầng orchestration thay vì để model tự quyết định. A cấp quá nhiều quyền đọc, C dựa vào model tự kiểm soát, D vô hiệu hóa năng lực cần thiết."
+  },
+  {
+   "id": 63,
+   "question": "Một Claude architect đang triển khai các biện pháp kiểm soát an toàn cho trợ lý tư vấn phục vụ khách hàng, vốn không bao giờ được đưa ra khuyến nghị đầu tư thuộc phạm vi quản lý pháp luật. Hai cách triển khai guardrail nào thực thi trực tiếp nhất ràng buộc này? (Chọn hai.)",
+   "options": [
+    "Ghi log toàn bộ truy vấn của người dùng vào SIEM để rà soát tuân thủ sau sự việc.",
+    "Giới hạn độ dài phiên để giảm số lượng truy vấn được xử lý cho mỗi người dùng mỗi ngày.",
+    "Thêm output classifier phát hiện và chặn phản hồi chứa ngôn ngữ khuyến nghị đầu tư thuộc phạm vi quản lý pháp luật.",
+    "Xác định rõ các nhóm nội dung ngoài phạm vi trong system prompt, với cách diễn đạt từ chối cố định cho các yêu cầu tư vấn đầu tư.",
+    "Tăng temperature của phản hồi để tạo tính biến thiên, làm giảm khả năng xuất hiện các khuyến nghị cụ thể."
+   ],
+   "explanation": "Hai tầng bổ trợ: xác định rõ các nhóm nội dung ngoài phạm vi với cách diễn đạt từ chối cố định trong system prompt (D), và output classifier chặn ngôn ngữ khuyến nghị đầu tư thuộc phạm vi quản lý pháp luật trước khi tới người dùng (C). A diễn ra sau sự việc; B và E không ràng buộc nội dung."
+  },
+  {
+   "id": 64,
+   "question": "Khi truyền đạt một quyết định kiến trúc cho người rà soát bảo mật và tuân thủ, tập nội dung nào phù hợp nhất với những mối quan tâm chính của đối tượng này?",
+   "options": [
+    "lịch trình triển khai, interface giữa các thành phần và trình tự deployment cho nhóm kỹ thuật",
+    "lịch bàn giao tính năng, các phụ thuộc trong roadmap và ranh giới phạm vi cho product manager",
+    "lý do ra quyết định, kết quả kinh doanh và tóm tắt rủi ro ở cấp tổng quan cho lãnh đạo rà soát",
+    "threat model, ánh xạ các biện pháp kiểm soát, tiêu chí chấp nhận rủi ro còn lại và khả năng truy vết phục vụ kiểm toán"
+   ],
+   "explanation": "Người rà soát bảo mật và tuân thủ cần threat model, ánh xạ biện pháp kiểm soát với yêu cầu, tiêu chí chấp nhận rủi ro còn lại và khả năng truy vết phục vụ kiểm toán. Các tập nội dung khác hướng tới nhóm kỹ thuật, sản phẩm và lãnh đạo."
+  },
+  {
+   "id": 65,
+   "question": "Trong một đợt rà soát kiến trúc, nhóm bảo mật nhận diện rủi ro rằng nội dung đối kháng được chèn vào tài liệu truy xuất có thể thao túng hành vi của model. Biện pháp giảm thiểu nào xử lý trực tiếp nhất mối đe dọa này?",
+   "options": [
+    "Chấm điểm đầu ra dựa trên một tập adversarial evaluation ổn định sau mỗi lần thay đổi phiên bản model.",
+    "Giới hạn tool call ra bên ngoài vào allow-list các đích đến đã được phê duyệt.",
+    "Coi toàn bộ nội dung truy xuất là đầu vào không đáng tin cậy và áp dụng input classifier cùng kiểm tra tính hợp lệ của đầu ra.",
+    "Yêu cầu trích dẫn cho mỗi khẳng định và giới hạn phản hồi vào nội dung có nguồn hỗ trợ."
+   ],
+   "explanation": "Indirect prompt injection được giảm thiểu bằng cách coi toàn bộ nội dung truy xuất là đầu vào không đáng tin cậy, sàng lọc bằng input classifier và kiểm tra tính hợp lệ của đầu ra thu được. B giới hạn con đường exfiltration, D xử lý grounding, A xử lý drift."
+  },
+  {
+   "id": 66,
+   "question": "Bạn đang tổng hợp các chiến thuật guardrail cho một trợ lý phục vụ khách hàng. Hai chiến thuật nào nên có trong danh sách guardrail? (Chọn hai.) Mỗi đáp án đúng là một giải pháp hoàn chỉnh.",
+   "options": [
+    "Nhúng các cụm từ override được phê duyệt để người dùng đáng tin cậy có thể nới lỏng guardrail theo yêu cầu.",
+    "Kết hợp guardrail ở cấp prompt với kiểm tra nội dung tại runtime thay vì chỉ dựa vào một trong hai.",
+    "Kiểm tra đầu ra của model theo một structured schema trước khi thực hiện các hành động downstream.",
+    "Giảm sampling temperature trên toàn hệ thống để giảm khả năng tạo completion vi phạm chính sách.",
+    "Dựa vào một system prompt duy nhất đã được gia cố, liệt kê mọi hành vi không được phép."
+   ],
+   "explanation": "Defence in depth: kết hợp guardrail ở cấp prompt với kiểm tra nội dung tại runtime thay vì chỉ dựa vào một trong hai (B), và kiểm tra đầu ra của model theo một structured schema trước khi bất kỳ hành động downstream nào được thực thi (C). A tạo sẵn đường bypass, D là tham số sampling, E chỉ có một tầng."
+  },
+  {
+   "id": 67,
+   "question": "Nhóm tuân thủ tại một công ty đã phê duyệt một Claude Skill tạo các bản tóm tắt đầu tư dành cho khách hàng. Skill bao gồm các tuyên bố miễn trừ trách nhiệm bắt buộc của công ty và danh sách ngôn ngữ bị cấm. Một product manager hỏi liệu có cần guardrail bổ sung ở tầng ứng dụng hay chỉ Skill là đủ. Hai trách nhiệm guardrail nào nên được giữ ở tầng ứng dụng thay vì trong Skill? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Áp dụng mẫu tuyên bố miễn trừ trách nhiệm mà nhóm tuân thủ đã chuẩn hóa trên toàn công ty.",
+    "Định dạng các phần đầu ra theo hướng dẫn văn phong nội bộ được chuẩn hóa của công ty.",
+    "Áp dụng danh sách ngôn ngữ bị cấm do nhóm tuân thủ duy trì và cập nhật.",
+    "Ghi mọi bản tóm tắt được tạo vào compliance audit trail của công ty để lưu giữ.",
+    "Xác minh rằng người dùng gửi yêu cầu thực sự được cấp quyền tạo các bản tóm tắt đầu tư."
+   ],
+   "explanation": "Việc cấp quyền cho người dùng gửi yêu cầu (E) và ghi mọi bản tóm tắt được tạo vào audit trail (D) phải được ứng dụng thực thi, vì Skill là nội dung chỉ dẫn mà model làm theo, tự nó không thể bảo đảm kiểm tra danh tính hoặc ghi log bền vững. A, B và C chính là các nội dung chuẩn hóa mà Skill chứa."
+  },
+  {
+   "id": 68,
+   "question": "Một đợt kiểm toán bảo mật phát hiện hai vấn đề: (1) mọi người dùng cuối dùng chung một API key, và (2) các tool call được thực thi mà không ghi log người dùng khởi tạo. Hai biện pháp giảm thiểu nào trực tiếp xử lý những phát hiện cụ thể này? (Chọn hai.)",
+   "options": [
+    "Thay API key dùng chung bằng OAuth token riêng cho từng người dùng với quyền được giới hạn theo scope.",
+    "Kiểm tra structured output theo một schema trước khi thực thi các hành động downstream.",
+    "Đưa credentials ra khỏi prompt context và lấy chúng từ secret store phía server.",
+    "Thực thi RBAC tại tầng retrieval trước khi nội dung đi vào context của model.",
+    "Thêm actor attribution vào log tool call để mỗi lần gọi đều ghi nhận danh tính người dùng khởi tạo."
+   ],
+   "explanation": "OAuth token riêng cho từng người dùng với quyền được giới hạn theo scope thay thế key dùng chung (A), và actor attribution trong log tool call ghi nhận người dùng khởi tạo (E). B, C và D là các biện pháp kiểm soát hợp lý nhưng xử lý những phát hiện khác."
+  },
+  {
+   "id": 69,
+   "question": "Một Claude architect đang thiết kế một pipeline tuân thủ HIPAA để xử lý hồ sơ bệnh nhân. Hai quyết định thiết kế nào trực tiếp hỗ trợ các yêu cầu tuân thủ HIPAA? (Chọn hai.)",
+   "options": [
+    "đặt max tokens ở mức thấp để giảm tối đa lượng văn bản được tạo cho mỗi yêu cầu",
+    "thực thi role-based access control để chỉ nhân sự được cấp quyền mới có thể truy xuất PHI",
+    "chọn Claude model có năng lực cao nhất để tối đa hóa độ chính xác chẩn đoán",
+    "bảo đảm dữ liệu bệnh nhân không bao giờ được đưa vào các vòng lặp training feedback gửi tới nhà cung cấp model khi chưa có BAA",
+    "sử dụng streaming response để giảm độ trễ cảm nhận đối với người dùng lâm sàng"
+   ],
+   "explanation": "RBAC để chỉ nhân sự được cấp quyền mới có thể truy xuất PHI (B), và bảo đảm dữ liệu bệnh nhân không bao giờ đi vào vòng lặp training hoặc feedback phía nhà cung cấp khi chưa có BAA (D). A, C và E là các lựa chọn về hiệu năng hoặc chất lượng, không có tác động trực tiếp tới HIPAA."
+  },
+  {
+   "id": 70,
+   "question": "Bạn đang thiết kế một workflow xác thực theo mô hình human-in-the-loop cho một triển khai mới dựa trên Claude và phải hoàn tất các bước thiết kế trước khi chạy thí điểm workflow. Hai bước nào phải được hoàn tất TRƯỚC KHI thí điểm workflow với một tập con traffic mang tính đại diện? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Hướng dẫn đội ngũ reviewer bằng chương trình đào tạo theo vai trò về tiêu chí kiểm tra và quy trình escalation.",
+    "Điều chỉnh thiết kế workflow dựa trên các phát hiện quan sát được trong thí điểm trước khi triển khai rộng hơn lên production.",
+    "Lập tài liệu workflow với tiêu chí kiểm tra, các tuyến escalation và service-level agreement (SLA) cho từng bước.",
+    "Xác định chiến lược sampling và tiêu chí escalation tại mỗi điểm giám sát trong pipeline.",
+    "Xác định các điểm ra quyết định trong pipeline cần con người giám sát dựa trên mức tác động và khả năng đảo ngược."
+   ],
+   "explanation": "Thiết kế đi trước thí điểm: xác định các điểm ra quyết định cần giám sát dựa trên mức tác động và khả năng đảo ngược (E), sau đó xác định chiến lược sampling và tiêu chí escalation tại từng điểm đó (D). A, B và C diễn ra sau công việc thiết kế này."
+  },
+  {
+   "id": 71,
+   "question": "Bạn đang ứng phó với một kiểu đầu vào đối kháng trong đó người dùng đưa vào văn bản tự nhận có quyền admin và chỉ dẫn model bỏ qua các hạn chế an toàn. Tổ hợp biện pháp kiểm soát nào giảm thiểu hiệu quả nhất kiểu tấn công này?",
+   "options": [
+    "cấp cho người dùng bất kỳ cấp đặc quyền nào họ tự khẳng định trong nội dung tin nhắn, với giả định rằng hành vi hợp tác đòi hỏi phải tôn trọng thẩm quyền tự xưng mà không xác minh độc lập",
+    "chỉ dẫn ở cấp prompt coi nội dung người dùng là dữ liệu không đáng tin cậy, runtime classifier phát hiện các nỗ lực override, quyền tool được giới hạn scope và không thể được nâng lên bởi nội dung người dùng, cùng audit logging ghi nhận các nỗ lực",
+    "tin rằng model sẽ tự nhận biết và từ chối mọi nỗ lực bypass mà không cần chỉ dẫn ở cấp prompt, runtime classifier, quyền được giới hạn scope hoặc audit logging",
+    "loại bỏ toàn bộ hạn chế an toàn và guardrail để loại bỏ bề mặt tấn công mà các nỗ lực bypass nhắm tới, chấp nhận rằng điều này khiến trợ lý không bị giới hạn đối với mọi đầu vào"
+   ],
+   "explanation": "Phòng vệ nhiều tầng: coi nội dung người dùng là dữ liệu không đáng tin cậy ở cấp prompt, phát hiện các nỗ lực override bằng runtime classifier, giới hạn scope quyền tool để nội dung không thể nâng quyền và ghi log các nỗ lực. A công nhận quyền tự xưng, C chỉ dựa vào model, D loại bỏ hoàn toàn các biện pháp kiểm soát."
+  },
+  {
+   "id": 72,
+   "question": "Bạn đang liệt kê các đặc điểm của thiết kế guardrail vững chắc cho một triển khai enterprise. Hai đặc điểm nào nên có trong danh sách? (Chọn hai.) Mỗi đáp án đúng là một giải pháp hoàn chỉnh.",
+   "options": [
+    "định kỳ làm mới cách diễn đạt system prompt để giữ ngôn ngữ từ chối phù hợp hiện tại và rõ ràng",
+    "lưu giữ tập trung log vi phạm guardrail, với nhóm bảo mật rà soát hằng quý",
+    "các kênh phản hồi người dùng chuyển những lỗi guardrail được báo cáo vào product backlog để phân loại xử lý",
+    "allow-list tool theo từng vai trò được thực thi tại tầng orchestration trước khi bất kỳ tool call nào chạy",
+    "bao phủ đầu vào đối kháng trong tập evaluation, kèm theo theo dõi regression về hiệu quả guardrail"
+   ],
+   "explanation": "Thực thi và đo lường: allow-list tool theo từng vai trò được thực thi tại tầng orchestration trước khi chạy bất kỳ tool call nào (D), và tập evaluation bao phủ đầu vào đối kháng kèm theo theo dõi regression về hiệu quả guardrail (E). A, B và C là các thực hành bảo trì hữu ích nhưng tự chúng không phải đặc điểm bảo đảm độ vững chắc."
+  },
+  {
+   "id": 73,
+   "question": "Một trợ lý đánh giá điều kiện sơ bộ để vay có 94 phần trăm khuyến nghị phê duyệt trùng với quyết định của chuyên viên thẩm định con người. Nhóm phụ trách fairness đã rà soát mức ngang bằng về tỷ lệ phê duyệt giữa các nhóm được bảo vệ và báo cáo không có khác biệt đáng kể. Một thành viên hội đồng quản trị hỏi liệu bằng chứng này có đủ để tuyên bố trợ lý là công bằng hay không. Bạn nên báo cáo hai phát hiện nào thuộc năng lực Discernment? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Cần một mẫu lớn hơn trước khi có thể đưa ra bất kỳ khẳng định có ý nghĩa nào về fairness của model.",
+    "Quy trình rà soát của nhóm fairness có khả năng đã bỏ sót ít nhất một số nhóm được bảo vệ trong nghiên cứu.",
+    "Việc trùng khớp với chuyên viên thẩm định con người không chứng minh rằng hệ thống không có bias do chính chuyên viên thẩm định đưa vào.",
+    "Tỷ lệ trùng khớp 94 phần trăm là bằng chứng đủ về fairness của các quyết định do trợ lý đưa ra.",
+    "Chỉ riêng mức ngang bằng về tỷ lệ phê duyệt không đánh giá được mức ngang bằng về tỷ lệ lỗi giữa các nhóm được bảo vệ."
+   ],
+   "explanation": "Trùng khớp với chuyên viên thẩm định con người chỉ tái tạo bất kỳ bias nào mà họ có (C), còn mức ngang bằng về tỷ lệ phê duyệt không nói lên điều gì về mức ngang bằng của tỷ lệ lỗi — tỷ lệ phê duyệt sai và từ chối sai có thể rất khác nhau giữa các nhóm dù có cùng tỷ lệ phê duyệt (E). D lặp lại khẳng định sai; A và B là các lưu ý phương pháp luận chung."
+  },
+  {
+   "id": 74,
+   "question": "Một architect tại Trenova Systems, Inc. đang rà soát hai bộ tài liệu truyền đạt dự thảo cho cùng một quyết định kiến trúc. Bộ 1 gồm threat model, sổ đăng ký rủi ro còn lại và bảng ánh xạ biện pháp kiểm soát. Bộ 2 gồm danh sách năng lực đã bàn giao và các phụ thuộc trong roadmap ở cấp tính năng. Hai đối tượng nào được ghép đúng với các bộ tài liệu này? (Chọn hai.)",
+   "options": [
+    "Bộ 2 --> executive sponsor",
+    "Bộ 1 --> nhóm kỹ thuật triển khai",
+    "Bộ 2 --> product manager phụ trách roadmap",
+    "Bộ 2 --> người rà soát bảo mật và tuân thủ",
+    "Bộ 1 --> người rà soát bảo mật và tuân thủ"
+   ],
+   "explanation": "Threat model, sổ đăng ký rủi ro còn lại và ánh xạ biện pháp kiểm soát là bộ tài liệu dành cho người rà soát bảo mật và tuân thủ (E); các năng lực đã bàn giao và phụ thuộc trong roadmap phù hợp với product manager phụ trách roadmap (C). Executive sponsor cần kết quả và các đánh đổi, còn nhóm kỹ thuật cần các contract và luồng xử lý."
+  },
+  {
+   "id": 75,
+   "question": "Bạn đang rà soát bản dự thảo ADR của một đồng nghiệp. ADR nêu quyết định và chi tiết kỹ thuật nhưng không nêu các phương án thay thế đã cân nhắc hoặc các đánh đổi đã chấp nhận. Phản hồi nào phù hợp nhất?",
+   "options": [
+    "Xóa hoàn toàn ADR và dựa vào trí nhớ tập thể của nhóm kỹ thuật để dựng lại context ra quyết định, các phương án thay thế và các đánh đổi trong những đợt kiểm toán hoặc onboarding sau này.",
+    "Phê duyệt ADR như hiện tại với lý do bản thân quyết định đã được ghi lại, chấp nhận rằng người rà soát và người bảo trì sau này sẽ thiếu context để đánh giá hoặc xem xét lại quyết định.",
+    "Thay ADR bằng một quyết định khác không liên quan đến quyết định được dự thảo.",
+    "Yêu cầu tác giả bổ sung các phương án thay thế đã cân nhắc và các đánh đổi đã chấp nhận trước khi công bố ADR."
+   ],
+   "explanation": "Giá trị của ADR nằm ở các phương án thay thế đã cân nhắc và các đánh đổi đã chấp nhận; chính điều này cho phép những người bảo trì sau này xem xét lại quyết định. Hãy yêu cầu tác giả bổ sung chúng trước khi công bố. A, B và C loại bỏ hoặc bỏ qua context đó."
+  },
+  {
+   "id": 76,
+   "question": "Một kiến trúc sư cấp cao đang chuẩn bị tài liệu giới thiệu về một kiến trúc retrieval mới. Người bảo trợ cấp điều hành yêu cầu bản tóm tắt quyết định kiến trúc. Cách trình bày nào phù hợp nhất với đối tượng này?",
+   "options": [
+    "các năng lực được cung cấp, tác động đến phạm vi và các phụ thuộc ở cấp tính năng trong roadmap",
+    "các phương án kỹ thuật đã được đánh giá, tác động đến triển khai và hệ quả ở cấp thành phần",
+    "threat model, ánh xạ các biện pháp kiểm soát, chấp nhận rủi ro còn lại và khả năng truy vết phục vụ audit",
+    "kết quả kinh doanh đạt được, các trade-off đã chấp nhận và các rủi ro tổng thể đã được ghi nhận"
+   ],
+   "explanation": "Người bảo trợ cấp điều hành cần biết kết quả kinh doanh, các trade-off đã chấp nhận và các rủi ro tổng thể đã được ghi nhận. A hướng đến đội sản phẩm, B hướng đến đội kỹ thuật, C hướng đến bộ phận bảo mật và tuân thủ."
+  },
+  {
+   "id": 77,
+   "question": "Bạn đang thực hiện giai đoạn discovery cho một năng lực mới dựa trên Claude và phải hoàn thành các bước thu thập yêu cầu trước khi xác nhận với các bên liên quan. Hai bước nào phải hoàn thành TRƯỚC KHI xác nhận các yêu cầu đã thu thập với các bên liên quan? (Chọn hai.) Mỗi đáp án đúng thể hiện một phần của giải pháp.",
+   "options": [
+    "Ghi nhận mục tiêu kinh doanh, tiêu chí thành công và nhóm người dùng nằm trong phạm vi công việc.",
+    "Lập các Architecture Decision Record để ghi lại cơ sở của những lựa chọn thiết kế quan trọng.",
+    "Xác định các ràng buộc phi chức năng về latency, chi phí, audit, độ nhạy cảm của dữ liệu và các yêu cầu pháp quy.",
+    "Lập lịch các mốc rollout và các phụ thuộc cùng các đối tác kỹ thuật và sản phẩm.",
+    "Lập tài liệu tổng hợp các yêu cầu, bảo đảm mỗi mục có thể truy vết đến bên liên quan cung cấp yêu cầu đó."
+   ],
+   "explanation": "Thu thập yêu cầu diễn ra trước bước xác nhận: ghi nhận mục tiêu kinh doanh, tiêu chí thành công và nhóm người dùng trong phạm vi (A), đồng thời xác định các ràng buộc phi chức năng về latency, chi phí, audit, độ nhạy cảm của dữ liệu và quy định (C). E là bước lập tài liệu; B và D diễn ra muộn hơn trong vòng đời."
+  },
+  {
+   "id": 78,
+   "question": "Bạn đang thiết kế một buổi thu thập phản hồi cho một dự án triển khai đang diễn ra. Cấu trúc nào hỗ trợ tốt nhất việc thu thập phản hồi hữu ích từ các bên liên quan?",
+   "options": [
+    "Tổ chức một cuộc họp mở, không gửi trước chương trình hay tài liệu, và dựa vào trí nhớ của người tham dự để ghi nhớ các quyết định cùng người phụ trách các việc tiếp theo.",
+    "Xác định chương trình tập trung, chia sẻ tài liệu trước, ghi lại các quyết định và việc cần làm tiếp bằng văn bản, đồng thời xác nhận người phụ trách và thời hạn.",
+    "Kết thúc buổi họp mà không ghi lại các quyết định, việc cần làm tiếp, người phụ trách hoặc thời hạn, dựa vào trí nhớ của người tham dự để tiếp tục thực hiện kết quả của buổi họp.",
+    "Phát tài liệu vào lúc bắt đầu buổi họp thay vì gửi trước, để các bên liên quan xem tài liệu ngay tại chỗ mà không chuẩn bị trước khi thảo luận."
+   ],
+   "explanation": "Cần có chương trình tập trung với tài liệu được gửi trước, ghi lại các quyết định và việc cần làm tiếp bằng văn bản, đồng thời xác nhận người phụ trách và thời hạn. A, C và D đều bỏ qua khâu chuẩn bị hoặc bản ghi bằng văn bản."
+  },
+  {
+   "id": 79,
+   "question": "Bạn đang xác định SLA cho một trợ lý dựa trên Claude. Định nghĩa SLA nào có ý nghĩa thiết thực nhất đối với vận hành?",
+   "options": [
+    "một mục tiêu nêu metric và ngưỡng nhưng bỏ qua khoảng thời gian đánh giá và hệ quả khi vi phạm, khiến kỳ đánh giá tuân thủ và điều kiện kích hoạt khắc phục không được xác định",
+    "một mục tiêu đo lường được với metric, ngưỡng, khoảng thời gian đánh giá và hệ quả khi vi phạm được xác định rõ (ví dụ: \"p95 latency trên mỗi request dưới 800 ms trong khoảng thời gian 28 ngày\")",
+    "một cam kết định tính như \"hệ thống sẽ nhanh và đáng tin cậy\", không nêu metric, ngưỡng hoặc khoảng thời gian đánh giá",
+    "một mục tiêu gắn với thước đo cảm nhận của bên liên quan như \"nhóm cảm thấy hài lòng\", không thể đo lường khách quan hoặc dùng để kích hoạt quy trình ứng phó vi phạm đã được ghi thành tài liệu"
+   ],
+   "explanation": "Một SLA có ý nghĩa vận hành phải nêu metric, ngưỡng, khoảng thời gian đánh giá và hệ quả khi vi phạm. A bỏ qua khoảng thời gian và hệ quả; C và D không đo lường được."
+  },
+  {
+   "id": 80,
+   "question": "Bạn đang soạn hướng dẫn kiến trúc cho một dự án triển khai mới và phải hoàn thành các bước lập kế hoạch trước khi viết nháp từng phần. Hai bước nào phải hoàn thành TRƯỚC KHI viết nháp từng phần của hướng dẫn? (Chọn hai.) Mỗi đáp án đúng thể hiện một phần của giải pháp.",
+   "options": [
+    "Xác định đối tượng đọc và những câu hỏi mà hướng dẫn phải trả lời cho đối tượng đó.",
+    "Dịch hướng dẫn sang các ngôn ngữ khu vực được hỗ trợ cho nhóm đối tượng ứng viên.",
+    "Lập dàn ý các phần của hướng dẫn, bao gồm tổng quan, các thành phần, contract, flow, runbook và các hạn chế.",
+    "Xác nhận hướng dẫn với đội triển khai và đưa vào mọi chỉnh sửa được phát hiện.",
+    "Đưa tài liệu vào version control với chu kỳ rà soát và danh sách người phê duyệt được xác định rõ."
+   ],
+   "explanation": "Trước khi viết nháp: xác định đối tượng đọc và những câu hỏi mà hướng dẫn phải trả lời cho họ (A), đồng thời lập dàn ý các phần tổng quan, thành phần, contract, flow, runbook và hạn chế (C). B, D và E diễn ra sau khi đã có bản nháp."
+  },
+  {
+   "id": 81,
+   "question": "Bạn đang chọn bộ tài liệu cần đi kèm một hệ thống triển khai dựa trên Claude khi bàn giao. Bộ nào đầy đủ nhất?",
+   "options": [
+    "một buổi hướng dẫn bàn giao bằng lời vào ngày chuyển giao, không ghi lại tổng quan kiến trúc, ADR, runbook, playbook hoặc các hạn chế đã biết bằng văn bản để tham khảo về sau",
+    "các comment trong code rải rác ở từng file mã nguồn, không có tổng quan kiến trúc tổng hợp, ADR, runbook hoặc on-call playbook để định hướng cho người vận hành hay thành viên mới",
+    "tổng quan kiến trúc, ADR, sơ đồ cấp thành phần, runbook cho các thao tác thường gặp, on-call playbook và danh sách các hạn chế đã biết",
+    "một sơ đồ kiến trúc duy nhất dài một trang, không có ADR, runbook, on-call playbook hoặc danh sách các hạn chế đã biết để hỗ trợ người vận hành hay người bảo trì sau này"
+   ],
+   "explanation": "Bộ tài liệu bàn giao đầy đủ bao gồm tổng quan kiến trúc, ADR, sơ đồ cấp thành phần, runbook cho các thao tác thường gặp, on-call playbook và các hạn chế đã biết. A, B và D đều khiến người vận hành thiếu những tài liệu cần thiết."
+  },
+  {
+   "id": 82,
+   "question": "Một Claude Architect đang xem xét báo cáo hiệu suất sau triển khai của hệ thống tóm tắt tài liệu pháp lý có AI hỗ trợ. Báo cáo có các quan sát sau: (1) Thời gian tóm tắt trung bình giảm từ 47 phút xuống 6 phút cho mỗi tài liệu. (2) Các luật sư cấp dưới cho biết họ dành ít thời gian hơn cho việc tóm tắt nhưng tổng sản lượng công việc có thể tính phí không có thay đổi đo lường được. (3) Chi phí hạ tầng tăng 22% do lượng API call cao hơn từ việc triển khai logic retry dư thừa. (4) Hệ thống đôi khi tạo ra bản tóm tắt cần luật sư sửa, làm tăng trung bình 8 phút rà soát cho mỗi tài liệu. Phân tích nào quy mỗi quan sát về đúng trụ cột giá trị kinh doanh?",
+   "options": [
+    "Quan sát 1 cho thấy kết quả chuyển đổi; Quan sát 2 cho thấy cải thiện efficiency; Quan sát 3 cho thấy suy giảm SLA hiệu suất; Quan sát 4 cho thấy vấn đề về chi phí giải pháp.",
+    "Quan sát 1 cho thấy cải thiện efficiency; Quan sát 2 cho thấy lợi ích về productivity chưa được hiện thực hóa; Quan sát 3 cho thấy vấn đề về chi phí giải pháp; Quan sát 4 cho thấy tổn thất efficiency bù trừ một phần mức cải thiện từ Quan sát 1.",
+    "Quan sát 1 và 4 kết hợp cho thấy cải thiện ròng về SLA hiệu suất; Quan sát 2 cho thấy khoảng trống về chuyển đổi; Quan sát 3 cho thấy tổn thất productivity do thiết kế kỹ thuật quá mức.",
+    "Quan sát 1 và 2 đều cho thấy cải thiện efficiency; Quan sát 3 cho thấy vấn đề về chi phí giải pháp; Quan sát 4 cho thấy vấn đề về SLA hiệu suất."
+   ],
+   "explanation": "Xử lý mỗi tài liệu nhanh hơn là cải thiện efficiency; sản lượng công việc có thể tính phí không đổi nghĩa là lợi ích về productivity chưa được hiện thực hóa; chi phí hạ tầng tăng 22% do retry dư thừa là vấn đề về chi phí giải pháp; và 8 phút luật sư phải sửa là tổn thất efficiency bù trừ một phần quan sát 1. Các lựa chọn khác quy sai ít nhất một quan sát."
+  },
+  {
+   "id": 83,
+   "question": "Bạn đang phản hồi yêu cầu của một bên liên quan làm tăng đáng kể phạm vi của một dự án triển khai đang diễn ra. Cách phản hồi nào giúp thống nhất kỳ vọng tốt nhất mà vẫn tôn trọng nhu cầu cốt lõi của bên liên quan?",
+   "options": [
+    "Ghi nhận yêu cầu, minh bạch về tác động đến phạm vi và tiến độ, đồng thời đề xuất các phương án (hoãn lại, cắt giảm hạng mục khác hoặc kéo dài tiến độ) để bên liên quan lựa chọn.",
+    "Từ chối ngay yêu cầu mà không ghi nhận nhu cầu cốt lõi của bên liên quan hoặc đưa ra các phương án khác như hoãn, giảm phạm vi hay kéo dài tiến độ để họ cân nhắc.",
+    "Giấu yêu cầu bổ sung phạm vi khỏi nhóm thực hiện rộng hơn để tránh một cuộc trao đổi khó khăn, để thay đổi tiếp tục mà nhóm không biết tác động của nó đến tiến độ.",
+    "Chấp nhận phạm vi bổ sung vào đợt phát hành hiện tại mà không nêu tác động đến tiến độ hoặc việc phải cắt giảm phạm vi khác, để kế hoạch thực hiện hấp thụ các thay đổi chưa được ghi nhận cho đến khi chúng biểu hiện thành chậm trễ."
+   ],
+   "explanation": "Ghi nhận yêu cầu và nhu cầu cốt lõi, minh bạch về tác động đến phạm vi và tiến độ, đồng thời cho bên liên quan lựa chọn thực chất giữa hoãn, giảm phạm vi hoặc kéo dài tiến độ. B từ chối mà không đưa phương án khác, C che giấu, D âm thầm tiếp nhận phạm vi bổ sung."
+  },
+  {
+   "id": 84,
+   "question": "Bạn đang xây dựng quy trình phản hồi và thống nhất kỳ vọng cho một dự án triển khai có nhiều bên liên quan. Hai thực hành nào nên có trong quy trình? (Chọn hai.) Mỗi đáp án đúng thể hiện một giải pháp hoàn chỉnh.",
+   "options": [
+    "Ghi hình từng buổi và gửi bản ghi cho những bên liên quan không thể tham dự trực tiếp.",
+    "Thiết lập chu kỳ định kỳ để xem lại kỳ vọng và giả định khi điều kiện thay đổi theo thời gian.",
+    "Chuyển mọi bất đồng giữa các bên liên quan lên người bảo trợ cấp điều hành để có quyết định ràng buộc.",
+    "Luân phiên vai trò điều phối giữa các nhóm bên liên quan tham gia để chia sẻ trách nhiệm đối với quy trình.",
+    "Giải quyết rõ ràng các quan điểm khác biệt giữa các bên liên quan thay vì tạm thời che lấp chúng."
+   ],
+   "explanation": "Thiết lập chu kỳ định kỳ để xem lại kỳ vọng và giả định khi điều kiện thay đổi (B), đồng thời giải quyết rõ ràng các quan điểm khác biệt giữa các bên liên quan thay vì lướt qua (E). A, C và D là các thông lệ tổ chức hoặc escalation, không phải thực hành thống nhất kỳ vọng."
+  },
+  {
+   "id": 85,
+   "question": "Bạn đang chuẩn bị một runbook vận hành cho dịch vụ dựa trên Claude. Nội dung nào thiết yếu cần đưa vào runbook?",
+   "options": [
+    "các cảnh báo thường gặp và bước triage tương ứng, tuyến escalation, quy trình rollback và tham chiếu đến dashboard cùng log liên quan",
+    "chỉ các tham chiếu đến dashboard và log, không có định nghĩa cảnh báo, bước triage, tuyến escalation hay quy trình rollback để kỹ sư on-call thực hiện",
+    "chỉ định nghĩa cảnh báo và các bước triage, không có tuyến escalation, quy trình rollback hay tham chiếu đến dashboard và log phục vụ on-call",
+    "chỉ tuyến escalation và quy trình rollback, không có định nghĩa cảnh báo, bước triage hay tham chiếu dashboard để hướng dẫn ứng phó sự cố ban đầu"
+   ],
+   "explanation": "Runbook phải giúp kỹ sư on-call hành động được: các cảnh báo thường gặp và bước triage tương ứng, tuyến escalation, quy trình rollback, cùng liên kết đến dashboard và log liên quan. B, C và D đều thiếu một phần trong số đó."
+  },
+  {
+   "id": 86,
+   "question": "Bạn đang chọn mức độ chi tiết cho một hướng dẫn triển khai. Đối tượng đọc là đội thực hiện sẽ xây dựng hệ thống. Tổ hợp nội dung hướng dẫn nào phục vụ họ tốt nhất?",
+   "options": [
+    "chỉ trách nhiệm của các thành phần và interface contract, không có sequence diagram cho các flow chính, tham số cấu hình kèm giá trị mặc định hoặc runbook hướng dẫn tác vụ vận hành",
+    "tổng quan kiến trúc và sequence diagram cho các flow chính, không có interface contract, bảng tham số cấu hình hoặc runbook vận hành để đội thực hiện làm theo",
+    "tổng quan kiến trúc và danh sách các hạn chế đã biết, không có sơ đồ cấp thành phần, interface contract, tham số cấu hình hoặc runbook vận hành để hỗ trợ triển khai",
+    "trách nhiệm của các thành phần, contract giữa các thành phần, sequence diagram cho các flow chính, tham số cấu hình kèm giá trị mặc định và runbook vận hành"
+   ],
+   "explanation": "Đội thực hiện xây dựng hệ thống cần trách nhiệm của các thành phần, contract giữa các thành phần, sequence diagram cho các flow chính, tham số cấu hình kèm giá trị mặc định và runbook vận hành. A, B và C đều thiếu những phần thiết yếu."
+  },
+  {
+   "id": 87,
+   "question": "Bạn đang điều hành một buổi discovery với người bảo trợ phía kinh doanh, người yêu cầu \"một hệ thống AI để giải quyết các vụ việc khách hàng cần escalation của chúng tôi\". Cách tiếp cận nào tạo ra các yêu cầu có thể triển khai tốt nhất?",
+   "options": [
+    "Hoãn buổi discovery vô thời hạn với lý do người bảo trợ phải đặc tả đầy đủ hệ thống trước khi kiến trúc sư có thể đặt bất kỳ câu hỏi làm rõ hoặc xác định phạm vi nào.",
+    "Phân rã yêu cầu bằng các câu hỏi có trọng tâm: ai thực hiện escalation, điều gì kích hoạt escalation, thế nào là giải quyết tốt và những ràng buộc nào (latency, chi phí, audit, độ nhạy cảm dữ liệu) được áp dụng.",
+    "Chấp nhận cách diễn đạt ban đầu của người bảo trợ là yêu cầu đầy đủ và cuối cùng, rồi chuyển thẳng sang thiết kế mà không đặt câu hỏi có trọng tâm để làm rõ các tác nhân, điều kiện kích hoạt hoặc ràng buộc.",
+    "Giả định yêu cầu giống với dự án trước của kiến trúc sư trong một ngành khác và tiếp tục theo bối cảnh đó mà không xác nhận các tác nhân, điều kiện kích hoạt hoặc ràng buộc cho người bảo trợ này."
+   ],
+   "explanation": "Phân rã yêu cầu mơ hồ bằng các câu hỏi có trọng tâm: ai thực hiện escalation, điều gì kích hoạt, thế nào là giải quyết tốt và những ràng buộc nào về latency, chi phí, audit, độ nhạy cảm dữ liệu được áp dụng. A trì hoãn, C chấp nhận yêu cầu không thể hành động, D mang giả định từ một dự án khác sang."
+  },
+  {
+   "id": 88,
+   "question": "Bạn đang phân biệt yêu cầu chức năng và phi chức năng trong giai đoạn discovery. Mục nào là yêu cầu phi chức năng?",
+   "options": [
+    "Hệ thống phải trích xuất một tập trường cụ thể đã được xác định từ các file hóa đơn đính kèm và điền vào một bản ghi dữ liệu downstream.",
+    "Hệ thống phải phân loại các ticket đầu vào vào một tập danh mục đã được xác định.",
+    "Hệ thống phải tạo một bản nháp phản hồi để người rà soát có thể chỉnh sửa trước khi gửi.",
+    "Hệ thống phải phản hồi với p95 latency dưới 800 mili giây ở lưu lượng request dự kiến."
+   ],
+   "explanation": "Mục tiêu p95 latency ở lưu lượng dự kiến mô tả hệ thống phải hoạt động tốt đến mức nào, nên là yêu cầu phi chức năng. A, B và C đều mô tả hệ thống phải làm gì."
+  },
+  {
+   "id": 89,
+   "question": "Một kiến trúc sư cấp cao đang quản lý kỳ vọng của các bên liên quan đối với trợ lý báo cáo dựa trên Claude ở giữa quá trình phát triển. Các bên liên quan ngày càng lo ngại về latency phản hồi. Hai hành động nào trực tiếp nhất giúp thống nhất kỳ vọng trong tình huống này? (Chọn hai.)",
+   "options": [
+    "Tạm dừng toàn bộ việc phát triển và chuyển toàn bộ nguồn lực kỹ thuật sang tối ưu latency.",
+    "Cùng các bên liên quan sửa đổi định nghĩa SLA nếu không thể đạt các mục tiêu hiện tại trong điều kiện ràng buộc production.",
+    "Thông báo rằng lo ngại về latency là một hạn chế đã biết của LLM và nằm ngoài tầm kiểm soát của đội kiến trúc.",
+    "Trình bày baseline latency p50 và p95 đã đo so với các ngưỡng SLA đã thống nhất để các bên liên quan có dữ liệu chính xác.",
+    "Thay model Claude hiện tại bằng model của bên thứ ba có thể có latency thấp hơn mà không đánh giá."
+   ],
+   "explanation": "Trình bày baseline p50 và p95 đã đo so với các ngưỡng SLA đã thống nhất để trao đổi dựa trên dữ liệu (D), đồng thời cùng thương lượng lại SLA nếu không thể đạt mục tiêu hiện tại trong các ràng buộc production (B). A phản ứng quá mức, C né tránh, E đổi model mà không đánh giá."
+  },
+  {
+   "id": 90,
+   "question": "Bạn đang trình bày một quyết định kiến trúc cho đối tượng hỗn hợp gồm người bảo trợ cấp điều hành và các trưởng nhóm kỹ thuật sẽ triển khai quyết định đó. Chiến lược trình bày nào phục vụ cả hai nhóm tốt nhất?",
+   "options": [
+    "Mở đầu bằng việc đi sâu vào chi tiết triển khai cấp thấp dành cho trưởng nhóm kỹ thuật và dừng ở đó, không đề cập đến kết quả kinh doanh hoặc các trade-off mà người bảo trợ cấp điều hành cần biết.",
+    "Mở đầu bằng quyết định, kết quả kinh doanh mà quyết định phục vụ và các trade-off đã chấp nhận; tiếp theo là cơ sở kỹ thuật, các phương án khác và tác động đến triển khai dành cho đối tượng kỹ thuật.",
+    "Bỏ hoàn toàn phần cơ sở lý luận, các phương án khác và thảo luận trade-off, chỉ công bố quyết định đã chọn, khiến cả hai nhóm thiếu bối cảnh cần thiết để triển khai hoặc xác nhận quyết định.",
+    "Trình bày một mạch nội dung duy nhất không phân biệt đối tượng, dành trọng số bằng nhau cho mối quan tâm kỹ thuật và kinh doanh xuyên suốt, coi cả hai nhóm đều cần độ sâu giống nhau ở mọi phần."
+   ],
+   "explanation": "Mở đầu bằng quyết định, kết quả kinh doanh và các trade-off cho người bảo trợ cấp điều hành, sau đó đi sâu vào cơ sở lý luận, phương án khác và tác động triển khai cho trưởng nhóm kỹ thuật. A chỉ phục vụ một nhóm, C loại bỏ cơ sở lý luận, D không phân biệt nhu cầu của hai nhóm."
+  },
+  {
+   "id": 91,
+   "question": "Bạn phải trình bày đề xuất kiến trúc triển khai một trợ lý rà soát hợp đồng dựa trên Claude cho ban chỉ đạo gồm CFO, giám đốc pháp chế và CIO. Mỗi bên liên quan quan tâm đến những khía cạnh khác nhau của quyết định. Bạn nên tổ chức tài liệu đề xuất như thế nào?",
+   "options": [
+    "Mở đầu bằng quyết định kiến trúc, sau đó trực tiếp giải đáp những mối quan tâm chính của từng bên liên quan.",
+    "Mở đầu bằng dự báo chi phí chi tiết cho toàn bộ giai đoạn nhiều năm trước phần cơ sở lý luận.",
+    "Mở đầu bằng sơ đồ kiến trúc kỹ thuật và danh sách đầy đủ các thành phần trước mọi phần khác.",
+    "Trình bày xuyên suốt bằng cùng một lối diễn giải dày đặc, không phân biệt các bên liên quan ở bất kỳ phần nào."
+   ],
+   "explanation": "Nêu quyết định kiến trúc ngay từ đầu, sau đó lần lượt giải đáp mối quan tâm về chi phí của CFO, về rủi ro và tuân thủ của giám đốc pháp chế, và về tích hợp cùng vận hành của CIO. B và C mở đầu theo góc nhìn của riêng một bên liên quan, D không điều chỉnh cho đối tượng nào."
+  },
+  {
+   "id": 92,
+   "question": "Bạn đang chuyển một dự án triển khai dựa trên Claude từ thiết kế sang thực hiện. Gói bàn giao nào hỗ trợ trực tiếp nhất cho quá trình chuyển tiếp suôn sẻ?",
+   "options": [
+    "bộ slide trình bày thiết kế mới nhất, không có sơ đồ cấp thành phần, interface contract, evaluation framework kèm reference set, runbook hoặc sổ theo dõi các hạn chế đã biết",
+    "một buổi hướng dẫn bằng lời vào ngày bàn giao, không có tổng quan kiến trúc, ADR, contract thành phần, evaluation framework, runbook, playbook hoặc các hạn chế đã biết bằng văn bản",
+    "tổng quan kiến trúc, ADR, contract thành phần, evaluation framework kèm reference set, runbook, on-call playbook và các hạn chế đã biết",
+    "chỉ mã nguồn, không có tổng quan kiến trúc tổng hợp, ADR, contract thành phần, evaluation framework, runbook, on-call playbook hoặc sổ theo dõi các hạn chế đã biết để hỗ trợ đội thực hiện"
+   ],
+   "explanation": "Một quá trình bàn giao suôn sẻ từ thiết kế sang thực hiện cần tổng quan kiến trúc, ADR, contract thành phần, evaluation framework kèm reference set, runbook, on-call playbook và các hạn chế đã biết. A, B và D đều bỏ phần lớn những nội dung đó."
+  },
+  {
+   "id": 93,
+   "question": "Một người bảo trợ phía kinh doanh yêu cầu giải pháp AI để \"cải thiện trải nghiệm khách hàng\". Người này không thể nói rõ hành trình khách hàng nào đang có vấn đề, metric nào phản ánh vấn đề hoặc AI cần hỗ trợ những quyết định nào. Người bảo trợ yêu cầu bạn bắt đầu thiết kế vào tuần tới. Bạn nên thực hiện hành động nào thuộc năng lực delegation trước tiên?",
+   "options": [
+    "Khuyến nghị người bảo trợ sửa lại yêu cầu và gửi lại sau để đánh giá.",
+    "Điều phối một quá trình discovery có cấu trúc để xác định quyết định đang có vấn đề và metric mục tiêu.",
+    "Đề xuất một phạm vi cố định mà bạn mặc định cam kết dựa trên các giả định của chính mình.",
+    "Bắt đầu tạo prototype cho một trợ lý tổng quát theo yêu cầu rộng này trước thời hạn tiếp theo."
+   ],
+   "explanation": "Yêu cầu chưa xác định quyết định đang có vấn đề hoặc metric mục tiêu, vì vậy cần điều phối discovery có cấu trúc để xác lập chúng trước khi thiết kế. A đẩy vấn đề trở lại mà không hỗ trợ, C cam kết theo giả định, D xây dựng theo mục tiêu chưa xác định."
+  },
+  {
+   "id": 94,
+   "question": "Bạn đang tổng hợp các thực hành duy trì tính liên tục xuyên suốt vòng đời triển khai. Hai thực hành nào nên có trong danh sách? (Chọn hai.) Mỗi đáp án đúng thể hiện một giải pháp hoàn chỉnh.",
+   "options": [
+    "Kế thừa evaluation framework và reference set qua các vòng lặp thay vì xây dựng lại mỗi lần.",
+    "Ghi lại các bài học kinh nghiệm ở cuối mỗi giai đoạn và đưa chúng thành đầu vào cho giai đoạn tiếp theo.",
+    "Duy trì danh sách các bên liên quan và thông báo cho những người trong danh sách tại mọi lần chuyển giai đoạn.",
+    "Khóa các quyết định được đưa ra ở giai đoạn đầu để ngăn việc xem xét lại khi các giai đoạn sau bắt đầu.",
+    "Lưu trữ dài hạn mọi sản phẩm bàn giao của từng giai đoạn để giữ lại hồ sơ về những gì đã được tạo ra."
+   ],
+   "explanation": "Tính liên tục nghĩa là kế thừa tài liệu và kiến thức: giữ lại evaluation framework và reference set qua các vòng lặp thay vì xây dựng lại (A), đồng thời ghi lại các bài học ở cuối mỗi giai đoạn làm đầu vào cho giai đoạn tiếp theo (B). C và E mang tính hành chính, D đóng băng những quyết định cần có thể xem xét lại."
+  },
+  {
+   "id": 95,
+   "question": "Bạn đang xác định các dấu hiệu cho thấy một hệ thống triển khai nên quay lại giai đoạn thiết kế thay vì tiếp tục cải tiến tại chỗ. Dấu hiệu nào trực tiếp nhất cho thấy cần một chu kỳ thiết kế mới?",
+   "options": [
+    "Có yêu cầu chỉnh sửa nhỏ câu chữ hiển thị cho khách hàng trong UI hiện có; việc này có thể xử lý như thay đổi nội dung cục bộ mà không thay đổi trách nhiệm hoặc contract của các thành phần.",
+    "Một bước trong runbook cần được diễn đạt rõ hơn để hướng dẫn on-call chính xác hơn; việc này có thể xử lý bằng cập nhật tài liệu mà không thay đổi trách nhiệm thành phần hoặc các contract cốt lõi.",
+    "Một ngưỡng cảnh báo dashboard cần được điều chỉnh nhẹ về số để giảm nhiễu false-positive; việc này có thể xử lý như thay đổi cấu hình vận hành mà không cần chu kỳ thiết kế mới.",
+    "Kiến trúc hiện tại của hệ thống không thể đáp ứng các yêu cầu mới nếu không thay đổi trách nhiệm của các thành phần hoặc các contract cốt lõi."
+   ],
+   "explanation": "Cần một chu kỳ thiết kế mới khi kiến trúc hiện tại không thể đáp ứng yêu cầu mới nếu không thay đổi trách nhiệm thành phần hoặc các contract cốt lõi. A, B và C là các thay đổi cục bộ về nội dung, tài liệu hoặc cấu hình."
+  },
+  {
+   "id": 96,
+   "question": "Bạn đang liệt kê các đặc điểm của việc truyền đạt quyết định kiến trúc hiệu quả. Hai đặc điểm nào nên có trong danh sách? (Chọn hai.) Mỗi đáp án đúng thể hiện một giải pháp hoàn chỉnh.",
+   "options": [
+    "bỏ qua các phương án đã bị loại để tài liệu quyết định tập trung và ngắn gọn cho người đọc",
+    "xác định người chịu trách nhiệm và chu kỳ rà soát để xem xét lại quyết định khi điều kiện hoặc giả định thay đổi",
+    "các phương án đã được cân nhắc cùng những tiêu chí dùng để đánh giá từng phương án",
+    "gửi đến một diễn đàn rà soát thường trực với sự tham dự bắt buộc của các lãnh đạo kỹ thuật cấp cao",
+    "sử dụng template thống nhất trong nhóm để chuẩn hóa hình thức trình bày các quyết định"
+   ],
+   "explanation": "Truyền đạt quyết định hiệu quả cần nêu các phương án đã cân nhắc và tiêu chí dùng để đánh giá chúng (C), đồng thời phân công trách nhiệm và đặt chu kỳ rà soát để xem xét lại quyết định khi giả định thay đổi (B). A che giấu các phương án khác, D và E là quy ước về quy trình và định dạng."
+  },
+  {
+   "id": 97,
+   "question": "Một kiến trúc sư Claude đang dẫn dắt giai đoạn discovery cho giải pháp dịch vụ khách hàng mới có AI hỗ trợ. Hai hoạt động nào đặc trưng cho discovery có cấu trúc và thu thập yêu cầu đối với một dự án triển khai dựa trên Claude? (Chọn hai.)",
+   "options": [
+    "ghi thành tài liệu các tiêu chí thành công và ngưỡng thất bại rõ ràng để quyết định việc cho phép triển khai production",
+    "tạo prototype ban đầu và lặp lại dựa trên phản ứng của người dùng thay vì yêu cầu bằng văn bản",
+    "chọn cấp model Claude dựa trên kinh nghiệm dự án trước đây của kiến trúc sư trước khi thu thập ý kiến của các bên liên quan",
+    "điều phối các workshop với các bên liên quan để làm rõ ràng buộc về latency, độ chính xác và tuân thủ trước khi bắt đầu xác định phạm vi",
+    "hoãn ghi nhận các ràng buộc cho đến giai đoạn thiết kế tích hợp để tránh scope creep"
+   ],
+   "explanation": "Discovery có cấu trúc ghi rõ tiêu chí thành công và ngưỡng thất bại làm điều kiện cho phép triển khai production (A), đồng thời tổ chức workshop với các bên liên quan để làm rõ ràng buộc về latency, độ chính xác và tuân thủ trước khi xác định phạm vi (D). B bỏ qua yêu cầu bằng văn bản, C cam kết trước lựa chọn model, E trì hoãn ghi nhận ràng buộc."
+  },
+  {
+   "id": 98,
+   "question": "Một kiến trúc sư đang rà soát các gói tài liệu kiến trúc trước khi bàn giao pipeline dựa trên Claude cho đội triển khai. Hai đặc điểm nào cho thấy một gói tài liệu đủ để hỗ trợ triển khai mà không cần kiến trúc sư liên tục tham gia? (Chọn hai.)",
+   "options": [
+    "Tài liệu có thông tin liên hệ của kiến trúc sư để hỏi các câu hỏi phát sinh trong quá trình triển khai.",
+    "Tài liệu đặc tả integration contract, configuration schema và cấu trúc input/output dự kiến cho từng thành phần.",
+    "Tài liệu diễn giải tổng quan vấn đề kinh doanh mà không có chi tiết ở cấp thành phần.",
+    "Tài liệu liệt kê tất cả model Claude đã được đánh giá nhưng không nêu model nào được chọn hoặc lý do chọn.",
+    "Tài liệu có decision log ghi lại cơ sở của các lựa chọn kiến trúc quan trọng và các phương án đã bị loại."
+   ],
+   "explanation": "Đủ để triển khai độc lập nghĩa là có integration contract, configuration schema và cấu trúc input/output dự kiến cho từng thành phần (B), cùng decision log ghi lại cơ sở lý luận và các phương án đã bị loại (E). A chấp nhận sự phụ thuộc liên tục, C và D để thiếu những chi tiết quan trọng."
+  },
+  {
+   "id": 99,
+   "question": "Một tổ chức y tế đang đánh giá hai kiến trúc AI sử dụng Claude cho trợ lý lập tài liệu lâm sàng. Kiến trúc X có điểm chất lượng đầu ra cao hơn nhưng tốn 0,18 USD cho mỗi phiên lập tài liệu và trung bình 4,2 giây cho mỗi phản hồi. Kiến trúc Y có điểm chất lượng thấp hơn đôi chút nhưng tốn 0,09 USD mỗi phiên và trung bình 2,1 giây mỗi phản hồi. SLA đã nêu yêu cầu phản hồi dưới 3 giây, và lưu lượng hằng năm dự kiến là 2 triệu phiên lập tài liệu. Cách đánh giá nào áp dụng đúng phân tích các trụ cột giá trị kinh doanh cho quyết định này?",
+   "options": [
+    "Chọn Kiến trúc Y chỉ dựa trên mức giảm chi phí 50%, vì chi phí giải pháp là trụ cột giá trị quan trọng nhất trong môi trường y tế bị giới hạn ngân sách.",
+    "Chọn Kiến trúc X vì điểm chất lượng cao hơn xứng đáng với phần chi phí tăng thêm, và mọi khoảng cách so với SLA có thể xử lý bằng tối ưu hạ tầng sau triển khai.",
+    "Loại Kiến trúc X vì không đáp ứng SLA, sau đó đánh giá Kiến trúc Y theo các trụ cột efficiency và chi phí giải pháp bằng cách tính chênh lệch chi phí hằng năm và xem xét chênh lệch chất lượng có ảnh hưởng đáng kể đến productivity của workflow lâm sàng hay không.",
+    "Đề xuất cách tiếp cận kết hợp: dùng Kiến trúc X cho ca phức tạp và Kiến trúc Y cho ca thông thường mà không phân tích thêm, vì cách này giữ được chất lượng ở những nơi quan trọng nhất."
+   ],
+   "explanation": "SLA 3 giây là điều kiện bắt buộc, nên Kiến trúc X với 4,2 giây bị loại trước; sau đó đánh giá Y theo efficiency và chi phí giải pháp — khoảng 180.000 USD so với 360.000 USD mỗi năm ở mức 2 triệu phiên — và xem chênh lệch chất lượng có ảnh hưởng đáng kể đến workflow lâm sàng không. A bỏ qua lập luận về SLA, B coi SLA là thứ có thể thương lượng sau triển khai, D thêm độ phức tạp mà không phân tích."
+  },
+  {
+   "id": 100,
+   "question": "Bạn đang ghi lại một quyết định kiến trúc để hỗ trợ audit và onboarding trong tương lai. Loại tài liệu nào phù hợp nhất?",
+   "options": [
+    "một bộ slide trong thư mục thuyết trình không kèm cơ sở lý luận bằng văn bản",
+    "một comment trong code ở một file duy nhất chứa ý kiến của một kỹ sư",
+    "một ghi chú ngắn được trao đổi bằng lời trong cuộc trò chuyện ở hành lang, không có bản ghi bằng văn bản",
+    "một Architecture Decision Record nêu bối cảnh, quyết định, các phương án đã cân nhắc, hệ quả, ngày lập và tác giả"
+   ],
+   "explanation": "Một ADR ghi lại bối cảnh, quyết định, các phương án đã cân nhắc, hệ quả, ngày lập và tác giả là tài liệu bền vững phục vụ audit và onboarding. A, B và C không để lại cơ sở lý luận có thể rà soát."
+  },
+  {
+   "id": 101,
+   "question": "Một kiến trúc sư giải pháp đang phân tích phản hồi của các bên liên quan sau quý đầu tiên triển khai tự động hóa mua sắm bằng Claude. Phản hồi gồm bốn nhận định: (1) “Nhóm mua sắm của chúng tôi đang xử lý số đơn đặt hàng trên mỗi chuyên viên mỗi ngày nhiều gấp 3 lần.” (2) “Chúng tôi đã loại bỏ hoàn toàn vị trí nhập liệu thủ công và điều chuyển nhân sự đó sang quản lý quan hệ nhà cung cấp.” (3) “Chi phí tích hợp API đang vượt 40% so với ngân sách dự kiến trên mỗi giao dịch.” (4) “Độ trễ phản hồi trong các đợt xử lý batch cuối tháng trung bình là 11 giây, so với SLA 5 giây mà chúng tôi đã cam kết.” Phương án nào xác định đúng trụ cột giá trị kinh doanh chính mà từng nhận định thể hiện?",
+   "options": [
+    "Nhận định 1: Productivity (năng suất); Nhận định 2: Efficiency (hiệu quả sử dụng nguồn lực); Nhận định 3: Solution Cost (chi phí giải pháp); Nhận định 4: Performance SLA (SLA hiệu năng)",
+    "Nhận định 1: Efficiency (hiệu quả sử dụng nguồn lực); Nhận định 2: Productivity (năng suất); Nhận định 3: Performance SLA (SLA hiệu năng); Nhận định 4: Solution Cost (chi phí giải pháp)",
+    "Nhận định 1: Efficiency (hiệu quả sử dụng nguồn lực); Nhận định 2: Transformation (chuyển đổi); Nhận định 3: Solution Cost (chi phí giải pháp); Nhận định 4: Performance SLA (SLA hiệu năng)",
+    "Nhận định 1: Transformation (chuyển đổi); Nhận định 2: Productivity (năng suất); Nhận định 3: Solution Cost (chi phí giải pháp); Nhận định 4: Efficiency (hiệu quả sử dụng nguồn lực)"
+   ],
+   "explanation": "Số đơn đặt hàng trên mỗi chuyên viên tăng gấp 3 lần là Efficiency (cùng một công việc, ít công sức hơn); loại bỏ một vị trí và điều chuyển nhân sự sang chức năng khác là Transformation; vượt 40% ngân sách trên mỗi giao dịch thuộc Solution Cost; và 11 giây so với cam kết 5 giây là vi phạm Performance SLA."
+  },
+  {
+   "id": 102,
+   "question": "Trưởng nhóm kỹ thuật tại Trenova Systems, Inc. đang đánh giá hai đề xuất cải thiện workflow của lập trình viên bằng các tool có Claude hỗ trợ. Đề xuất A bổ sung Claude Code vào IDE để tạo và review code ngay tại chỗ. Đề xuất B chuyển mọi yêu cầu tạo code qua một Slack bot dùng chung, không tích hợp IDE. Hai nhận xét nào đánh giá chính xác nhất các đề xuất này so với mục tiêu cải thiện workflow? (Chọn hai.)",
+   "options": [
+    "Đề xuất B tốt hơn vì tập trung các yêu cầu trong Slack tạo ra một log có thể kiểm toán cho mọi hoạt động tạo code.",
+    "Đề xuất B làm gián đoạn workflow do yêu cầu lập trình viên rời khỏi IDE, gây bất lợi cho mục tiêu năng suất.",
+    "Đề xuất A giảm việc chuyển đổi ngữ cảnh bằng cách cung cấp hỗ trợ AI ngay tại nơi phát triển mà không cần một tool riêng.",
+    "Đề xuất B tăng tốc độ workflow vì thông báo Slack tạo ra hàng đợi review bất đồng bộ.",
+    "Hai đề xuất tương đương vì khả năng của model nền tảng giống nhau bất kể điểm tích hợp."
+   ],
+   "explanation": "Đề xuất A giữ hỗ trợ ngay tại nơi phát triển, giảm việc chuyển đổi ngữ cảnh (C), trong khi đề xuất B buộc lập trình viên rời IDE rồi quay lại, tạo trở ngại cho mục tiêu năng suất (B). A đánh đổi mục tiêu để lấy khả năng kiểm toán; D hiểu nhầm sự gián đoạn là tốc độ; E hoàn toàn bỏ qua điểm tích hợp."
+  },
+  {
+   "id": 103,
+   "question": "Bạn đang tích hợp Claude Code vào workflow của nhóm và phải hoàn thành các bước thiết kế, cấu hình trước khi thử nghiệm workflow đã tích hợp. Hai bước nào phải hoàn thành TRƯỚC khi thử nghiệm workflow đã tích hợp với một nhóm nhỏ? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Điều chỉnh workflow đã tích hợp dựa trên kết quả thử nghiệm trước khi triển khai rộng hơn cho nhóm.",
+    "Viết tài liệu cho workflow đã tích hợp, gồm tiêu chí bàn giao, ranh giới quyền hạn và runbook trực vận hành.",
+    "Thỏa thuận thay đổi workflow với các nhóm chịu ảnh hưởng và nhận phê duyệt chính thức từ từng quản lý.",
+    "Xác định các bước trong workflow mà tool có AI hỗ trợ mang lại giá trị và những nơi quyền quyết định phải thuộc về con người.",
+    "Cấu hình Model Context Protocol (MCP) server, quyền hạn, subagent và ngữ cảnh dự án được lưu bền vững ở project scope."
+   ],
+   "explanation": "Trước khi thử nghiệm: xác định những bước workflow được lợi từ hỗ trợ AI và nơi quyền quyết định phải thuộc về con người (D); đồng thời cấu hình MCP server, quyền hạn, subagent và ngữ cảnh dự án được lưu bền vững ở project scope (E). A diễn ra sau thử nghiệm; B và C theo sau khi workflow được xác thực."
+  },
+  {
+   "id": 104,
+   "question": "Lãnh đạo kỹ thuật muốn triển khai Claude Skills cho 280 lập trình viên thuộc 14 nhóm. Các Skill sẽ chứa quy chuẩn coding nội bộ, checklist review code và mẫu báo cáo postmortem sự cố. Lãnh đạo hỏi cách quản trị việc biên soạn Skill để Skill vẫn đáng tin cậy mà không tạo nút thắt tại một nhóm trung tâm duy nhất. Bạn nên đề xuất mô hình quản trị nào?",
+   "options": [
+    "Tập trung việc biên soạn tại một nhóm nền tảng duy nhất, chịu trách nhiệm cho mọi Skill được tạo ra",
+    "Phân quyền hoàn toàn việc biên soạn cho 14 nhóm mà không review trước khi phát hành",
+    "Phân công việc biên soạn cho 14 nhóm theo mô hình federated, với cổng review và phát hành tập trung",
+    "Mỗi người trong 280 kỹ sư tự biên soạn mà không cần phối hợp ở cấp nhóm"
+   ],
+   "explanation": "Biên soạn theo mô hình federated với cổng review và phát hành tập trung cho phép 14 nhóm đưa kiến thức chuyên môn của mình vào Skill, đồng thời giữ một điểm kiểm soát thống nhất về chất lượng và độ tin cậy. A tạo ra đúng nút thắt cần tránh; B và D loại bỏ hoàn toàn review."
+  },
+  {
+   "id": 105,
+   "question": "Một nhóm kỹ thuật đang tranh luận nên triển khai khả năng mới để tạo hồ sơ nộp cơ quan quản lý từ dữ liệu nội bộ dưới dạng Claude Skill hay MCP server. Khả năng này yêu cầu một quy trình soạn thảo cố định có ví dụ nhúng sẵn, không cần gọi hệ thống bên ngoài đang hoạt động và phải dùng được trên ba môi trường triển khai Claude: claude.ai, một tích hợp API nội bộ và Claude Code. Yếu tố nào ủng hộ mạnh nhất việc triển khai dưới dạng Skill?",
+   "options": [
+    "Khả năng này cũng phải gọi được từ giao diện dòng lệnh của lập trình viên.",
+    "Khả năng này yêu cầu xác thực trực tiếp với identity provider của doanh nghiệp.",
+    "Khả năng này cần truy vấn cơ sở dữ liệu đang hoạt động để lấy các hồ sơ nộp cơ quan quản lý mới nhất.",
+    "Khả năng này là kiến thức về quy trình và không yêu cầu gọi hệ thống bên ngoài đang hoạt động."
+   ],
+   "explanation": "Skill là cách đóng gói phù hợp cho kiến thức về quy trình — một quy trình soạn thảo cố định có ví dụ nhúng sẵn — không cần gọi hệ thống đang hoạt động và phải dùng được trên claude.ai, tích hợp API và Claude Code. A, B và C mô tả nhu cầu liên quan đến hệ thống đang hoạt động và xác thực, vốn phù hợp hơn với MCP server."
+  },
+  {
+   "id": 106,
+   "question": "Bạn đang xác định khi nào nên bổ sung một subagent cho dự án thay vì dựa vào khả năng tổng quát của Claude Code. Tình huống nào trực tiếp nhất cho thấy cần một subagent chuyên biệt?",
+   "options": [
+    "Nhóm có một tác vụ chuyên môn lặp lại (chẳng hạn review database schema) cần system prompt tập trung, quyền sử dụng tool giới hạn và lựa chọn model cụ thể qua nhiều phiên.",
+    "Nhóm không có tác vụ chuyên môn lặp lại và chỉ dùng Claude Code cho các công việc tổng quát riêng lẻ, không đủ lý do để có system prompt hoặc phạm vi tool chuyên biệt.",
+    "Nhóm muốn mọi tương tác Claude Code dùng cùng một system prompt tổng quát, không có chuyên môn hóa theo tác vụ, quyền sử dụng tool giới hạn hay lựa chọn model riêng.",
+    "Nhóm có một câu hỏi phát sinh một lần, không lặp lại và không cần system prompt tập trung, quyền sử dụng tool giới hạn hay lựa chọn model riêng."
+   ],
+   "explanation": "Một subagent chuyên biệt được biện minh bởi tác vụ chuyên môn lặp lại, hưởng lợi từ system prompt tập trung riêng, quyền sử dụng tool giới hạn và lựa chọn model cụ thể qua nhiều phiên. B, C và D mô tả công việc một lần hoặc tổng quát, không có chuyên môn hóa cần đưa vào."
+  },
+  {
+   "id": 107,
+   "question": "Bạn đang tổng hợp các thực hành thiết lập cho nhóm khi triển khai Claude Code trên toàn tổ chức kỹ thuật. Hai thực hành nào nên có trong danh sách? (Chọn hai.) Mỗi đáp án đúng là một giải pháp hoàn chỉnh.",
+   "options": [
+    "Dùng project scope cho tùy chọn trình soạn thảo cá nhân để các tùy chọn được áp dụng nhất quán trong dự án.",
+    "Dùng project scope cho các Model Context Protocol (MCP) server và quy tắc quyền hạn dùng chung của nhóm, được quản lý bằng version control.",
+    "Dùng local scope cho các quy tắc quyền hạn quan trọng về bảo mật để mỗi kỹ sư có thể điều chỉnh theo công việc đang thực hiện.",
+    "Dùng user scope cho các MCP server dùng chung của nhóm để mọi kỹ sư trong nhóm có quyền truy cập nhất quán.",
+    "Áp dụng managed configuration tập trung cho các thiết lập quan trọng về bảo mật mà từng kỹ sư không được phép ghi đè."
+   ],
+   "explanation": "Đặt các MCP server và quy tắc quyền hạn dùng chung của nhóm trong project scope, dưới version control (B), và áp dụng managed configuration tập trung cho các thiết lập quan trọng về bảo mật mà cá nhân không được ghi đè (E). A đặt sai chỗ các tùy chọn cá nhân; C đặt quy tắc bảo mật ở nơi có thể sửa cục bộ; D biến server dùng chung thành việc thiết lập riêng của từng người."
+  },
+  {
+   "id": 108,
+   "question": "Bạn đang tích hợp Claude Code vào workflow pull request của nhóm. Nhóm muốn review có AI hỗ trợ mà vẫn giữ phê duyệt của con người. Thiết kế tích hợp nào phù hợp nhất với yêu cầu này?",
+   "options": [
+    "Claude Code tự động merge mọi pull request ngay khi hoàn tất phân tích, bỏ qua hoàn toàn bước phê duyệt của con người và các quy tắc branch protection hiện có.",
+    "Claude Code vô hiệu hóa toàn bộ quy tắc branch protection hiện có của repository để đơn giản hóa việc merge, loại bỏ phê duyệt của con người khỏi các điều kiện bắt buộc đối với mọi pull request.",
+    "Claude Code âm thầm xóa những pull request mà nó đánh giá chất lượng thấp, không đăng bình luận hay thông báo cho tác giả, khiến tác giả không thể phản hồi hoặc chỉnh sửa.",
+    "Claude Code review pull request và đăng phân tích có cấu trúc dưới dạng bình luận, trong khi người review vẫn giữ quyền phê duyệt theo các quy tắc branch protection hiện có."
+   ],
+   "explanation": "Claude Code đăng bản review có cấu trúc dưới dạng bình luận trên PR, trong khi người review giữ quyền phê duyệt theo branch protection hiện có. A, B và C đều loại bỏ cổng kiểm soát của con người."
+  },
+  {
+   "id": 109,
+   "question": "Bạn đang xác định điểm thiếu hiệu quả trong workflow Claude Code, nơi mỗi kỹ sư phải tự giải thích lại các quy ước và kiến trúc dự án trong từng phiên. Điều chỉnh nào trực tiếp nhất loại bỏ sự thiếu hiệu quả này?",
+   "options": [
+    "Ghi các quy ước và kiến trúc dự án vào CLAUDE.md ở project scope (hoặc tệp ngữ cảnh dự án lưu bền vững tương đương) và commit vào repository để mỗi phiên tự động nạp nội dung đó.",
+    "Cấm hoàn toàn việc dùng Claude Code trong dự án để tránh chi phí khởi tạo phiên, chấp nhận nhóm mất toàn bộ lợi ích năng suất phát triển có AI hỗ trợ cho codebase này.",
+    "Yêu cầu mỗi kỹ sư gõ lại quy ước dự án và ngữ cảnh kiến trúc nhanh hơn ở đầu mỗi phiên, giảm thời gian mất đi nhưng không loại bỏ công việc thủ công lặp lại.",
+    "Xóa tất cả quy ước dự án và tiêu chuẩn kiến trúc đã ghi thành tài liệu để kỹ sư không còn gì phải giải thích lại khi bắt đầu phiên, chấp nhận mất tính nhất quán và chuẩn coding dùng chung."
+   ],
+   "explanation": "Commit các quy ước và kiến trúc vào CLAUDE.md ở project scope (hoặc tệp ngữ cảnh dự án lưu bền vững tương đương) để mọi phiên tự động nạp nội dung đó. B từ bỏ tool; C chỉ làm sự lãng phí diễn ra nhanh hơn; D xóa bỏ các tiêu chuẩn."
+  },
+  {
+   "id": 110,
+   "question": "Nhóm tuân thủ đã soạn một quy trình công bố thông tin theo quy định, phải được áp dụng giống hệt nhau trong các workflow dịch vụ khách hàng, bán hàng và onboarding. Quy trình thay đổi khi cơ quan quản lý ban hành cập nhật, hiện khoảng bốn đến sáu lần mỗi năm. Bạn đang thiết kế cách đóng gói quy trình để Claude sử dụng trong cả ba workflow. Bạn nên đưa vào hai quyết định thiết kế nào? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Tham chiếu trực tiếp cùng một Claude Skill từ cả ba tích hợp workflow.",
+    "Lưu quy trình trong một retrieval corpus dùng chung mà cả ba workflow truy cập.",
+    "Yêu cầu mỗi nhóm workflow viết lại quy trình theo ngữ cảnh riêng của nhóm đó.",
+    "Đóng gói trực tiếp quy trình thành một Claude Skill do nhóm tuân thủ sở hữu.",
+    "Nhúng nội dung quy trình vào system prompt của từng workflow tại thời điểm tích hợp."
+   ],
+   "explanation": "Đóng gói quy trình một lần thành Skill do nhóm tuân thủ sở hữu (D) và tham chiếu cùng Skill đó từ cả ba tích hợp workflow (A), để bốn đến sáu cập nhật quy định mỗi năm được thực hiện tại một nơi. B làm mất hình thức quy trình cố định; C tách quy trình thành ba nhánh; E đòi hỏi triển khai lại ba lần cho mỗi cập nhật."
+  },
+  {
+   "id": 111,
+   "question": "Bạn đang hỗ trợ một kỹ sư có phiên Claude Code báo từ chối quyền, trong khi kỹ sư đó cho rằng thao tác phải được cho phép. Bước xử lý nào phù hợp nhất?",
+   "options": [
+    "Vô hiệu hóa hoàn toàn hệ thống quyền hạn ở tất cả scope để loại bỏ việc từ chối, xóa toàn bộ cơ chế kiểm soát theo tool pattern và deny rule thay vì xác định và sửa quy tắc cụ thể.",
+    "Cấp cho kỹ sư quyền truy cập Bash không giới hạn để bỏ qua quy tắc cụ thể gây ra việc từ chối, xóa toàn bộ ràng buộc tool pattern thay vì chỉ sửa quy tắc liên quan.",
+    "Yêu cầu kỹ sư thử lại nguyên văn thao tác bị từ chối nhiều lần cho đến khi không còn báo từ chối, mà không kiểm tra các quy tắc quyền hạn đang có hiệu lực để xác định việc từ chối có chủ đích hay không.",
+    "Kiểm tra các quy tắc quyền hạn đang có hiệu lực ở mọi scope (managed, command-line, local, project, user) để xác định quy tắc nào từ chối thao tác, rồi xác nhận nên sửa quy tắc đó hay tiếp tục từ chối thao tác."
+   ],
+   "explanation": "Kiểm tra các quy tắc quyền hạn đang có hiệu lực ở mọi scope (managed, command-line, local, project, user) để tìm quy tắc từ chối thao tác và quyết định nên sửa hay quy tắc đang từ chối đúng. A, B và C loại bỏ cơ chế kiểm soát hoặc bỏ qua nguyên nhân."
+  },
+  {
+   "id": 112,
+   "question": "Bạn đang xử lý một sự cố vận hành Claude Code do nhóm báo cáo và phải hoàn thành các bước chẩn đoán trước khi áp dụng bản sửa đúng trọng tâm. Hai bước nào phải hoàn thành TRƯỚC khi áp dụng bản sửa đúng trọng tâm? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Mở một yêu cầu thay đổi lâu dài trong hệ thống quản lý thay đổi để chính thức hóa bản sửa sắp tới.",
+    "Ghi lại nguyên nhân gốc và bản sửa trong runbook của nhóm để dùng cho những lần xảy ra sau.",
+    "Đưa ra giả thuyết về nguyên nhân gốc có khả năng cao nhất dựa trên triệu chứng, cấu hình và các thay đổi gần đây.",
+    "Tái hiện sự cố bằng một trường hợp tái hiện tối thiểu để xác nhận triệu chứng và cô lập các biến.",
+    "Thông báo cho người dùng bị ảnh hưởng rằng bản sửa đã được triển khai và sự cố vận hành đã được giải quyết."
+   ],
+   "explanation": "Chẩn đoán trước khi sửa: tái hiện sự cố bằng trường hợp tối thiểu để xác nhận triệu chứng và cô lập các biến (D); đồng thời đưa ra giả thuyết về nguyên nhân gốc dựa trên triệu chứng, cấu hình và thay đổi gần đây (C). A, B và E là các bước đi kèm hoặc diễn ra sau bản sửa."
+  },
+  {
+   "id": 113,
+   "question": "Một kiến trúc sư Claude đang cấu hình môi trường Claude Code dùng chung cho nhóm phát triển gồm mười hai người. Hai quyết định cấu hình nào trực tiếp nhất tạo nên một môi trường nhóm nhất quán và an toàn? (Chọn hai.)",
+   "options": [
+    "Áp dụng managed configuration để thực thi các chính sách bảo mật và tuân thủ không thể bị ghi đè cho mọi thành viên nhóm",
+    "Commit định nghĩa MCP server và quyền sử dụng tool dùng chung vào các tệp cấu hình ở project scope cùng với repository",
+    "Hướng dẫn mỗi kỹ sư cấu hình Claude model họ thích trong thiết lập cá nhân ở user scope",
+    "Lưu API key dùng chung của nhóm trong settings.json ở project scope để mọi kỹ sư dùng cùng một credential",
+    "Thiết lập theme trình soạn thảo và tùy chọn hiển thị ở project scope để đồng nhất trên các máy trạm"
+   ],
+   "explanation": "Managed configuration thực thi chính sách bảo mật và tuân thủ không thể bị ghi đè trên toàn nhóm (A); các tệp ở project scope được commit cùng repository cung cấp cùng MCP server và quyền sử dụng tool cho mọi người (B). C là tùy chọn cá nhân; D commit credential dùng chung vào repository; E đặt thiết lập hiển thị sai scope."
+  },
+  {
+   "id": 114,
+   "question": "Bạn đang cấu hình Claude Code cho một nhóm cần mọi kỹ sư dùng chung bộ MCP server, quy tắc quyền hạn và ngữ cảnh dự án trên toàn monorepo kỹ thuật. Scope cấu hình nào hỗ trợ tốt nhất yêu cầu này?",
+   "options": [
+    "User scope được cấu hình riêng trên máy của từng kỹ sư, không có cấu hình dùng chung được commit vào repository và không bảo đảm tính nhất quán trong nhóm",
+    "User scope với định nghĩa MCP server và quy tắc quyền hạn đặt trong ~/.claude/settings.json của từng kỹ sư, được đồng bộ thủ công qua một script thiết lập dùng chung nằm ngoài version control",
+    "Local scope chỉ được cấu hình trên máy của kiến trúc sư trưởng, không có cấu hình trên máy của các kỹ sư khác và không có cơ chế phân phối MCP server hay quy tắc quyền hạn",
+    "Project scope, với cấu hình được commit vào repository để mọi kỹ sư làm việc trong dự án nhận được cùng MCP server, quyền hạn và ngữ cảnh"
+   ],
+   "explanation": "Project scope được commit vào repository tự động cung cấp cho mọi kỹ sư cùng MCP server, quy tắc quyền hạn và ngữ cảnh dự án. A, B và C đều phụ thuộc vào thiết lập riêng trên từng máy mà không bảo đảm tính nhất quán."
+  },
+  {
+   "id": 115,
+   "question": "Một Claude cần bảo đảm rằng không kỹ sư riêng lẻ nào có thể tắt một cờ tăng cường bảo mật sau khi cờ đó được thiết lập. Scope cấu hình nào thực thi đúng yêu cầu này?",
+   "options": [
+    "Managed configuration được áp dụng tập trung và đánh dấu không thể ghi đè",
+    "Biến môi trường chỉ được định nghĩa trong CI/CD pipeline",
+    "Project scope (.claude/settings.json) được commit vào repository",
+    "User scope (~/.claude/settings.json) trên máy của từng kỹ sư"
+   ],
+   "explanation": "Managed configuration được áp dụng tập trung và đánh dấu không thể ghi đè là scope duy nhất mà từng kỹ sư không thể thay đổi. Project scope và user scope có thể sửa cục bộ; biến môi trường chỉ có trong CI không quản lý các phiên của kỹ sư."
+  },
+  {
+   "id": 116,
+   "question": "Bạn đang tích hợp Claude Code vào một workflow thao tác trên cơ sở dữ liệu production. Thiết kế guardrail nào trực tiếp nhất giữ an toàn cho các thao tác thay đổi dữ liệu?",
+   "options": [
+    "Cho phép Claude Code ghi trực tiếp vào cơ sở dữ liệu production mà không giới hạn phạm vi subagent, không mặc định dùng credential chỉ đọc và không có bước xác nhận của con người cho các thao tác thay đổi dữ liệu.",
+    "Cấu hình MCP server của cơ sở dữ liệu bằng credential toàn quyền, có thể thực hiện mọi thao tác đọc hoặc ghi, và cho phép mọi thao tác tiếp tục mà không cần xác nhận rõ ràng của con người.",
+    "Cấu hình MCP server của cơ sở dữ liệu mặc định bằng credential chỉ đọc, giới hạn danh sách tool của subagent ở các thao tác chỉ đọc và yêu cầu xác nhận rõ ràng của con người đối với mọi thao tác có thể thay đổi dữ liệu.",
+    "Tắt toàn bộ logging và auditing đối với các thao tác cơ sở dữ liệu qua MCP server để giảm nhiễu cảnh báo, loại bỏ khả năng quan sát cần thiết để phát hiện những thay đổi dữ liệu ngoài ý muốn."
+   ],
+   "explanation": "Phòng vệ nhiều lớp cho thao tác ghi: MCP server của cơ sở dữ liệu mặc định dùng credential chỉ đọc, danh sách tool của subagent bị giới hạn ở thao tác đọc và mọi thao tác thay đổi dữ liệu đều cần xác nhận rõ ràng của con người. A và B cấp quyền ghi không kiểm soát; D loại bỏ dấu vết kiểm toán."
+  },
+  {
+   "id": 117,
+   "question": "Một kiến trúc sư Claude đang kiểm tra việc phân bổ scope cấu hình. Hai nhận định nào xác định đúng cách sử dụng cấu hình user scope so với các scope khác? (Chọn hai.)",
+   "options": [
+    "Định nghĩa MCP server endpoint dùng chung cho mọi người đóng góp vào một repository cụ thể",
+    "Lưu bền vững các tùy chọn theme trình soạn thảo cá nhân, theo kỹ sư qua nhiều dự án",
+    "Lưu ngôn ngữ phản hồi Claude ưa thích, áp dụng cho tất cả repository mà kỹ sư sử dụng",
+    "Lưu API authentication key để chúng không bị commit vào version control",
+    "Thực thi một chính sách toàn công ty vô hiệu hóa một tính năng đối với mọi kỹ sư"
+   ],
+   "explanation": "User scope chứa các thiết lập cá nhân theo kỹ sư qua nhiều dự án: tùy chọn theme trình soạn thảo (B) và ngôn ngữ phản hồi ưa thích cho tất cả repository (C). A thuộc project scope; D thuộc kho lưu secret hoặc môi trường; E thuộc managed configuration."
+  },
+  {
+   "id": 118,
+   "question": "Bạn đang triển khai cấu hình Claude Code chuẩn hóa cho một nhóm kỹ thuật và phải hoàn thành các bước lập kế hoạch trước khi thử nghiệm cấu hình. Hai bước nào phải hoàn thành TRƯỚC khi thử nghiệm cấu hình với một nhóm kỹ sư nhỏ? (Chọn hai.) Mỗi đáp án đúng là một phần của giải pháp.",
+   "options": [
+    "Triển khai cấu hình đã ổn định cho các nhóm bổ sung, kèm tài liệu và kênh hỗ trợ được xác định rõ.",
+    "Xác định cấu hình nền chuẩn ở project scope, bao gồm Model Context Protocol (MCP) server, quy tắc quyền hạn và subagent.",
+    "Hướng dẫn mọi kỹ sư trong tổ chức sử dụng cấu hình mới thông qua các buổi đào tạo bắt buộc.",
+    "Điều chỉnh cấu hình dựa trên kết quả thử nghiệm và ổn định cấu hình nền chuẩn trước khi triển khai rộng hơn.",
+    "Xác định workflow của nhóm, ranh giới bảo mật và những quyết định nào thuộc managed configuration so với project scope."
+   ],
+   "explanation": "Trước khi thử nghiệm: xác định workflow của nhóm, ranh giới bảo mật và những quyết định thuộc managed configuration hay project scope (E); sau đó xác định cấu hình nền chuẩn ở project scope gồm MCP server, quy tắc quyền hạn và subagent (B). A, C và D diễn ra sau thử nghiệm."
+  },
+  {
+   "id": 119,
+   "question": "Bạn đang hỗ trợ một nhóm có các phiên Claude Code thường xuyên nạp từ 60 MCP tool trở lên từ nhiều server, làm cạn context budget trước khi phiên bắt đầu. Điều chỉnh nào trực tiếp nhất giải quyết vấn đề này mà không loại bỏ khả năng nào?",
+   "options": [
+    "Bật Tool Search để trì hoãn nạp định nghĩa tool và tìm chúng khi cần, thay vì nạp sẵn vào context ngay từ đầu.",
+    "Thêm MCP server để cung cấp cho nhóm nhiều khả năng hơn, làm tăng thay vì giảm số định nghĩa tool được nạp vào context budget của phiên.",
+    "Tăng độ dài prompt bằng chỉ dẫn và ngữ cảnh bổ sung, tiêu tốn thêm context budget thay vì giảm phần chiếm dụng do định nghĩa tool gây ra vấn đề.",
+    "Vô hiệu hóa mọi MCP server trong cấu hình để giải phóng context budget, chấp nhận nhóm mất toàn bộ quyền truy cập tool và không thể thực hiện bất kỳ tác vụ nào phụ thuộc MCP trong phiên."
+   ],
+   "explanation": "Tool Search trì hoãn nạp định nghĩa tool và tìm chúng theo nhu cầu, nên hơn 60 tool không còn chiếm context trước khi phiên bắt đầu, và không khả năng nào bị loại bỏ. B làm vấn đề tệ hơn; C không liên quan; D loại bỏ khả năng."
+  },
+  {
+   "id": 120,
+   "question": "Một quản lý nhóm muốn mọi kỹ sư làm việc trên cùng repository dùng chung các định nghĩa MCP server giống hệt nhau mà không cần đồng bộ thủ công. Cách cấu hình nào đáp ứng yêu cầu này?",
+   "options": [
+    "Các tệp .claude/settings.json và .mcp.json ở project scope được commit vào repository",
+    "Managed configuration được quản trị viên đẩy đến tất cả endpoint",
+    "Biến môi trường được đặt ở cấp hệ điều hành trên từng máy trạm",
+    "Mỗi kỹ sư duy trì ~/.claude/settings.json cá nhân chứa các định nghĩa dùng chung"
+   ],
+   "explanation": "Các tệp .claude/settings.json và .mcp.json ở project scope được commit vào repository phân phối định nghĩa MCP server giống hệt nhau cho tất cả người làm việc trong đó, không cần đồng bộ thủ công. B dành cho chính sách được thực thi tập trung; C và D đòi hỏi duy trì riêng trên từng máy."
+  },
+  {
+   "id": 121,
+   "question": "Bạn đang chẩn đoán một phiên Claude Code mà subagent sử dụng 50.000 token context trước khi kỹ sư gõ dù chỉ một tin nhắn. Nguyên nhân gốc nào có khả năng cao nhất?",
+   "options": [
+    "Nhiều MCP server được cấu hình, mỗi server đóng góp các định nghĩa tool vào context budget; Tool Search chưa được bật nên mọi định nghĩa đều nạp ngay từ đầu.",
+    "Model có các sở thích cá nhân hoặc hành vi mặc định nội tại âm thầm tiêu thụ phần lớn context budget trước khi xử lý bất kỳ tin nhắn người dùng nào, độc lập với cấu hình tool.",
+    "Bố cục bàn phím hoặc cấu hình bộ gõ của lập trình viên gây tăng mức tiêu thụ context, thêm token trước khi kỹ sư gõ bất kỳ tin nhắn nào.",
+    "Thiết lập render font hoặc tỷ lệ hiển thị của IDE đang chuyển đầu ra trực quan thành các context token bổ sung, khiến mức tiêu thụ context trước phiên tăng cao."
+   ],
+   "explanation": "Mỗi MCP server được cấu hình đều đóng góp định nghĩa tool vào context budget, và khi Tool Search chưa bật, mọi định nghĩa được nạp ngay từ đầu. B, C và D không phải cơ chế tiêu thụ context token."
+  },
+  {
+   "id": 122,
+   "question": "Bạn đang giải thích thứ tự ưu tiên các scope cấu hình Claude Code cho nhóm. Thứ tự nào từ cao nhất đến thấp nhất là đúng?",
+   "options": [
+    "Local --> managed --> user --> command-line arguments --> project",
+    "Managed --> command-line arguments --> local --> project --> user",
+    "User --> project --> local --> command-line arguments --> managed",
+    "Project --> user --> managed --> local --> project command-line arguments"
+   ],
+   "explanation": "Từ cao nhất đến thấp nhất: thiết lập managed (enterprise), rồi command-line arguments (đối số dòng lệnh), rồi thiết lập local của dự án, rồi thiết lập project dùng chung, cuối cùng là thiết lập user. Các thứ tự khác đảo ngược quy tắc managed ở trên cùng và user ở dưới cùng."
+  },
+  {
+   "id": 123,
+   "question": "Bạn đang review các quy tắc quyền hạn Claude Code của một đồng nghiệp cho đợt triển khai toàn doanh nghiệp. Các quy tắc cấp quyền truy cập Bash không giới hạn cho mọi dự án và mọi lập trình viên. Phản hồi nào phù hợp nhất?",
+   "options": [
+    "Phê duyệt quyền truy cập Bash không giới hạn như đã viết với lý do thu hẹp quy tắc sẽ làm cấu hình phức tạp hơn, chấp nhận toàn bộ bề mặt tấn công cho mọi kỹ sư trên mọi dự án.",
+    "Thay quyền Bash không giới hạn bằng các tool pattern có phạm vi hẹp, chỉ cho phép đúng các lệnh mà workflow cần, và thêm deny rule rõ ràng cho các thao tác nhạy cảm.",
+    "Cấp thêm quyền không giới hạn cho các loại tool khác để Bash không có quyền rộng hơn một cách bất cân xứng so với tool khác, tiếp tục mở rộng bề mặt tấn công dưới danh nghĩa nhất quán.",
+    "Vô hiệu hóa mọi quy tắc quyền hạn cho đợt triển khai toàn doanh nghiệp để mọi lệnh trên mọi dự án chạy mà không có giới hạn phạm vi tool pattern hay deny rule rõ ràng cho thao tác nhạy cảm."
+   ],
+   "explanation": "Thay quyền Bash không giới hạn bằng tool pattern có phạm vi hẹp chỉ bao phủ các lệnh mà workflow cần, kèm deny rule rõ ràng cho thao tác nhạy cảm. A chấp nhận toàn bộ bề mặt tấn công; C và D mở rộng nó."
+  },
+  {
+   "id": 124,
+   "question": "Bạn đang tích hợp tool có AI hỗ trợ vào workflow tài liệu của nhóm. Nhóm muốn tài liệu được tạo ra luôn bám sát code thực tế. Cách tích hợp nào phù hợp nhất với yêu cầu này?",
+   "options": [
+    "Vô hiệu hóa mọi tool filesystem và code-search để subagent không thể đọc bất kỳ code nào trong repository, chấp nhận việc tạo tài liệu hoàn toàn tách rời triển khai thực tế.",
+    "Tạo tài liệu từ những gì model nhớ trong dữ liệu huấn luyện mà không đọc bất kỳ code thực tế nào của repository, chấp nhận đầu ra không phản ánh triển khai hiện tại.",
+    "Cấu hình subagent đọc các tệp code liên quan qua tool filesystem và code-search, tạo tài liệu, rồi đưa các thay đổi qua workflow review thông thường của nhóm.",
+    "Cho subagent phát hành tài liệu được tạo trực tiếp lên website công khai mà không đi qua workflow review thông thường của nhóm hoặc bất kỳ bước phê duyệt nào của con người."
+   ],
+   "explanation": "Lấy chính repository làm căn cứ cho tài liệu: subagent đọc code liên quan qua tool filesystem và code-search, tạo tài liệu và chuyển các thay đổi qua workflow review thông thường của nhóm. A và B tách đầu ra khỏi code; D bỏ qua review."
+  },
+  {
+   "id": 125,
+   "question": "Bạn đang hỗ trợ một kỹ sư có MCP server vừa thêm nhưng không xuất hiện trong phiên Claude Code. Nên thử bước chẩn đoán nào trước tiên?",
+   "options": [
+    "Cài lại từ đầu hệ điều hành của lập trình viên, loại bỏ mọi cấu hình cục bộ và trạng thái tool trước khi thử bất kỳ bước chẩn đoán có trọng tâm nào.",
+    "Vô hiệu hóa mọi MCP server trong cấu hình để cô lập vấn đề, loại bỏ toàn bộ quyền truy cập tool thay vì xác nhận server mới đã được đăng ký hay chưa.",
+    "Chuyển nhóm sang một dòng sản phẩm Claude khác không liên quan đến workflow hiện có, từ bỏ cấu hình hiện tại thay vì chẩn đoán vấn đề đăng ký.",
+    "Dùng lệnh liệt kê để xác minh MCP server đã được đăng ký, rồi kết nối lại phiên nếu cần, vì thay đổi cấu hình thường yêu cầu khởi động lại mới có hiệu lực."
+   ],
+   "explanation": "Bắt đầu bằng kiểm tra ít tốn công nhất để xác nhận việc đăng ký: liệt kê các MCP server đã cấu hình, sau đó kết nối lại hoặc khởi động lại phiên, vì thay đổi cấu hình thường cần khởi động lại để có hiệu lực. A, B và C là các biện pháp quá mức trước khi thực hiện xác minh cơ bản."
+  }
+ ]
+}

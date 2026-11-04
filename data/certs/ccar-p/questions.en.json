@@ -1,0 +1,3102 @@
+{
+ "$schema": "../../schema/questions.schema.json",
+ "schema": 2,
+ "certification": "ccar-p",
+ "language": "en",
+ "note": "PANIC Study Room question bank. EN source extracted verbatim from the original page. Do not edit question text.",
+ "domains": [
+  {
+   "name": "Solution Design and Architecture",
+   "weight": 17,
+   "description": "Translating business problems into Claude solutions, end-to-end design, and choosing workflow, agentic or augmented-LLM patterns."
+  },
+  {
+   "name": "Claude Models, Prompting and Context Engineering",
+   "weight": 13,
+   "description": "Model selection, prompt design, context windows, caching and token management."
+  },
+  {
+   "name": "Integration",
+   "weight": 19,
+   "description": "MCP, API and agent-to-agent mechanisms, tool configuration, RAG pipelines, auth and observability."
+  },
+  {
+   "name": "Evaluation, Testing and Optimization",
+   "weight": 16,
+   "description": "Evaluation sets, metrics, regression testing, and cost and latency optimisation."
+  },
+  {
+   "name": "Governance, Safety and Risk Management",
+   "weight": 14,
+   "description": "Guardrails, human review placement, compliance, privacy and adversarial risk."
+  },
+  {
+   "name": "Stakeholder Communication and Lifecycle Management",
+   "weight": 14,
+   "description": "Discovery, requirements, architectural decision communication, handoff and lifecycle ownership."
+  },
+  {
+   "name": "Developer Productivity and Operational Enablement",
+   "weight": 7,
+   "description": "Claude Code configuration and rollout, team enablement, and operational tooling."
+  }
+ ],
+ "questions": [
+  {
+   "id": 1,
+   "type": "classification",
+   "domain": "Solution Design and Architecture",
+   "question": "You are a solution architect evaluating candidate use cases for a Claude-based program. For each scenario, select yes if Claude is appropriate as the primary solution at the architectural level Otherwise, select no.",
+   "statements": [
+    {
+     "text": "drafting first-pass investigative reports from semi-structured incident logs for analyst review",
+     "answer": "Yes"
+    },
+    {
+     "text": "computing real-time fraud scores at sub-50-millisecond latency on a streaming pipeline",
+     "answer": "No"
+    },
+    {
+     "text": "long-context contract review with structured clause extraction and deviation flagging",
+     "answer": "Yes"
+    },
+    {
+     "text": "replacing a vector index for semantic retrieval over a multi-million-document corpus",
+     "answer": "No"
+    },
+    {
+     "text": "routing inbound support tickets into 30 categories with reasoning for the chosen routing",
+     "answer": "Yes"
+    }
+   ],
+   "choices": [
+    "Yes",
+    "No"
+   ],
+   "explanation": "Yes - drafting first-pass reports from semi-structured logs is language synthesis over messy input with a human reviewer downstream, which is a core Claude fit. No - sub-50 ms scoring on a streaming pipeline is below LLM inference latency and is served by a trained scoring model or rules engine. Yes - long-context contract review with clause extraction and deviation flagging exploits exactly the long-context reasoning and structured-output strengths Claude provides. No - a model is not a substitute for a vector index; embeddings plus an ANN store handle retrieval at multi-million-document scale, and Claude sits on top of that retrieval rather than replacing it. Yes - 30-category ticket routing with a stated rationale is classification over natural language where the reasoning trace itself is part of the required output."
+  },
+  {
+   "id": 2,
+   "type": "multiple",
+   "domain": "Integration",
+   "question": "A managed agent deployment for claims triage has grown from 6 tools to 34 tools over 18 months as product teams added capabilities. Triage accuracy has declined from 91 percent to 78 percent, and average tool selection latency has increased by 2.3 seconds. A junior engineer has proposed adding a tool router agent in front of the current agent to filter the tool list per request. Which two findings should you present to justify capability decomposition before adding the router? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Several tools have not been invoked across the most recent 90 days of traffic."
+    },
+    {
+     "text": "The proposed router introduces an additional model call on every incoming request."
+    },
+    {
+     "text": "Tool descriptions overlap across multiple claim categories within the agent's tool set.",
+     "correct": true
+    },
+    {
+     "text": "The 34 tools serve four distinct claim workflow domains within the triage scope.",
+     "correct": true
+    },
+    {
+     "text": "The router pattern is well-documented across publicly available agent literature."
+    }
+   ],
+   "explanation": "Decomposition is justified by evidence intrinsic to the tool set: overlapping tool descriptions across claim categories (C) cause selection ambiguity, and 34 tools spanning four distinct workflow domains (D) show natural capability seams. A is dead-tool cleanup, B is a cost of the router rather than a decomposition argument, and E is an appeal to popularity."
+  },
+  {
+   "id": 3,
+   "type": "classification",
+   "domain": "Solution Design and Architecture",
+   "question": "You are reviewing a peer's end-to-end design for a Claude-based platform expected to scale to thousands of concurrent users. For each statement, indicate yes if the statement reflects a sound architectural practice. Otherwise, select no.",
+   "statements": [
+    {
+     "text": "Authentication and authorization run before retrieval so retrieval can filter by identity.",
+     "answer": "Yes"
+    },
+    {
+     "text": "An asynchronous queue absorbs bursty traffic between intake and the model invocation layer.",
+     "answer": "Yes"
+    },
+    {
+     "text": "Tax computation is encoded directly in the system prompt rather than in code.",
+     "answer": "No"
+    },
+    {
+     "text": "Conversation logs include unredacted government identifiers to maximize signal for tuning.",
+     "answer": "No"
+    }
+   ],
+   "choices": [
+    "Yes",
+    "No"
+   ],
+   "explanation": "Yes - resolving identity before retrieval lets access control filter the candidate set so unauthorized content never enters the prompt or the model context, which is the correct enforcement point. Yes - an async queue between intake and model invocation absorbs bursts, smooths load against provider rate limits, and keeps intake responsive under thousands of concurrent users. No - tax computation demands deterministic, auditable arithmetic and belongs in code or a rules engine; a probabilistic model gives no guarantee of correctness or reproducibility. No - storing unredacted government identifiers in conversation logs creates an unnecessary PII exposure across the log store and any downstream tuning pipeline; redact or tokenize at ingestion under data minimization."
+  },
+  {
+   "id": 4,
+   "type": "single",
+   "domain": "Solution Design and Architecture",
+   "question": "You are comparing patterns for a batch document-classification job that follows fixed steps: extract metadata, classify, summarize, and persist. Which pattern is the best fit and why?",
+   "options": [
+    {
+     "text": "A workflow pattern, because the steps are well-defined and predictable per-request token cost is preferred over flexibility.",
+     "correct": true
+    },
+    {
+     "text": "An agentic pattern, because agents are categorically more accurate than workflows and therefore always preferable regardless of step predictability."
+    },
+    {
+     "text": "An agentic pattern, because the open-ended planning capability of agents produces more consistent structured outputs than a fixed workflow graph on classification tasks."
+    },
+    {
+     "text": "A workflow pattern, because agentic patterns do not support tool invocations and therefore cannot execute the persist step that writes results to the downstream store."
+    }
+   ],
+   "explanation": "The four steps are fixed and known in advance, so a workflow gives deterministic sequencing, predictable token cost and simpler evaluation. B and C assert agent superiority without basis; D is factually wrong, since agents can invoke tools."
+  },
+  {
+   "id": 5,
+   "type": "single",
+   "domain": "Solution Design and Architecture",
+   "question": "A platform team operates a self-hosted multi-agent system on Kubernetes that orchestrates seven specialized agents for invoice processing. The team spends approximately 40 percent of engineering capacity on infrastructure maintenance, message bus reliability, and agent state recovery. The CFO has asked you to evaluate moving to managed agent infrastructure to reclaim engineering capacity. The security officer requires that all customer financial data remain within an approved network boundary. Which factor should most heavily influence your recommendation?",
+   "options": [
+    {
+     "text": "whether the current seven agents map cleanly to the patterns supported by managed agents"
+    },
+    {
+     "text": "whether managed agents support the current bus topology used by the platform team"
+    },
+    {
+     "text": "whether managed agents reduce per-invoice token costs across the existing processing volume"
+    },
+    {
+     "text": "whether managed agent data handling satisfies the network boundary required by security",
+     "correct": true
+    }
+   ],
+   "explanation": "A hard security constraint is a gate, not a trade-off. If managed agent data handling cannot keep financial data inside the approved network boundary, the engineering-capacity savings are irrelevant. The other factors matter only once the boundary requirement is satisfied."
+  },
+  {
+   "id": 6,
+   "type": "single",
+   "domain": "Integration",
+   "question": "You are selecting a pattern for a compliance Q&A assistant that must answer policy questions with citations to the authoritative internal source set. Latency, cost, and audit predictability are prioritized. Which pattern is the best fit?",
+   "options": [
+    {
+     "text": "multi-agent orchestration with a planner, researcher, and writer agent for every query"
+    },
+    {
+     "text": "a static prompt with the entire policy corpus concatenated into every request"
+    },
+    {
+     "text": "augmented LLM with retrieval-augmented generation over the indexed authoritative corpus and citation rendering on each answer",
+     "correct": true
+    },
+    {
+     "text": "a pure agent loop with open web-browsing tools to surface the most current policy information, without constraining retrieval to the authoritative internal corpus"
+    }
+   ],
+   "explanation": "RAG over the authoritative indexed corpus with per-answer citations gives grounded, auditable answers at one model call. Multi-agent orchestration (A) adds latency and cost, full-corpus concatenation (B) is expensive and hits context limits, and open web browsing (D) breaks the authoritative-source and audit requirements."
+  },
+  {
+   "id": 7,
+   "type": "single",
+   "domain": "Integration",
+   "question": "You are a solution architect designing a Claude-based assistant with access to 60 internal tools across multiple business domains. Loading every tool definition on every request increases token usage and time to first response. Which design pattern best addresses this issue without sacrificing capability breadth?",
+   "options": [
+    {
+     "text": "Use a separate model call to summarize all 60 tool definitions before each user turn."
+    },
+    {
+     "text": "Apply progressive tool discovery so a curated initial subset is exposed and additional tools are loaded on demand based on the task.",
+     "correct": true
+    },
+    {
+     "text": "Hard-code a fixed set of five tools per request to reduce token usage, regardless of whether those tools are relevant to the current task."
+    },
+    {
+     "text": "Increase the maximum context length and load all 60 tool definitions on every request, accepting the higher token cost and latency as necessary for full capability."
+    }
+   ],
+   "explanation": "Progressive tool discovery exposes a small relevant subset up front and loads further definitions on demand, cutting prompt tokens and time to first token while keeping all 60 tools reachable. A adds a call and still reads all definitions, C arbitrarily destroys capability, D accepts the cost rather than fixing it."
+  },
+  {
+   "id": 8,
+   "type": "classification",
+   "domain": "Solution Design and Architecture",
+   "question": "You are sequencing decomposed components in an invoice-processing pipeline. For each of the decomposed components, select the execution layer it belongs to: \"Pre-Processing\", \"Model Stage\", or \"Post-Processing\".",
+   "statements": [
+    {
+     "text": "Claude-based classification of invoice type",
+     "answer": "Model Stage"
+    },
+    {
+     "text": "persistence of validated records to the system of record",
+     "answer": "Post-Processing"
+    },
+    {
+     "text": "schema validation of the extracted fields",
+     "answer": "Post-Processing"
+    },
+    {
+     "text": "Claude-based extraction of structured invoice fields",
+     "answer": "Model Stage"
+    },
+    {
+     "text": "PII redaction on extracted text prior to model invocation",
+     "answer": "Pre-Processing"
+    },
+    {
+     "text": "optical character recognition on scanned invoice images",
+     "answer": "Pre-Processing"
+    }
+   ],
+   "choices": [
+    "Pre-Processing",
+    "Model Stage",
+    "Post-Processing"
+   ],
+   "explanation": "Model Stage - Claude-based classification of invoice type is model inference. Post-Processing - persistence to the system of record is a downstream action taken on validated output, after the model has returned. Post-Processing - schema validation checks the model's extracted fields and must run on the output, gating persistence. Model Stage - Claude-based extraction of structured fields is model inference. Pre-Processing - PII redaction is explicitly performed on extracted text before the model is invoked, so it prepares the input. Pre-Processing - OCR converts scanned images to text and is the first step that makes the input consumable by the model. The pipeline order reads: OCR, redact, extract, classify, validate, persist."
+  },
+  {
+   "id": 9,
+   "type": "single",
+   "domain": "Integration",
+   "question": "You are reviewing a customer-support agent's configuration. Each candidate tool falls into one of four categories: (1) required to complete defined tasks (2) frequently used and reduces hand-offs (3) occasionally useful for unrelated work (4) speculative future utility Which categories should typically remain in the agent configuration?",
+   "options": [
+    {
+     "text": "Only category 3, because occasionally useful tools for unrelated work provide broader coverage and should take priority over tools required for the agent's defined tasks."
+    },
+    {
+     "text": "Categories 1 and 2 only, because they map to defined tasks and the agent's regular hand-offs.",
+     "correct": true
+    },
+    {
+     "text": "All four categories, because broader tool access is categorically better for agent performance regardless of whether the tools map to defined tasks or regular hand-offs."
+    },
+    {
+     "text": "Only category 4, because speculative future-utility tools provide the most flexibility and should be configured even when no defined task currently requires them."
+    }
+   ],
+   "explanation": "Least privilege for tools: keep what the defined tasks require (category 1) and what materially reduces hand-offs in the agent's own scope (category 2). Occasional unrelated tools (3) and speculative tools (4) enlarge the selection space, dilute tool descriptions and add attack surface for no defined benefit."
+  },
+  {
+   "id": 10,
+   "type": "classification",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "You are classifying token-management tactics by where in the request lifecycle each tactic applies. For each of the tactics, select where in the request lifecycle each tactic applies: \"Input Preparation\", \"Prompt Construction\", or \"Output Handling\".",
+   "statements": [
+    {
+     "text": "Persist the validated output for downstream consumption and audit.",
+     "answer": "Output Handling"
+    },
+    {
+     "text": "Order the prompt sections so cacheable content sits before per-request content.",
+     "answer": "Prompt Construction"
+    },
+    {
+     "text": "Summarize prior conversation history when full history is no longer needed.",
+     "answer": "Input Preparation"
+    },
+    {
+     "text": "Validate the model's structured output against the expected schema.",
+     "answer": "Output Handling"
+    },
+    {
+     "text": "Move stable repeated content into a cacheable prefix at the head of the prompt.",
+     "answer": "Prompt Construction"
+    },
+    {
+     "text": "Trim retrieved passages to spans relevant to the user's question.",
+     "answer": "Input Preparation"
+    }
+   ],
+   "choices": [
+    "Input Preparation",
+    "Prompt Construction",
+    "Output Handling"
+   ],
+   "explanation": "Output Handling - persisting validated output for downstream use and audit acts on what the model returned. Prompt Construction - ordering sections so cacheable content precedes per-request content is an assembly decision that determines how much of the prefix can be cached. Input Preparation - summarizing prior conversation history compresses material before it enters the request. Output Handling - schema validation checks the returned structure and drives any retry. Prompt Construction - moving stable repeated content into a cacheable prefix at the head of the prompt is prefix layout. Input Preparation - trimming retrieved passages to the relevant spans reduces what is fed in, before assembly."
+  },
+  {
+   "id": 11,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "You are reviewing a peer's draft system prompt that contains contradictory instructions: one section says to never speculate beyond the supplied source, and another says to confidently fill in any gaps. Which response is most appropriate?",
+   "options": [
+    {
+     "text": "Add a priority-ordering instruction that tells the model to evaluate all available instructions and apply the most contextually appropriate one on each request."
+    },
+    {
+     "text": "Increase the temperature setting so that output randomness masks the contradictions."
+    },
+    {
+     "text": "Resolve the contradiction by removing or rewording the gap-filling instruction so the prompt consistently constrains the model to source-supported content.",
+     "correct": true
+    },
+    {
+     "text": "Keep both contradictory instructions in place and rely on the model to select which one to follow on each individual request, accepting inconsistent behavior as a result."
+    }
+   ],
+   "explanation": "Contradictory instructions produce non-deterministic behaviour. The fix is to resolve the conflict in the prompt itself so it consistently constrains the model to source-supported content. A and D delegate the conflict to the model; B misuses temperature and does not remove the contradiction."
+  },
+  {
+   "id": 12,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "A document analysis service processes legal filings averaging 80,000 tokens each. Each filing is queried by attorneys an average of 14 times during a case. The current architecture sends the full filing on every query. The CFO has asked you to reduce per-query costs while preserving response quality. The security officer requires that filing contents not be stored outside Fabrikam's tenancy. Which optimization approach should you recommend?",
+   "options": [
+    {
+     "text": "Summarize each filing once at intake and run all subsequent queries against the summary."
+    },
+    {
+     "text": "Move the workload to a smaller Claude model to reduce the per-token cost paid."
+    },
+    {
+     "text": "Cache the filing as the prompt prefix for reuse across the 14 queries per case.",
+     "correct": true
+    },
+    {
+     "text": "Index filings in a vector store and retrieve only the relevant passages per query."
+    }
+   ],
+   "explanation": "The filing is re-queried ~14 times, so caching it as a static prompt prefix makes the repeated 80k tokens cheap on every subsequent query while preserving full fidelity and keeping content inside the tenancy. A loses detail the attorneys need, B trades quality for cost, D adds an external index and risks missing context for whole-document questions."
+  },
+  {
+   "id": 13,
+   "type": "classification",
+   "domain": "Integration",
+   "question": "You are classifying chunking strategies by the corpus type each is best suited to. For each chunking strategy, select where in the request lifecycle each applies: \"Long Structured Documents\", \"Heterogeneous Short Records\", or \"Code or Hierarchical Specs\".",
+   "statements": [
+    {
+     "text": "function-level or section-level chunking for code modules",
+     "answer": "Code or Hierarchical Specs"
+    },
+    {
+     "text": "tree-aware chunking that follows code or specification hierarchy",
+     "answer": "Code or Hierarchical Specs"
+    },
+    {
+     "text": "per-record chunking where each record is one chunk",
+     "answer": "Heterogeneous Short Records"
+    },
+    {
+     "text": "semantic chunking along clause or paragraph boundaries",
+     "answer": "Long Structured Documents"
+    },
+    {
+     "text": "fixed-size chunking with overlap for short records of similar length",
+     "answer": "Heterogeneous Short Records"
+    },
+    {
+     "text": "hierarchical chunking that mirrors document section structure",
+     "answer": "Long Structured Documents"
+    }
+   ],
+   "choices": [
+    "Long Structured Documents",
+    "Heterogeneous Short Records",
+    "Code or Hierarchical Specs"
+   ],
+   "explanation": "Code or Hierarchical Specs - function-level chunking keeps each callable unit intact with its signature, which is the natural boundary in code modules. Code or Hierarchical Specs - tree-aware chunking follows the AST or specification hierarchy so children stay attached to their parent context. Heterogeneous Short Records - each record is already self-contained, so one record per chunk avoids merging unrelated entries. Long Structured Documents - clause and paragraph boundaries are the semantic units in contracts, policies and reports. Heterogeneous Short Records - fixed-size chunking with overlap is a reasonable fit only when the records are short and of similar length, as stated. Long Structured Documents - hierarchical chunking mirroring section structure preserves the heading context a long document depends on for retrieval."
+  },
+  {
+   "id": 14,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "You are designing the prompt for a ticket-triage classifier with thirty well-defined categories and clear category descriptions in the prompt. Which technique is most appropriate as the starting point?",
+   "options": [
+    {
+     "text": "a prompt that demands the model invent new categories when the supplied ones do not fit"
+    },
+    {
+     "text": "a chain-of-thought prompt for a routing decision that does not require multi-step reasoning"
+    },
+    {
+     "text": "a zero-shot prompt that specifies the categories with their descriptions and the required output format",
+     "correct": true
+    },
+    {
+     "text": "a prompt with no category descriptions, expecting the model to infer the category set"
+    }
+   ],
+   "explanation": "With thirty well-defined categories and clear descriptions available, a zero-shot prompt that states the categories and the required output format is the right starting point; add examples only if evaluation shows gaps. B adds latency for a decision that needs no multi-step reasoning, A and D remove the defined label set."
+  },
+  {
+   "id": 15,
+   "type": "classification",
+   "domain": "Integration",
+   "question": "You are evaluating retrieval-strategy claims used by a peer team. For each claim, select yes if the statement is generally accurate. Otherwise, select no.",
+   "statements": [
+    {
+     "text": "Dense vector retrieval is well suited to recovering paraphrased intent against unstructured text.",
+     "answer": "Yes"
+    },
+    {
+     "text": "Sparse term-matching retrieval recovers exact terms (such as identifiers and rare tokens) more reliably than dense alone.",
+     "answer": "Yes"
+    },
+    {
+     "text": "Structured query retrieval is the right fit for filter-and-aggregate workloads against a relational store with schema and indexes.",
+     "answer": "Yes"
+    },
+    {
+     "text": "Hybrid retrieval is identical to dense-only retrieval and shares the same recall characteristics.",
+     "answer": "No"
+    },
+    {
+     "text": "Random sampling of a data store is a sound retrieval strategy for production Q&A.",
+     "answer": "No"
+    }
+   ],
+   "choices": [
+    "Yes",
+    "No"
+   ],
+   "explanation": "Yes - embeddings capture semantic similarity, so dense retrieval matches paraphrased intent where the query shares no surface terms with the passage. Yes - sparse methods such as BM25 match tokens literally, which is why rare identifiers, part numbers and error codes are recovered more reliably than by dense retrieval alone. Yes - filter-and-aggregate work over a relational store with a schema and indexes belongs in SQL, not in an approximate similarity search. No - hybrid combines dense and sparse signals precisely because their recall profiles differ; if it were identical to dense-only there would be no reason to run it. No - random sampling has no relationship to the query and cannot reliably surface the passages an answer depends on."
+  },
+  {
+   "id": 16,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "You are designing a content moderation classifier that processes high volumes of user-generated comments under a tight per-message latency budget using well-defined classification labels. Which model selection best aligns with the workload?",
+   "options": [
+    {
+     "text": "Sonnet with extended thinking enabled, because deeper reasoning should be applied to every moderation request to improve edge-case handling."
+    },
+    {
+     "text": "Sonnet, because larger general-purpose models are preferred even when workload latency requirements are strict."
+    },
+    {
+     "text": "Opus, because every moderation decision requires maximum reasoning depth regardless of classification complexity."
+    },
+    {
+     "text": "Haiku, because its latency and cost profile align with high-volume classification workloads that require limited reasoning depth.",
+     "correct": true
+    }
+   ],
+   "explanation": "High volume, tight per-message latency and well-defined labels is the canonical Haiku profile. Extended thinking (A) and heavier tiers (B, C) add latency and cost without a reasoning requirement that justifies them."
+  },
+  {
+   "id": 17,
+   "type": "classification",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "You are evaluating prompting claims in a peer's design document. For each claim, select yes if the claim reflects sound practice. Otherwise, select no.",
+   "statements": [
+    {
+     "text": "Zero-shot is appropriate as a starting point for closed-set classification when categories and descriptions are provided in the prompt.",
+     "answer": "Yes"
+    },
+    {
+     "text": "Adding a few-shot example set with exact field names anchors output formatting on extraction tasks.",
+     "answer": "Yes"
+    },
+    {
+     "text": "Chain-of-thought should be the default on every task regardless of complexity.",
+     "answer": "No"
+    },
+    {
+     "text": "Leading-question framing is best mitigated by asking for an even-handed comparison with stated criteria.",
+     "answer": "Yes"
+    },
+    {
+     "text": "Behavioral differences across model versions can be ignored once a prompt has been validated on one version.",
+     "answer": "No"
+    }
+   ],
+   "choices": [
+    "Yes",
+    "No"
+   ],
+   "explanation": "Yes - with a closed category set and descriptions already in the prompt, zero-shot is the right starting point; add examples only where evaluation shows gaps. Yes - few-shot examples using the exact field names anchor the output shape and reduce formatting drift on extraction tasks. No - chain-of-thought adds latency and tokens, and on simple routing or classification it brings no accuracy benefit; reserve it for genuinely multi-step reasoning. Yes - a leading prompt biases the answer toward the framing, so requesting an even-handed comparison against stated criteria is the correct mitigation. No - behaviour shifts across model versions, so prompts must be re-validated against the evaluation set on each upgrade rather than assumed stable."
+  },
+  {
+   "id": 18,
+   "type": "classification",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "You are evaluating model-selection claims used by a peer team. For each statement, select yes if the statement is generally true. Otherwise, select no.",
+   "statements": [
+    {
+     "text": "Heavier-reasoning models typically consume more of the rate limit and run more slowly than lighter models on the same input.",
+     "answer": "Yes"
+    },
+    {
+     "text": "A representative-sample evaluation on the target workload is the right basis for confirming a model selection.",
+     "answer": "Yes"
+    },
+    {
+     "text": "The most capable model is always the right choice regardless of the workload profile.",
+     "answer": "No"
+    },
+    {
+     "text": "Tiered routing can serve routine traffic with a lighter model while reserving a heavier model for traffic that needs its capability.",
+     "answer": "Yes"
+    },
+    {
+     "text": "Selecting a model based on which version was most recently announced is the right basis for production decisions.",
+     "answer": "No"
+    }
+   ],
+   "choices": [
+    "Yes",
+    "No"
+   ],
+   "explanation": "Yes - heavier models generate more slowly and draw more against token-based rate limits for the same input, which is why latency-sensitive high-volume workloads favour lighter tiers. Yes - confirming a selection requires running candidates against a representative sample of the actual workload, not published benchmarks. No - capability is only one axis; latency tolerance, volume and cost ceiling matter, and the correct rule is the lightest model that clears the quality bar. Yes - tiered routing by task complexity is a standard pattern that keeps cost and latency down on routine traffic without giving up capability where it is needed. No - recency of announcement says nothing about fit for a given workload; a new version is a trigger to re-evaluate, not a reason to adopt."
+  },
+  {
+   "id": 19,
+   "type": "multiple",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "You are selecting a model for a new production workload and must complete the upstream steps before testing candidate models empirically. Which two steps must be completed BEFORE running a representative sample on a candidate model? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Sign off the production rollout plan with the platform and security teams."
+    },
+    {
+     "text": "Select the lightest model that consistently meets the quality bar across the sample."
+    },
+    {
+     "text": "Choose a candidate model based on the requirements profile and known capabilities.",
+     "correct": true
+    },
+    {
+     "text": "Retest the model choice when a new model version becomes available."
+    },
+    {
+     "text": "Define the quality bar, latency tolerance, and expected volume for the workload.",
+     "correct": true
+    }
+   ],
+   "explanation": "Before empirical testing you need the requirements profile: the quality bar, latency tolerance and expected volume (E), and a candidate model chosen against that profile and known capabilities (C). B is the outcome of testing, A is rollout, D is ongoing re-evaluation."
+  },
+  {
+   "id": 20,
+   "type": "single",
+   "domain": "Integration",
+   "question": "You are investigating an MCP server that fails on first launch but succeeds on subsequent runs. The system permission dialogs appeared on first launch. Which response is most appropriate?",
+   "options": [
+    {
+     "text": "Recognize the first-run permission grant as the cause, document the expected behavior in onboarding guidance, and confirm that subsequent runs succeed.",
+     "correct": true
+    },
+    {
+     "text": "Disable operating system permission dialogs entirely, accept the resulting security implications, and proceed without confirming whether the failure recurs."
+    },
+    {
+     "text": "Reinstall the operating system to clear all permission state, and do not first confirm whether the one-time permission grant was the actual cause of failure."
+    },
+    {
+     "text": "Treat the first-run failure as a permanent fault, replace the MCP server with an alternative implementation, and do not verify whether subsequent runs succeed."
+    }
+   ],
+   "explanation": "First-run OS permission dialogs are a known one-time grant; the correct response is to recognise the cause, document it in onboarding and verify subsequent runs succeed. B trades away security, C is disproportionate, D discards a working component without diagnosis."
+  },
+  {
+   "id": 21,
+   "type": "multiple",
+   "domain": "Integration",
+   "question": "You are compiling factors that should drive the choice between Model Context Protocol (MCP), direct API integration, and agent-to-agent handoff. Which two factors belong on the list? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "whether the underlying transport supports encryption in transit between the integrated services"
+    },
+    {
+     "text": "whether the interaction is stateless and latency-sensitive or stateful and longer-running",
+     "correct": true
+    },
+    {
+     "text": "whether the vendor publishes detailed reference documentation for each candidate protocol"
+    },
+    {
+     "text": "whether the team has prior implementation experience with any of the candidate protocols"
+    },
+    {
+     "text": "whether the integration must be portable across multiple AI clients in the ecosystem",
+     "correct": true
+    }
+   ],
+   "explanation": "Protocol choice is driven by interaction shape — stateless and latency-sensitive versus stateful and long-running (B) — and by whether the integration must be reusable across multiple AI clients, which is exactly what MCP provides (E). A applies to all options, C and D are team/vendor conveniences rather than architectural drivers."
+  },
+  {
+   "id": 22,
+   "type": "single",
+   "domain": "Integration",
+   "question": "You are selecting a protocol for a single low-latency stateless tool call from a Claude-based assistant to an internal pricing service that already exposes a stable HTTP API. Which integration mechanism is the most appropriate?",
+   "options": [
+    {
+     "text": "a bespoke streaming protocol layered over an unrelated asynchronous message bus"
+    },
+    {
+     "text": "an agent-to-agent handoff that introduces another Claude-based agent in front of the pricing service"
+    },
+    {
+     "text": "a long-lived stateful session protocol for a stateless single-call interaction"
+    },
+    {
+     "text": "a direct API call to the existing endpoint with the appropriate scoped credentials",
+     "correct": true
+    }
+   ],
+   "explanation": "A single stateless low-latency call to an existing stable HTTP endpoint is best served by a direct API call with scoped credentials. MCP-style session protocols (C), an extra agent hop (B) or a bespoke bus (A) add latency and moving parts for no benefit."
+  },
+  {
+   "id": 23,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "You are assessing a Claude-based system whose dominant risk is silent quality drift on safety relevant outputs after a model-version upgrade. Which assessment activity most directly addresses this risk?",
+   "options": [
+    {
+     "text": "Disable adversarial evaluation entirely during model-version upgrade cycles to reduce evaluation cost, accepting that safety drift will go undetected until it appears in production."
+    },
+    {
+     "text": "Skip evaluation on each model-version upgrade and rely on user-submitted complaints to surface safety drift after the upgraded model has already served production traffic."
+    },
+    {
+     "text": "Rotate adversarial inputs randomly so no two upgrades are scored on the same set."
+    },
+    {
+     "text": "Maintain an adversarial evaluation set with version-attributed scoring so each upgrade is measured against the same set before promotion.",
+     "correct": true
+    }
+   ],
+   "explanation": "Silent drift is detected by scoring every version against the same stable adversarial set, with results attributed per version and checked before promotion. C destroys comparability, A and B remove detection entirely."
+  },
+  {
+   "id": 24,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are designing a human-in-the-loop validation workflow. Which two design elements belong in the workflow? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "capture of reviewer decisions as labeled data that feeds the evaluation set over time",
+     "correct": true
+    },
+    {
+     "text": "mandatory reviewer agreement with the model output to maintain consistent reviewer-model alignment"
+    },
+    {
+     "text": "aggregate reviewer throughput metrics published weekly to leadership for headcount planning"
+    },
+    {
+     "text": "uniform sampling of all model outputs to give every request an equal chance of review"
+    },
+    {
+     "text": "risk-stratified sampling that concentrates reviewer attention on low-confidence and high-impact outputs",
+     "correct": true
+    }
+   ],
+   "explanation": "Risk-stratified sampling (E) puts reviewer capacity where impact and uncertainty are highest, and capturing reviewer decisions as labelled data (A) compounds into the evaluation set over time. B destroys the point of independent review, C is a management metric, D spreads scarce review capacity uniformly."
+  },
+  {
+   "id": 25,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "You are designing a test strategy for a Claude-based pipeline that handles sensitive financial data. Which two test types should be prioritized to cover both safety-under-attack and cross-component correctness? (Choose two.)",
+   "options": [
+    {
+     "text": "integration tests that verify end-to-end pipeline behavior across all components",
+     "correct": true
+    },
+    {
+     "text": "unit tests targeting individual prompt-template rendering logic only"
+    },
+    {
+     "text": "adversarial tests using prompt-injection and malformed-input cases",
+     "correct": true
+    },
+    {
+     "text": "smoke tests to verify core paths after each deployment"
+    },
+    {
+     "text": "regression tests against a stable reference set of previously known good outputs"
+    }
+   ],
+   "explanation": "Adversarial tests with prompt-injection and malformed inputs cover safety-under-attack (C); integration tests covering end-to-end behaviour across components cover cross-component correctness (A). B is too narrow, D and E are valuable but address neither dimension specifically."
+  },
+  {
+   "id": 26,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "A Claude-based research assistant begins producing responses that confidently contradict its retrieved source documents despite no change to the retrieval pipeline. Which two diagnostic actions most directly identify the root cause of this behavior? (Choose two.)",
+   "options": [
+    {
+     "text": "Switch the retrieval index to a denser embedding model to improve chunk relevance scores."
+    },
+    {
+     "text": "Isolate whether the failure reproduces on the previous model version to test for model mismatch.",
+     "correct": true
+    },
+    {
+     "text": "Inspect system-prompt grounding instructions to determine whether citation constraints remain intact.",
+     "correct": true
+    },
+    {
+     "text": "Reduce the temperature setting to lower response variance across all query types."
+    },
+    {
+     "text": "Increase the context window size to allow more retrieved chunks per query."
+    }
+   ],
+   "explanation": "The retrieval pipeline is unchanged, so the likely causes are upstream of retrieval: a model-version change (B, reproduce on the previous version) or weakened grounding/citation constraints in the system prompt (C). A, D and E are speculative tuning changes that do not isolate a cause."
+  },
+  {
+   "id": 27,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "A pilot AI assistant for procurement specialists shows 89 percent first-response acceptance, but follow-up surveys reveal that specialists frequently override the assistant's vendor recommendations after consulting unrelated criteria the assistant did not consider. The pilot owner wants to ship the assistant as is, given the strong acceptance rate. Which two discernment-competency observations should you raise BEFORE approving the launch? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Acceptance does not measure whether recommendations are right after specialist review.",
+     "correct": true
+    },
+    {
+     "text": "The survey response rate may not be statistically representative of all the specialists."
+    },
+    {
+     "text": "The unconsidered criteria represent a scope gap in the assistant's input space directly.",
+     "correct": true
+    },
+    {
+     "text": "The acceptance rate alone is sufficient evidence of readiness for general production use."
+    },
+    {
+     "text": "The pilot duration was likely too short to establish reliability across the full year."
+    }
+   ],
+   "explanation": "Acceptance of a first response is not a correctness measure once specialists later override it (A), and the criteria the assistant never saw are a genuine input-scope gap (C). D restates the flawed reasoning; B and E are generic survey/duration caveats rather than discernment findings."
+  },
+  {
+   "id": 28,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "The platform team at Trenova Systems, Inc. needs to reduce per-query cost and p95 latency for a high-volume Claude pipeline without degrading output quality on the core use case. Which two optimizations directly target both cost and latency simultaneously? (Choose two.)",
+   "options": [
+    {
+     "text": "Add a retrieval step that fetches the full source corpus into the context window before generation."
+    },
+    {
+     "text": "Expand the system prompt to include additional few-shot examples for every request."
+    },
+    {
+     "text": "Increase max_tokens to reduce the frequency of truncated responses requiring follow-up calls."
+    },
+    {
+     "text": "Enable prompt caching on the static system-prompt prefix to reduce billable input tokens on repeated calls.",
+     "correct": true
+    },
+    {
+     "text": "Route straightforward query types to a smaller, faster Claude model and reserve the full model for complex cases.",
+     "correct": true
+    }
+   ],
+   "explanation": "Prompt caching on the static prefix (D) cuts billable input tokens and prefill time; routing simple queries to a smaller model (E) cuts both price per token and generation latency. A, B and C all add tokens or work."
+  },
+  {
+   "id": 29,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "After a prompt template update, several previously passing test cases now produce unexpected outputs. Which test type is specifically designed to detect this category of failure?",
+   "options": [
+    {
+     "text": "regression tests scored against a stable reference set of known-good behavior",
+     "correct": true
+    },
+    {
+     "text": "adversarial tests that probe for prompt-injection vulnerabilities"
+    },
+    {
+     "text": "integration tests that validate cross-component pipeline behavior"
+    },
+    {
+     "text": "smoke tests that confirm high-level system availability after the change"
+    }
+   ],
+   "explanation": "Regression tests scored against a stable known-good reference set exist precisely to catch behaviour changes introduced by a prompt or template edit. The other test types target injection, cross-component wiring and availability."
+  },
+  {
+   "id": 30,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are integrating human review into a high-volume classification pipeline where reviewing every output is infeasible. Which sampling strategy best balances throughput with quality oversight?",
+   "options": [
+    {
+     "text": "no sampling at all, relying entirely on user-submitted complaints to surface quality and safety issues after they have already affected end users at scale"
+    },
+    {
+     "text": "risk-stratified sampling that reviews all low-confidence and high-impact outputs and a smaller random sample of high-confidence routine outputs",
+     "correct": true
+    },
+    {
+     "text": "inverse sampling that reviews only high-confidence routine outputs and skips all low-confidence and high-impact outputs"
+    },
+    {
+     "text": "universal sampling that reviews every output regardless of confidence level or throughput impact, treating all outputs as equally requiring human review"
+    }
+   ],
+   "explanation": "Risk-stratified sampling reviews all low-confidence and high-impact outputs plus a smaller random sample of routine high-confidence ones, giving oversight where it matters within a feasible review budget. A has no oversight, C inverts the priority, D is infeasible at volume."
+  },
+  {
+   "id": 31,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "You are rolling out monitoring for a Claude-based deployment and must complete the specification steps before instrumenting the deployment. Which two steps must be completed BEFORE instrumenting the deployment to emit metrics and traces? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Document the dashboards, alerts, and runbooks for the on-call rotation that will respond."
+    },
+    {
+     "text": "Build the dashboards that surface metrics across slices at the cadence the team operates on."
+    },
+    {
+     "text": "Define the service-level objectives (SLOs) and the error budgets the deployment will be held to.",
+     "correct": true
+    },
+    {
+     "text": "Tune the alert thresholds based on observed normal-state distributions to reduce false positives."
+    },
+    {
+     "text": "Define the metrics and the slices the deployment will monitor across normal and adversarial traffic.",
+     "correct": true
+    }
+   ],
+   "explanation": "Instrumentation must be specified before it is built: define the SLOs and error budgets the deployment is held to (C), and the metrics and slices to be emitted across normal and adversarial traffic (E). Dashboards, alert tuning and runbooks (A, B, D) come after telemetry exists."
+  },
+  {
+   "id": 32,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are an architect supporting the iteration phase of a deployed Claude-based system. Which activity most directly fits this phase?",
+   "options": [
+    {
+     "text": "Discard the evaluation framework and reference set once the deployment is in production, accepting that future iterations will have no structured basis for measuring the impact of changes."
+    },
+    {
+     "text": "Rebuild the entire system architecture from scratch at the start of every iteration cycle regardless of what production telemetry, evaluations, and stakeholder feedback indicate is needed."
+    },
+    {
+     "text": "Review production telemetry, sampled output evaluations, and stakeholder feedback to identify the highest-impact change for the next cycle, then plan the change against the evaluation framework.",
+     "correct": true
+    },
+    {
+     "text": "Stop measuring production outcomes once the deployment has successfully launched, treating the go-live milestone as the end of the evaluation and iteration cycle."
+    }
+   ],
+   "explanation": "Iteration means reviewing telemetry, sampled output evaluations and stakeholder feedback, picking the highest-impact change, and planning it against the existing evaluation framework. A and D discard measurement; B discards continuity."
+  },
+  {
+   "id": 33,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "A Claude architect at a health services organization is defining evaluation metrics for a clinical-summary pipeline. The pipeline must remain within a per query cost ceiling and must never surface patient data to unauthorized roles. Which two metrics directly address these requirements? (Choose two.)",
+   "options": [
+    {
+     "text": "role-based access-control enforcement rate measured on a red-team dataset",
+     "correct": true
+    },
+    {
+     "text": "response latency at the 95th percentile across a one-week sample window"
+    },
+    {
+     "text": "BLEU score computed against a human-annotated reference summary set"
+    },
+    {
+     "text": "throughput measured as successful requests processed per minute"
+    },
+    {
+     "text": "per-query token cost measured against the defined cost ceiling",
+     "correct": true
+    }
+   ],
+   "explanation": "Per-query token cost against the defined ceiling (E) maps to the cost requirement; RBAC enforcement rate measured on a red-team dataset (A) maps to the never-surface-PHI-to-unauthorised-roles requirement. B, C and D measure other properties."
+  },
+  {
+   "id": 34,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "A revenue projection assistant has missed its monthly cost target by 38 percent. Profiling shows three contributors: a 6,000-token policy preamble repeated on every call (45 percent of cost), retrieval of historical sales chunks averaging 3,000 tokens per call (30 percent), and inference on a flagship tier model (25 percent). Stakeholders require that projection accuracy remain unchanged. Which two optimizations should you sequence first to reduce cost without affecting accuracy? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Cache common retrieved sales chunks accessed across many of the daily queries.",
+     "correct": true
+    },
+    {
+     "text": "Truncate the policy preamble to remove non-essential clauses from the prompt."
+    },
+    {
+     "text": "Enable prompt caching on the static policy preamble across the recurring calls.",
+     "correct": true
+    },
+    {
+     "text": "Switch the workload to a smaller, faster Claude model tier across all queries."
+    },
+    {
+     "text": "Reduce the number of historical sales chunks retrieved across each query run."
+    }
+   ],
+   "explanation": "Only caching reduces cost without touching what the model sees: prompt caching on the static 6,000-token preamble (C) targets the largest contributor, and caching commonly retrieved sales chunks (A) targets the second. B, D and E all change prompt content, retrieval depth or model tier, which risks the fixed accuracy requirement."
+  },
+  {
+   "id": 35,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "You are operating an interactive assistant whose dominant performance constraint is per-turn latency. Quality on routine turns is already acceptable. Which configuration adjustment most directly improves latency without disproportionately damaging quality?",
+   "options": [
+    {
+     "text": "Reduce retrieval depth to the top-k passages that historically cover the answer, and cache stable system-prompt content.",
+     "correct": true
+    },
+    {
+     "text": "Increase retrieval depth to the corpus maximum to improve recall regardless of latency."
+    },
+    {
+     "text": "Disable prompt caching entirely to ensure fresh context processing on every request, preventing stale prefix content from affecting latency-sensitive interactions."
+    },
+    {
+     "text": "Switch every turn to the heaviest available model to maximize output quality, accepting that the increased model latency will worsen the per-turn SLO rather than improve it."
+    }
+   ],
+   "explanation": "Trimming retrieval to the top-k that historically covers the answer reduces prefill tokens, and caching the stable system prefix removes repeated prefill — both cut latency with minimal quality cost on already-acceptable routine turns. B, C and D all increase latency."
+  },
+  {
+   "id": 36,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "You are evaluating an evaluation set used to score a Claude-based hiring-support tool. The set is drawn from one geographic region and one tenure band. Which response is most appropriate?",
+   "options": [
+    {
+     "text": "Expand the evaluation set to cover the geographic regions and tenure bands the tool will serve, and rescore the system on the expanded set before broader release.",
+     "correct": true
+    },
+    {
+     "text": "Continue using the narrow evaluation set drawn from one region and one tenure band because the existing benchmark scores are already high on that subset."
+    },
+    {
+     "text": "Reduce the evaluation set further to a single demographic subgroup to simplify score interpretation, narrowing coverage rather than expanding it to match the intended user population."
+    },
+    {
+     "text": "Discard all quantitative evaluation and replace it with qualitative impressions collected from a small, convenience-selected group that may not represent the tool's full user population."
+    }
+   ],
+   "explanation": "An evaluation set drawn from one region and one tenure band cannot support claims about the population the tool will serve; expand coverage to the intended slices and rescore before broader release. B keeps a biased benchmark, C narrows further, D discards measurement."
+  },
+  {
+   "id": 37,
+   "type": "multiple",
+   "domain": "Integration",
+   "question": "You are reviewing instrumentation in a multi-agent system. Which two findings constitute valid observability gaps in the instrumentation? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "Model identity and version on each turn are not recorded with the turn artifacts.",
+     "correct": true
+    },
+    {
+     "text": "Tool-call payloads and outcomes are recorded with redaction applied to known sensitive fields."
+    },
+    {
+     "text": "Latency and token usage on every span are emitted to the central metrics pipeline."
+    },
+    {
+     "text": "Request-scoped correlation identifiers do not propagate across agent and tool calls.",
+     "correct": true
+    },
+    {
+     "text": "Trace spans for each agent step are exported to the shared distributed-tracing backend."
+    }
+   ],
+   "explanation": "Missing model identity and version per turn (A) makes drift and incident attribution impossible; correlation IDs that do not propagate across agent and tool calls (D) break end-to-end tracing. B, C and E describe instrumentation that is present and correct."
+  },
+  {
+   "id": 38,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "You are building an evaluation pipeline for a Claude-based deployment and must complete the specification steps before running the deployment against the dataset. Which two steps must be completed BEFORE running the deployment against the evaluation dataset? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Score the deployment outputs against the reference labels and aggregate the metrics."
+    },
+    {
+     "text": "Publish the aggregated metrics to a dashboard and gate releases on threshold checks."
+    },
+    {
+     "text": "Review failure cases with subject matter experts to refine the scoring rubric."
+    },
+    {
+     "text": "Define the metrics and slices the framework will report across representative, edge, and adversarial cases.",
+     "correct": true
+    },
+    {
+     "text": "Curate and label the evaluation dataset to match the defined slices.",
+     "correct": true
+    }
+   ],
+   "explanation": "Specification precedes execution: define the metrics and slices across representative, edge and adversarial cases (D), then curate and label the dataset to match those slices (E). A, B and C all happen after the run."
+  },
+  {
+   "id": 39,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "You are identifying the highest-impact optimization for a deployment whose token cost is dominated by a long, repeated system prompt and a large retrieved context per request. Which optimization most directly targets the dominant cost driver?",
+   "options": [
+    {
+     "text": "Add additional repeated content to the system prompt to give the model more guidance."
+    },
+    {
+     "text": "Increase retrieval depth on every request to maximize recall, worsening the dominant cost driver by adding more retrieved tokens per request rather than reducing them."
+    },
+    {
+     "text": "Switch every request to the heaviest available model to maximize output quality, accepting that higher per-request inference cost compounds rather than addresses the dominant cost driver."
+    },
+    {
+     "text": "Move the long, repeated system prompt into a cacheable prefix and trim retrieved context to the spans relevant to each query.",
+     "correct": true
+    }
+   ],
+   "explanation": "The two dominant drivers are the repeated system prompt and oversized retrieved context, so move the prompt into a cacheable prefix and trim retrieval to the relevant spans. A, B and C each enlarge the dominant driver or the per-request inference cost."
+  },
+  {
+   "id": 40,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "An operations engineer reports that a Claude-based pipeline began returning malformed JSON responses after a scheduled maintenance window, causing downstream processing failures. Which two investigative steps most directly isolate the root cause? (Choose two.)",
+   "options": [
+    {
+     "text": "Compare the current system prompt and output schema configuration against the last known good version from before the maintenance window.",
+     "correct": true
+    },
+    {
+     "text": "Switch to a different Claude model tier to rule out provider-side changes as a contributing factor."
+    },
+    {
+     "text": "Increase the max tokens limit to determine whether output truncation is causing incomplete JSON structures."
+    },
+    {
+     "text": "Replay a set of premaintenance requests against the current configuration and inspect the raw model output before downstream parsing.",
+     "correct": true
+    },
+    {
+     "text": "Clear the prompt cache and resubmit all pending requests to eliminate stale cached prefixes."
+    }
+   ],
+   "explanation": "Something changed in the maintenance window, so diff the current system prompt and output-schema configuration against the last known-good version (A) and replay pre-maintenance requests while inspecting raw model output before parsing (D). B, C and E are remediation guesses that do not isolate the change."
+  },
+  {
+   "id": 41,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "You are running a controlled experiment to compare two prompts and must complete the design steps before executing the experiment. Which two steps must be completed BEFORE running the experiment with random assignment? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Analyze the results against the predefined success metric and significance threshold."
+    },
+    {
+     "text": "Determine the minimum detectable effect size and the sample size needed for power.",
+     "correct": true
+    },
+    {
+     "text": "Document the recommendation, the trade-offs accepted, and the alternatives considered."
+    },
+    {
+     "text": "Decide whether to promote, reject, or iterate the candidate based on the analysis."
+    },
+    {
+     "text": "Define the hypothesis and the primary success metric for the comparison.",
+     "correct": true
+    }
+   ],
+   "explanation": "Experiment design comes first: state the hypothesis and primary success metric (E), then determine the minimum detectable effect and the sample size needed for power (B). A, C and D are post-execution steps."
+  },
+  {
+   "id": 42,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "An architect is reviewing a Claude-based candidate-screening tool prior to deployment. A stakeholder asserts that because the model was not trained on company data, no bias evaluation is necessary. Which two responses most accurately challenge this assertion? (Choose two.)",
+   "options": [
+    {
+     "text": "The model may carry demographic biases from pretraining that manifest in screening outcomes regardless of fine-tuning.",
+     "correct": true
+    },
+    {
+     "text": "Transparency obligations are satisfied by disclosing that an AI system is in use, without further evaluation."
+    },
+    {
+     "text": "The system should be evaluated on outcome-disparity metrics across protected groups before deployment.",
+     "correct": true
+    },
+    {
+     "text": "Fairness testing is required only when the training dataset is known to contain protected-class labels."
+    },
+    {
+     "text": "Bias evaluation is unnecessary when the model provider has published a responsible-use policy."
+    }
+   ],
+   "explanation": "Pretraining bias can surface in screening outcomes regardless of whether company data was used for training (A), so the system needs outcome-disparity testing across protected groups before deployment (C). B, D and E all restate the assertion being challenged."
+  },
+  {
+   "id": 43,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are building an ethics review checklist for deployments supported by artificial intelligence (AI). Which two checks belong on the list? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "Verify that outputs do not rely on generalizations about people that the underlying data does not support.",
+     "correct": true
+    },
+    {
+     "text": "Confirm that vendor licensing terms permit the planned production use of the model."
+    },
+    {
+     "text": "Confirm that latency and throughput targets are met across the supported user populations."
+    },
+    {
+     "text": "Restrict the ethics review to outputs that exceed a defined model-confidence threshold."
+    },
+    {
+     "text": "Confirm that high-impact decisions retain human accountability rather than being attributed to the model.",
+     "correct": true
+    }
+   ],
+   "explanation": "Ethics checks: outputs must not rest on unsupported generalisations about people (A), and high-impact decisions must retain named human accountability (E). B is legal/licensing, C is performance, D would exclude exactly the low-confidence outputs that need review."
+  },
+  {
+   "id": 44,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are defining where human review must remain in a planned automated pipeline. Which placement reflects sound human-in-the-loop design?",
+   "options": [
+    {
+     "text": "Remove all human review steps from the pipeline to maximize throughput, accepting that high-impact and irreversible actions will be taken without any human approval or oversight."
+    },
+    {
+     "text": "Place a human reviewer in the loop for a randomly selected sample of requests, without defining criteria for what the reviewer should check or which output categories require mandatory review."
+    },
+    {
+     "text": "Place a human reviewer between the model's output and any high-impact, irreversible action, with explicit criteria for what the reviewer must check before approval.",
+     "correct": true
+    },
+    {
+     "text": "Place a human reviewer only after the irreversible action has already executed, making the review a post-hoc audit rather than a meaningful pre-action check or approval gate."
+    }
+   ],
+   "explanation": "Place the reviewer between the model output and any high-impact irreversible action, with explicit criteria for what must be checked before approval. A removes oversight, B is unstructured, D reviews after the damage is done."
+  },
+  {
+   "id": 45,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "An engineer inadvertently commits an API key to the repository by placing it in .claude/settings.json. Which configuration design principle was violated?",
+   "options": [
+    {
+     "text": "Project-scope configuration should always override user-scope configuration."
+    },
+    {
+     "text": "MCP server definitions must reside in environment variables to prevent scope conflicts."
+    },
+    {
+     "text": "Credentials must be resolved at runtime from a secret store and never stored in version-controlled files.",
+     "correct": true
+    },
+    {
+     "text": "Managed configuration must be applied before project-scope configuration is read."
+    }
+   ],
+   "explanation": "Secrets must be resolved at runtime from a secret store and never written into version-controlled configuration files. The other options describe configuration precedence rules, which are not what was violated."
+  },
+  {
+   "id": 46,
+   "type": "multiple",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "An engineering organization is adopting Claude Code across 200 developers. A team lead has proposed that AI-generated pull requests bypass the standard code review process for changes under 50 lines, on the grounds that small changes are low-risk and review capacity is constrained. Which two Diligence-competency objections should you raise? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Code review capacity should be expanded to handle every code change submitted across the team."
+    },
+    {
+     "text": "The 50-line threshold should be raised to 200 lines instead to capture more changes overall."
+    },
+    {
+     "text": "Line count is a poor proxy for the actual risk a code change introduces into the system.",
+     "correct": true
+    },
+    {
+     "text": "Removing review removes the verification mechanism that AI-generated output requires across the workflow.",
+     "correct": true
+    },
+    {
+     "text": "AI-generated pull requests should be rejected as a default policy across the engineering organization."
+    }
+   ],
+   "explanation": "Line count is a weak proxy for risk — a two-line change to auth or a migration can be severe (C) — and removing review removes the verification step that AI-generated output specifically requires (D). A, B and E are impractical or unrelated policy positions rather than diligence objections."
+  },
+  {
+   "id": 47,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "A technical team is cataloging risks specific to Claude's use in a document-grounded Q&A system. Which two items represent failure modes that are intrinsic to LLM-based systems rather than generic software defects? (Choose two.)",
+   "options": [
+    {
+     "text": "the model generating a plausible-sounding answer that is unsupported by any retrieved document",
+     "correct": true
+    },
+    {
+     "text": "the model refusing a legitimate query because surface features triggered an overly broad safety pattern",
+     "correct": true
+    },
+    {
+     "text": "an expired TLS certificate blocking outbound API calls to the Claude endpoint"
+    },
+    {
+     "text": "a database connection timeout causing a retrieval call to return an empty result set"
+    },
+    {
+     "text": "a misconfigured load balancer routing requests to a deprecated API version"
+    }
+   ],
+   "explanation": "Plausible but unsupported output (A) and over-broad refusal of a legitimate query (B) are probabilistic model behaviours with no deterministic-software analogue. C, D and E are ordinary infrastructure faults."
+  },
+  {
+   "id": 48,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are evaluating a Claude-based deployment for adherence to a specific regulation. Which two steps must be completed BEFORE mapping deployment data flows to specific regulatory clauses? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Compare the in-place controls against the regulatory requirements to identify any compliance gaps."
+    },
+    {
+     "text": "Inventory the vendor-provided compliance tooling and confirm which compliance affordances are in place.",
+     "correct": true
+    },
+    {
+     "text": "Identify the applicability of the regulation based on data types, jurisdiction, and audience.",
+     "correct": true
+    },
+    {
+     "text": "Document the identified gaps along with recommended remediations and residual risk for sign-off."
+    },
+    {
+     "text": "Schedule the remediation work with the engineering team based on the prioritized gap findings."
+    }
+   ],
+   "explanation": "Before mapping data flows to clauses you must establish that the regulation applies, based on data types, jurisdiction and audience (C), and inventory the vendor-provided compliance affordances already in place (B). A, D and E follow the mapping step."
+  },
+  {
+   "id": 49,
+   "type": "multiple",
+   "domain": "Integration",
+   "question": "You are reviewing an integration specification for security gaps. Which two findings constitute valid security gaps in the specification? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "Tool inputs and outputs are encrypted in transit using transport layer security between services."
+    },
+    {
+     "text": "Service credentials are placed in the prompt context where they can leak into logs and traces.",
+     "correct": true
+    },
+    {
+     "text": "Tool calls execute server-side under a least-privilege service principal scoped to the requested action."
+    },
+    {
+     "text": "Role-based access control (RBAC) is enforced only at the response-rendering layer after the model accesses restricted data.",
+     "correct": true
+    },
+    {
+     "text": "Per-user OAuth tokens are exchanged with scope-restricted permissions and refreshed within the active session."
+    }
+   ],
+   "explanation": "Credentials in the prompt context (B) leak into logs, traces and model output. RBAC enforced only at rendering (D) means restricted data already entered the model context, so the control is applied too late. A, C and E describe sound controls."
+  },
+  {
+   "id": 50,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are running a risk assessment on a planned Claude-based deployment and must complete the inventory steps before assessing threats against assets. Which two steps must be completed BEFORE assessing threats against assets to estimate likelihood and impact? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Recommend mitigations and residual-risk acceptance for the risks that remain after analysis."
+    },
+    {
+     "text": "Document the assessment outcome with risks, mitigations, residual risk, and acceptance owners."
+    },
+    {
+     "text": "Enumerate the threat actors and attack vectors that are relevant to the deployment.",
+     "correct": true
+    },
+    {
+     "text": "Identify the assets that the deployment touches along with the sensitivity of each asset.",
+     "correct": true
+    },
+    {
+     "text": "Recommend mitigations and residual-risk acceptance for risks that remain."
+    }
+   ],
+   "explanation": "Threat-likelihood and impact assessment needs both sides of the inventory first: the assets touched and their sensitivity (D), and the relevant threat actors and attack vectors (C). A, B and E are downstream outputs."
+  },
+  {
+   "id": 51,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are a platform architect designing an internal Claude-based assistant that serves both finance analysts and external auditors. Each population must access only documents permitted by their role. Where should role-based access control be enforced in the pipeline?",
+   "options": [
+    {
+     "text": "at the retrieval layer, before any role-restricted content reaches the prompt construction step or the model",
+     "correct": true
+    },
+    {
+     "text": "after the response is generated, by post-filtering content that should not have been retrieved"
+    },
+    {
+     "text": "nowhere in the pipeline; rely on the model's general refusal behavior to reject unauthorized document access without any enforced access control"
+    },
+    {
+     "text": "inside the system prompt as a natural-language instruction for Claude to ignore unauthorized documents"
+    }
+   ],
+   "explanation": "Enforce RBAC at the retrieval layer so unauthorised content never enters the prompt or the model context. Post-filtering (B) means the data was already exposed to the model, and prompt instructions (D) or reliance on refusal behaviour (C) are not enforcement."
+  },
+  {
+   "id": 52,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "A customer support team has proposed delegating customer refund decisions to a Claude-driven workflow with no human review for refunds under 50 USD. The team's reasoning is that small refunds are low-risk and human review would erase the efficiency gain. Which Delegation-competency principle should guide your response?",
+   "options": [
+    {
+     "text": "Delegation scope should reflect the type of risk involved, not the transaction size alone.",
+     "correct": true
+    },
+    {
+     "text": "Delegation scope should be set primarily by maximizing efficiency gains across the workflow."
+    },
+    {
+     "text": "Delegation should always include human review on every decision the workflow produces."
+    },
+    {
+     "text": "Delegation should be avoided entirely wherever financial transactions occur in the workflow."
+    }
+   ],
+   "explanation": "Delegation scope should track the type and reversibility of the risk, not the dollar amount; small refunds can still carry fraud, compliance and precedent risk. B optimises only for efficiency, C and D are absolutes that ignore risk tiering."
+  },
+  {
+   "id": 53,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "A research summarization assistant has been deployed for six months. A user has flagged that a generated summary contained a fabricated citation. The product team has asked whether the incident requires architectural action or whether it is an isolated case. Which two Diligence-competency actions should you take? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Sample recent summaries to estimate the fabrication frequency across the population.",
+     "correct": true
+    },
+    {
+     "text": "Treat the incident as an anecdotal isolated case and take no further investigative action."
+    },
+    {
+     "text": "Review whether citation grounding controls exist anywhere in the current generation pipeline.",
+     "correct": true
+    },
+    {
+     "text": "Disable the assistant immediately for all current users without any prior diagnostic analysis."
+    },
+    {
+     "text": "Communicate to users that the assistant does not fabricate output as a matter of design."
+    }
+   ],
+   "explanation": "Establish frequency by sampling recent summaries (A) and determine whether citation grounding controls exist anywhere in the pipeline (C). B assumes the answer, D is disproportionate before diagnosis, E asserts something untrue."
+  },
+  {
+   "id": 54,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are assessing data-exfiltration risk in a Claude-based assistant that has tools for both internal-document retrieval and outbound HTTP calls. Which scenario most directly indicates a data-exfiltration risk?",
+   "options": [
+    {
+     "text": "The outbound HTTP tool returns a 200 response when the assistant calls an allow-listed domain to fulfill a user-initiated data lookup request."
+    },
+    {
+     "text": "Adversarial content in retrieved documents instructs the model to call the outbound HTTP tool and send sensitive content to an attacker-controlled URL.",
+     "correct": true
+    },
+    {
+     "text": "The user types a routine question into the assistant and receives a routine answer."
+    },
+    {
+     "text": "The internal-document retrieval tool returns a document that the user has authorization to view."
+    }
+   ],
+   "explanation": "Indirect prompt injection in retrieved content that drives an outbound HTTP call to an attacker-controlled URL is the classic exfiltration path: untrusted input plus an egress-capable tool. A, C and D describe normal authorised behaviour."
+  },
+  {
+   "id": 55,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are defining escalation criteria for ambiguous cases in an automated workflow. Which set of criteria best supports consistent escalation?",
+   "options": [
+    {
+     "text": "confidence threshold below a defined level, presence of high-impact decision categories, ambiguity flags raised by content classifiers, and the user's explicit request for review",
+     "correct": true
+    },
+    {
+     "text": "escalation at the discretion of whoever is available when the teams on-call engineer has spare capacity, with no defined threshold, category, or ambiguity criterion to trigger it"
+    },
+    {
+     "text": "escalation only after an affected customer has already contacted the support channel to complain, by which point the automated workflow has already completed without human review"
+    },
+    {
+     "text": "no escalation criteria at all; the model itself decides on each turn whether to escalate, without explicit confidence thresholds, impact categories, or classifier-based ambiguity flags"
+    }
+   ],
+   "explanation": "Consistent escalation needs explicit, testable triggers: a confidence threshold, defined high-impact categories, classifier-raised ambiguity flags, and the user's own request for review. B, C and D leave escalation undefined, too late, or entirely to model discretion."
+  },
+  {
+   "id": 56,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "A Claude architect observes that after a recent model-version upgrade, grounded responses began including claims not supported by the retrieved source documents. Which mitigation is most directly targeted at this failure mode?",
+   "options": [
+    {
+     "text": "replacing the shared API key with per-user OAuth tokens to restrict data access"
+    },
+    {
+     "text": "scoring each new model version against a stable adversarial evaluation set"
+    },
+    {
+     "text": "constraining responses to source-supported content combined with required citations and a verification step",
+     "correct": true
+    },
+    {
+     "text": "treating retrieved data as untrusted and applying input classifiers at ingestion time"
+    }
+   ],
+   "explanation": "The failure is ungrounded claims, so constrain responses to source-supported content, require citations and add a verification step. B detects drift but does not prevent it, A and D address access control and injection."
+  },
+  {
+   "id": 57,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are preparing a HIPAA-eligible deployment for a healthcare customer. Which configuration supports HIPAA compliance using Anthropic-offered tools?",
+   "options": [
+    {
+     "text": "disabling all audit logging so that no PHI is recorded in any log store, on the assumption that the absence of logs satisfies HIPAA requirements without a signed BAA"
+    },
+    {
+     "text": "an ad-hoc personal Claude account used by individual clinicians for PHI-related tasks, with no Business Associate Agreement, no Zero Data Retention, and no audit logging configured"
+    },
+    {
+     "text": "Claude Enterprise with a signed Business Associate Agreement, Zero Data Retention enabled, and audit logging configured for compliance tracking",
+     "correct": true
+    },
+    {
+     "text": "Claude Free with no contractual addendum, since consumer products meet HIPAA requirements out of the box"
+    }
+   ],
+   "explanation": "HIPAA-eligible use requires an enterprise agreement with a signed BAA, Zero Data Retention, and audit logging for compliance tracking. A confuses absence of logs with compliance, B and D use consumer tiers with no contractual basis."
+  },
+  {
+   "id": 58,
+   "type": "classification",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are auditing a procurement-assistant agent whose defined responsibility is to draft purchase requests for review. For each tool currently configured on the agent, select yes if the tool should remain after a least-privilege audit. Otherwise, select no if it should be removed.",
+   "statements": [
+    {
+     "text": "a read-only catalog lookup tool that returns vendor and SKU information",
+     "answer": "Yes"
+    },
+    {
+     "text": "an inbox-send tool that emails purchase requests to vendors directly",
+     "answer": "No"
+    },
+    {
+     "text": "a draft-write tool that creates purchase-request drafts in the review queue",
+     "answer": "Yes"
+    },
+    {
+     "text": "a production-database admin tool unrelated to procurement",
+     "answer": "No"
+    },
+    {
+     "text": "A read-only policy-document tool that returns the relevant procurement policies",
+     "answer": "Yes"
+    }
+   ],
+   "choices": [
+    "Yes",
+    "No"
+   ],
+   "explanation": "Yes - read-only catalog lookup supplies the vendor and SKU data a draft request needs and carries no write authority. No - emailing requests to vendors directly is an outbound, externally visible action that bypasses the human review the agent's scope depends on; sending belongs after approval, not to the drafting agent. Yes - writing drafts into the review queue is precisely the agent's defined responsibility and is the one write it should hold. No - a production-database admin tool is outside procurement scope entirely and grants privileges no defined task requires, making it the clearest removal. Yes - read-only policy lookup grounds the draft in current procurement rules with no write surface."
+  },
+  {
+   "id": 59,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are defining transparency practices for a customer-facing assistant whose responses are materially shaped by AI. Which transparency practice most directly supports responsible deployment?",
+   "options": [
+    {
+     "text": "Disclose AI involvement only to internal staff and operators while withholding that information from the end users whose interactions are materially shaped by the AI system."
+    },
+    {
+     "text": "Refuse to answer any user question about how the responses were produced or whether AI was involved, treating the AI's role as confidential operational information."
+    },
+    {
+     "text": "Misrepresent the AI's role in producing responses in order to make the assistant feel more trustworthy or more human, undermining informed user consent and organizational transparency."
+    },
+    {
+     "text": "Disclose AI involvement to end users in line with the organization's transparency policy and provide a documented path to reach a human when needed.",
+     "correct": true
+    }
+   ],
+   "explanation": "Disclose AI involvement to end users per the organisation's transparency policy and provide a documented route to a human. A withholds it from the affected users, B refuses legitimate questions, C is misrepresentation."
+  },
+  {
+   "id": 60,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "A security team is evaluating two proposed controls. Control A adds an outbound tool allow-list with destination restrictions and per-call review. Control B scores responses against a stable adversarial evaluation set after each model-version change. Which two risk categories are correctly matched to these controls? (Choose two.)",
+   "options": [
+    {
+     "text": "Control A --> silent quality drift after a model-version upgrade"
+    },
+    {
+     "text": "Control A --> data exfiltration via outbound tool calls",
+     "correct": true
+    },
+    {
+     "text": "Control A --> prompt injection from adversarial content in retrieved data"
+    },
+    {
+     "text": "Control B --> silent quality drift after a model-version upgrade",
+     "correct": true
+    },
+    {
+     "text": "Control B --> data exfiltration via outbound tool calls"
+    }
+   ],
+   "explanation": "An outbound allow-list with destination restrictions and per-call review directly limits data exfiltration through tool calls (B). Scoring each model version against a stable adversarial set detects silent quality drift (D). The other pairings mismatch control to risk."
+  },
+  {
+   "id": 61,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are supporting an EU-based deployment with GDPR obligations. Which combination of measures best supports the deployment's GDPR posture?",
+   "options": [
+    {
+     "text": "disabling all data-retention configuration, redaction controls, and data-subject-rights handling to simplify day-to-day operations, accepting the resulting GDPR compliance exposure"
+    },
+    {
+     "text": "enterprise-tier deployment with a signed Data Processing Addendum, defined data-retention configuration, redaction of personal data not needed for the task, and documented data-subject-rights handling",
+     "correct": true
+    },
+    {
+     "text": "pasting full EU personal data into every prompt to \"give Claude complete context\" without considering purpose limitation, data minimization, or the organization's Data Processing Addendum obligations"
+    },
+    {
+     "text": "using a personal Claude account tier for processing EU personal data at scale, with no signed Data Processing Addendum and no documented data-subject-rights handling procedure"
+    }
+   ],
+   "explanation": "GDPR posture is supported by an enterprise tier with a signed DPA, defined retention configuration, redaction of personal data not needed for the task (data minimisation and purpose limitation), and documented data-subject-rights handling. A, C and D each remove one or more of those requirements."
+  },
+  {
+   "id": 62,
+   "type": "single",
+   "domain": "Integration",
+   "question": "You are configuring tool permissions for a Claude-based assistant. The assistant's defined responsibilities require read access to a knowledge base and write access to a draft queue, and nothing else. Which scoping design best applies least privilege?",
+   "options": [
+    {
+     "text": "Allow access to all tools with read permissions globally and restrict write permissions to the draft-queue tool, without scoping to only the specific tools required for defined tasks."
+    },
+    {
+     "text": "Per-role allow-list of exactly the read-knowledge-base and write-draft-queue tools, enforced at the orchestration layer.",
+     "correct": true
+    },
+    {
+     "text": "Allow access to every tool in the catalog and rely on the model to decline tools it should not use."
+    },
+    {
+     "text": "Disable all tools entirely to achieve a minimal permission surface, accepting that the assistant can no longer perform the read-knowledge base or write-draft-queue tasks it was designed for."
+    }
+   ],
+   "explanation": "Least privilege means a per-role allow-list containing exactly the two required tools, enforced at the orchestration layer rather than left to model discretion. A over-grants reads, C relies on the model to police itself, D disables the required capability."
+  },
+  {
+   "id": 63,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "A Claude architect is implementing safety controls for a customer-facing advice assistant that must never provide regulated investment recommendations. Which two guardrail implementations most directly enforce this constraint? (Choose two.)",
+   "options": [
+    {
+     "text": "Log all user queries to a SIEM for post-hoc compliance review."
+    },
+    {
+     "text": "Limit session length to reduce the volume of queries processed per user per day."
+    },
+    {
+     "text": "Add an output classifier that detects and blocks responses containing regulated investment-recommendation language.",
+     "correct": true
+    },
+    {
+     "text": "Define explicit out-of-scope categories in the system prompt with fixed refusal phrasing for investment advice requests.",
+     "correct": true
+    },
+    {
+     "text": "Increase response temperature to introduce variability that reduces the likelihood of specific recommendations."
+    }
+   ],
+   "explanation": "Two complementary layers: explicit out-of-scope categories with fixed refusal phrasing in the system prompt (D), and an output classifier that blocks regulated investment-recommendation language before it reaches the user (C). A is post-hoc, B and E do not constrain content."
+  },
+  {
+   "id": 64,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "When communicating an architectural decision to a security and compliance reviewer, which content set is most aligned with that audience's primary concerns?",
+   "options": [
+    {
+     "text": "implementation timeline, component interfaces, and deployment sequence for the engineering team"
+    },
+    {
+     "text": "feature delivery schedule, roadmap dependencies, and scope boundaries for the product manager"
+    },
+    {
+     "text": "decision rationale, business outcomes, and high-level risk summary for executive review"
+    },
+    {
+     "text": "threat model, control mappings, residual-risk acceptance criteria, and audit traceability",
+     "correct": true
+    }
+   ],
+   "explanation": "Security and compliance reviewers need the threat model, mapping of controls to requirements, residual-risk acceptance criteria, and audit traceability. The other sets target engineering, product and executive audiences."
+  },
+  {
+   "id": 65,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "During an architectural review, the security team identifies a risk that adversarial content injected into retrieved documents could manipulate the model's behavior. Which mitigation most directly addresses this threat?",
+   "options": [
+    {
+     "text": "Score outputs against a stable adversarial evaluation set on each model-version change."
+    },
+    {
+     "text": "Restrict outbound tool calls to an approved destination allow-list."
+    },
+    {
+     "text": "Treat all retrieved content as untrusted input and apply input classifiers with output validation.",
+     "correct": true
+    },
+    {
+     "text": "Require citations for each claim and constrain responses to source-supported content."
+    }
+   ],
+   "explanation": "Indirect prompt injection is mitigated by treating all retrieved content as untrusted input, screening it with input classifiers and validating the resulting output. B limits the exfiltration path, D addresses grounding, A addresses drift."
+  },
+  {
+   "id": 66,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are compiling guardrail tactics for a customer-facing assistant. Which two tactics belong on the guardrail list? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "Embed approved override phrases that let trusted users relax guardrails on demand."
+    },
+    {
+     "text": "Layer prompt-level guardrails with runtime content checks rather than relying on either alone.",
+     "correct": true
+    },
+    {
+     "text": "Validate the model output against a structured schema before downstream actions are taken.",
+     "correct": true
+    },
+    {
+     "text": "Lower sampling temperature globally to reduce the chance of off-policy completions."
+    },
+    {
+     "text": "Rely on a single hardened system prompt that enumerates every disallowed behavior."
+    }
+   ],
+   "explanation": "Defence in depth: layer prompt-level guardrails with runtime content checks rather than relying on either alone (B), and validate model output against a structured schema before any downstream action executes (C). A builds in a bypass, D is a sampling knob, E is single-layer."
+  },
+  {
+   "id": 67,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "The compliance team at a firm has approved a Claude Skill that generates client-facing investment summaries. The Skill includes the firm's required disclaimers and prohibited-language list. A product manager has asked whether additional guardrails are needed at the application layer or whether the Skill alone is sufficient. Which two guardrail responsibilities should remain at the application layer rather than the Skill? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Apply the disclaimer template that the compliance team has standardized firm-wide."
+    },
+    {
+     "text": "Format output sections according to the firm's standardized house style guidelines."
+    },
+    {
+     "text": "Apply the prohibited-language list that the compliance team maintains and updates."
+    },
+    {
+     "text": "Log every generated summary to the firm's compliance audit trail for retention.",
+     "correct": true
+    },
+    {
+     "text": "Verify the requesting user is authorized to generate investment summaries at all.",
+     "correct": true
+    }
+   ],
+   "explanation": "Authorisation of the requesting user (E) and audit-trail logging of every generated summary (D) must be enforced by the application, since a Skill is instruction content the model follows and cannot itself guarantee identity checks or durable logging. A, B and C are exactly the standardised content the Skill carries."
+  },
+  {
+   "id": 68,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "A security audit uncovers two issues: (1) all end users share a single API key, and (2) tool calls are executed without logging the initiating user. Which two mitigations directly address these specific findings? (Choose two.)",
+   "options": [
+    {
+     "text": "Replace the shared API key with per-user OAuth tokens carrying scope-restricted permissions.",
+     "correct": true
+    },
+    {
+     "text": "Validate structured outputs against a schema before downstream actions are executed."
+    },
+    {
+     "text": "Move credentials out of the prompt context and resolve them from a server-side secret store."
+    },
+    {
+     "text": "Enforce RBAC at the retrieval layer before content enters the model context."
+    },
+    {
+     "text": "Add actor attribution to tool-call logs so each call records the initiating user identity.",
+     "correct": true
+    }
+   ],
+   "explanation": "Per-user OAuth tokens with scope-restricted permissions replace the shared key (A), and actor attribution on tool-call logs records the initiating user (E). B, C and D are sound controls but address other findings."
+  },
+  {
+   "id": 69,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "A Claude architect is designing a HIPAA-compliant pipeline that processes patient records. Which two design decisions directly support HIPAA compliance requirements? (Choose two.)",
+   "options": [
+    {
+     "text": "setting max tokens to a low value to minimize the volume of text generated per request"
+    },
+    {
+     "text": "enforcing role-based access controls so that PHI is retrievable only by authorized personnel",
+     "correct": true
+    },
+    {
+     "text": "selecting the highest-capability Claude model to maximize diagnostic accuracy"
+    },
+    {
+     "text": "ensuring patient data is never included in training feedback loops sent to the model provider without a BAA in place",
+     "correct": true
+    },
+    {
+     "text": "using streaming responses to reduce perceived latency for clinical users"
+    }
+   ],
+   "explanation": "RBAC so PHI is retrievable only by authorised personnel (B), and ensuring patient data never enters provider-side training or feedback loops without a BAA (D). A, C and E are performance or quality choices with no HIPAA bearing."
+  },
+  {
+   "id": 70,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are designing a human-in-the-loop validation workflow for a new Claude-based deployment and must complete the design steps before piloting the workflow. Which two steps must be completed BEFORE piloting the workflow with a representative subset of traffic? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Onboard the reviewer pool with role-specific training on the check criteria and escalation procedures."
+    },
+    {
+     "text": "Iterate the workflow design based on observed pilot findings before broader rollout to production."
+    },
+    {
+     "text": "Document the workflow with check criteria, escalation paths, and service-level agreements (SLAs) for each step."
+    },
+    {
+     "text": "Define the sampling strategy and the escalation criteria at each oversight point in the pipeline.",
+     "correct": true
+    },
+    {
+     "text": "Identify the decision points in the pipeline that require human oversight by impact and reversibility.",
+     "correct": true
+    }
+   ],
+   "explanation": "Design precedes pilot: identify the decision points needing oversight by impact and reversibility (E), then define the sampling strategy and escalation criteria at each of those points (D). A, B and C follow that design work."
+  },
+  {
+   "id": 71,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are responding to an adversarial input pattern in which users include text claiming admin authority and instructing the model to bypass safety restrictions. Which combination of controls most effectively mitigates this attack pattern?",
+   "options": [
+    {
+     "text": "granting users any privilege level they assert in their message content, on the assumption that cooperative behavior requires honoring self-declared authority without independent verification"
+    },
+    {
+     "text": "prompt-level instructions that treat user content as untrusted data, runtime classifiers that detect override attempts, scoped tool permissions that cannot be elevated by user content, and audit logging of attempts",
+     "correct": true
+    },
+    {
+     "text": "trusting that the model will intrinsically recognize and reject all bypass attempts without prompt-level instructions, runtime classifiers, scoped permissions, or audit logging"
+    },
+    {
+     "text": "removing all safety restrictions and guardrails to eliminate the attack surface that bypass attempts target, accepting that this makes the assistant unrestricted for all inputs"
+    }
+   ],
+   "explanation": "Layered defence: treat user content as untrusted data at the prompt level, detect override attempts with runtime classifiers, scope tool permissions so they cannot be elevated by content, and log attempts. A honours self-declared authority, C relies on the model alone, D removes the controls entirely."
+  },
+  {
+   "id": 72,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "You are listing characteristics of robust guardrail design for an enterprise deployment. Which two characteristics belong on the list? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "periodic refresh of the system prompt wording to keep refusal language current and clear"
+    },
+    {
+     "text": "centralized log retention for guardrail violations with quarterly review by the security team"
+    },
+    {
+     "text": "user feedback channels that route reported guardrail failures into the product backlog for triage"
+    },
+    {
+     "text": "per-role tool allow-lists enforced at the orchestration layer before any tool call executes",
+     "correct": true
+    },
+    {
+     "text": "adversarial-input coverage in the evaluation set with regression tracking on guardrail performance",
+     "correct": true
+    }
+   ],
+   "explanation": "Enforcement and measurement: per-role tool allow-lists enforced at orchestration before any tool call runs (D), and adversarial coverage in the evaluation set with regression tracking on guardrail performance (E). A, B and C are useful hygiene but not robustness characteristics on their own."
+  },
+  {
+   "id": 73,
+   "type": "multiple",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "A loan pre-qualification assistant shows 94 percent approval recommendations that match the human underwriter decision. The fairness team has reviewed approval rate parity across protected groups and reported no significant difference. A board member has asked whether this evidence is sufficient to declare the assistant fair. Which two Discernment-competency findings should you report? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "A larger sample is needed before any meaningful fairness claim can be made about the model."
+    },
+    {
+     "text": "The fairness team's review process likely missed at least some of the protected groups studied."
+    },
+    {
+     "text": "Match with human underwriters does not establish freedom from underwriter-introduced bias.",
+     "correct": true
+    },
+    {
+     "text": "The 94 percent match rate is sufficient evidence of fairness for the assistant's decisions."
+    },
+    {
+     "text": "Approval rate parity does not by itself assess error rate parity across protected groups.",
+     "correct": true
+    }
+   ],
+   "explanation": "Matching human underwriters only reproduces whatever bias the underwriters carry (C), and approval-rate parity says nothing about error-rate parity — false approvals and false denials can differ sharply across groups at equal approval rates (E). D restates the flawed claim; A and B are generic methodology caveats."
+  },
+  {
+   "id": 74,
+   "type": "multiple",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "An architect at Trenova Systems, Inc. is reviewing two draft communication packages for the same architectural decision. Package 1 contains a threat model, residual-risk register, and control-mapping table. Package 2 contains a list of capabilities delivered and feature-level roadmap dependencies. Which two audiences are correctly matched to these packages? (Choose two.)",
+   "options": [
+    {
+     "text": "Package 2 --> executive sponsor"
+    },
+    {
+     "text": "Package 1 --> engineering implementation team"
+    },
+    {
+     "text": "Package 2 --> product manager owning the roadmap",
+     "correct": true
+    },
+    {
+     "text": "Package 2 --> security and compliance reviewer"
+    },
+    {
+     "text": "Package 1 --> security and compliance reviewer",
+     "correct": true
+    }
+   ],
+   "explanation": "Threat model, residual-risk register and control mappings are the security and compliance reviewer's package (E); capabilities delivered and roadmap dependencies suit the product manager owning the roadmap (C). The executive sponsor needs outcomes and trade-offs, and engineering needs contracts and flows."
+  },
+  {
+   "id": 75,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are reviewing a peer's draft ADR. The ADR states the decision and the technical detail but does not state the alternatives considered or the trade-offs accepted. Which response is most appropriate?",
+   "options": [
+    {
+     "text": "Delete the ADR entirely and rely on the engineering team's collective memory to reconstruct the decision context, alternatives, and trade-offs during future audits or onboarding."
+    },
+    {
+     "text": "Approve the ADR as written on the grounds that the decision itself is documented, accepting that reviewers and future maintainers will lack the context to evaluate or revisit it."
+    },
+    {
+     "text": "Replace the ADR with a different decision unrelated to the one drafted."
+    },
+    {
+     "text": "Ask the author to add the alternatives considered and the trade-offs accepted before publishing the ADR.",
+     "correct": true
+    }
+   ],
+   "explanation": "An ADR's value lies in the alternatives considered and the trade-offs accepted, which is what lets future maintainers revisit the decision. Ask the author to add them before publishing. A, B and C discard or ignore that context."
+  },
+  {
+   "id": 76,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "A senior architect is preparing briefing materials on a new retrieval architecture. The executive sponsor has requested a summary of the architectural decision. Which framing is most appropriate for that audience?",
+   "options": [
+    {
+     "text": "capabilities delivered, scope implications, and feature-level dependencies on the roadmap"
+    },
+    {
+     "text": "technical alternatives evaluated, implementation implications, and component-level consequences"
+    },
+    {
+     "text": "threat model, control mappings, residual-risk acceptance, and audit traceability"
+    },
+    {
+     "text": "business outcomes achieved, trade-offs accepted, and high-level risks acknowledge",
+     "correct": true
+    }
+   ],
+   "explanation": "Executive sponsors need business outcomes, trade-offs accepted and high-level risks acknowledged. A targets product, B targets engineering, C targets security and compliance."
+  },
+  {
+   "id": 77,
+   "type": "multiple",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are running a discovery engagement for a new Claude-based capability and must complete the requirements-gathering steps before validating with stakeholders. Which two steps must be completed BEFORE validating the captured requirements with stakeholders? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Capture the business goals, success criteria, and the in-scope user population for the engagement.",
+     "correct": true
+    },
+    {
+     "text": "Produce architecture decision records that capture the rationale for major design choices."
+    },
+    {
+     "text": "Identify the non-functional constraints covering latency, cost, audit, data sensitivity, and regulatory needs.",
+     "correct": true
+    },
+    {
+     "text": "Schedule the rollout milestones and dependencies with engineering and product partners."
+    },
+    {
+     "text": "Document the consolidated requirements with traceability to the source stakeholder for each item."
+    }
+   ],
+   "explanation": "Requirements gathering comes before validation: capture business goals, success criteria and the in-scope user population (A), and identify non-functional constraints across latency, cost, audit, data sensitivity and regulation (C). E is the write-up step, B and D come later in the lifecycle."
+  },
+  {
+   "id": 78,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are designing a feedback session for a deployment in flight. Which structure best supports productive stakeholder feedback?",
+   "options": [
+    {
+     "text": "Hold an open-ended meeting with no pre-distributed agenda or artifacts, and rely on participants' memory to carry decisions and follow-up owners forward."
+    },
+    {
+     "text": "Define a focused agenda, share the artifacts in advance, capture decisions and follow-ups in writing, and confirm action owners and dates.",
+     "correct": true
+    },
+    {
+     "text": "End the session without recording decisions, follow-up items, action owners, or dates, relying on participant memory to carry the session's outcomes forward."
+    },
+    {
+     "text": "Distribute artifacts at session start rather than in advance, so stakeholders review materials in real time without preparation before the discussion begins."
+    }
+   ],
+   "explanation": "A focused agenda with artifacts distributed in advance, written capture of decisions and follow-ups, and confirmed owners and dates. A, C and D each remove preparation or the written record."
+  },
+  {
+   "id": 79,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are defining an SLA for a Claude-based assistant. Which SLA definition is most operationally meaningful?",
+   "options": [
+    {
+     "text": "a target that names the metric and threshold but omits the evaluation window and breach consequence, leaving compliance periods and remediation triggers undefined"
+    },
+    {
+     "text": "a measurable target with a defined metric, threshold, evaluation window, and consequence for breach (for example, \"p95 per-request latency under 800 ms over a 28-day window\")",
+     "correct": true
+    },
+    {
+     "text": "a qualitative commitment such as \"the system will be fast and reliable\", which names no metric, no threshold, and no evaluation window"
+    },
+    {
+     "text": "a target tied to a stakeholder sentiment measure such as \"the team feels satisfied\", which cannot be measured objectively or used to trigger a documented breach response"
+    }
+   ],
+   "explanation": "An operationally meaningful SLA names the metric, the threshold, the evaluation window and the consequence of breach. A omits window and consequence, C and D are unmeasurable."
+  },
+  {
+   "id": 80,
+   "type": "multiple",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are producing an architecture guide for a new deployment and must complete the planning steps before drafting each section. Which two steps must be completed BEFORE drafting each section of the guide? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Identify the audience and the questions the guide must answer for that audience.",
+     "correct": true
+    },
+    {
+     "text": "Translate the guide into the supported regional languages for the candidate population."
+    },
+    {
+     "text": "Outline the sections of the guide covering overview, components, contracts, flows, runbooks, and limitations.",
+     "correct": true
+    },
+    {
+     "text": "Validate the guide with the implementation team and incorporate any corrections that arise."
+    },
+    {
+     "text": "Establish the document under version control with a defined review cadence and approver list."
+    }
+   ],
+   "explanation": "Before drafting: identify the audience and the questions the guide must answer for them (A), and outline the sections covering overview, components, contracts, flows, runbooks and limitations (C). B, D and E come after a draft exists."
+  },
+  {
+   "id": 81,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are selecting the documentation set that should accompany a Claude-based deployment at handoff. Which set is most complete?",
+   "options": [
+    {
+     "text": "a verbal handover walkthrough conducted on the day of transition, with no written architecture overview, ADRs, runbooks, playbook, or known limitations captured for future reference"
+    },
+    {
+     "text": "code comments scattered across individual source files with no integrating architecture overview, no ADRs, no runbooks, and no on-call playbook to orient operators or new team members"
+    },
+    {
+     "text": "architecture overview, ADRs, component-level diagrams, runbooks for common operations, on-call playbook, and a list of known limitations",
+     "correct": true
+    },
+    {
+     "text": "a single one-page architecture diagram with no ADRs, no runbooks, no on-call playbook, and no list of known limitations to support operators or future maintainers"
+    }
+   ],
+   "explanation": "A complete handoff set includes the architecture overview, ADRs, component-level diagrams, runbooks for common operations, an on-call playbook and known limitations. A, B and D each leave operators without the artifacts they need."
+  },
+  {
+   "id": 82,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "A Claude Architect is reviewing a post-deployment performance report for an AI-assisted legal document summarization system. The report includes the following observations: (1) Average summarization time has decreased from 47 minutes to 6 minutes per document. (2) Associates report spending less time on summaries but no measurable change in overall billable output. (3) Infrastructure costs have increased 22% due to higher API call volume from a redundant retry logic implementation. (4) The system occasionally generates summaries requiring attorney correction, adding an average of 8 minutes of review time per document. Which analysis correctly attributes each observation to the appropriate business value pillar?",
+   "options": [
+    {
+     "text": "Observation 1 indicates a transformation outcome; Observation 2 indicates an efficiency gain; Observation 3 indicates a performance SLA degradation; Observation 4 indicates a solution cost issue."
+    },
+    {
+     "text": "Observation 1 indicates an efficiency gain; Observation 2 indicates that productivity has not yet been realized; Observation 3 indicates a solution cost issue; Observation 4 indicates an efficiency loss that partially offsets the gain from Observation 1.",
+     "correct": true
+    },
+    {
+     "text": "Observations 1 and 4 together indicate a net performance SLA improvement; Observation 2 indicates a transformation gap; Observation 3 indicates a productivity drain from over-engineering."
+    },
+    {
+     "text": "Observations 1 and 2 both indicate efficiency gains; Observation 3 indicates a solution cost issue; Observation 4 indicates a performance SLA issue."
+    }
+   ],
+   "explanation": "Faster per-document processing is an efficiency gain; unchanged billable output means the productivity benefit has not yet been realised; the 22% infrastructure increase from redundant retries is a solution-cost issue; and 8 minutes of attorney correction is an efficiency loss offsetting part of observation 1. The other options misassign at least one observation."
+  },
+  {
+   "id": 83,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are responding to a stakeholder request that adds significant scope to a deployment already in flight. Which response best aligns expectations while respecting the stakeholder's underlying need?",
+   "options": [
+    {
+     "text": "Acknowledge the request, name the scope and timeline implications transparently, and propose options (defer, descope something else, or extend the timeline) for the stakeholder to choose.",
+     "correct": true
+    },
+    {
+     "text": "Decline the request outright without acknowledging the stakeholder's underlying need or offering alternative options such as deferral, descope, or timeline extension for their consideration."
+    },
+    {
+     "text": "Hide the scope-addition request from the broader delivery team to avoid a difficult conversation, allowing the change to proceed without team awareness of its timeline implications."
+    },
+    {
+     "text": "Accept the additional scope into the current release without naming the timeline or descope implications, allowing the delivery plan to absorb unacknowledged changes until they surface as delays."
+    }
+   ],
+   "explanation": "Acknowledge the request and the underlying need, state the scope and timeline implications transparently, and offer the stakeholder a real choice among defer, descope or extend. B refuses without alternatives, C conceals, D absorbs scope silently."
+  },
+  {
+   "id": 84,
+   "type": "multiple",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are building a feedback-and-alignment routine for a multi-stakeholder deployment. Which two practices belong in the routine? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "Record each session and distribute the recording to stakeholders who could not attend live."
+    },
+    {
+     "text": "Set a regular cadence for revisiting expectations and assumptions as conditions evolve over time.",
+     "correct": true
+    },
+    {
+     "text": "Escalate any disagreement among stakeholders to the executive sponsor for binding resolution."
+    },
+    {
+     "text": "Rotate facilitation among the participating stakeholder groups to share ownership of the routine."
+    },
+    {
+     "text": "Reconcile divergent stakeholder positions explicitly rather than papering over them in the moment.",
+     "correct": true
+    }
+   ],
+   "explanation": "Set a regular cadence for revisiting expectations and assumptions as conditions change (B), and reconcile divergent stakeholder positions explicitly rather than glossing over them (E). A, C and D are logistics or escalation habits, not alignment practices."
+  },
+  {
+   "id": 85,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are preparing an operational runbook for a Claude-based service. Which content is essential to include in the runbook?",
+   "options": [
+    {
+     "text": "common alerts and their triage steps, escalation paths, rollback procedures, and references to the relevant dashboards and logs",
+     "correct": true
+    },
+    {
+     "text": "dashboard and log references only, without alert definitions, triage steps, escalation paths, or rollback procedures for the on-call engineer to act on"
+    },
+    {
+     "text": "alert definitions and triage steps only, without escalation paths, rollback procedures, or references to dashboards and logs for on-call use"
+    },
+    {
+     "text": "escalation paths and rollback procedures only, without alert definitions, triage steps, or dashboard references to guide initial incident response"
+    }
+   ],
+   "explanation": "A runbook must let an on-call engineer act: common alerts and their triage steps, escalation paths, rollback procedures, and links to the relevant dashboards and logs. B, C and D each omit part of that."
+  },
+  {
+   "id": 86,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are choosing the level of detail for an implementation guide. The audience is a delivery team that will build the deployment. Which guidance composition best serves them?",
+   "options": [
+    {
+     "text": "component responsibilities and interface contracts only, without sequence diagrams of the dominant flows, configuration parameters with defaults, or runbooks to guide operational tasks"
+    },
+    {
+     "text": "an architecture overview and sequence diagrams for the dominant flows, without interface contracts, configuration parameter tables, or operational runbooks for the delivery team to follow"
+    },
+    {
+     "text": "an architecture overview and a list of known limitations, without component-level diagrams, interface contracts, configuration parameters, or operational runbooks to support implementation"
+    },
+    {
+     "text": "component responsibilities, contracts between components, sequence diagrams of the dominant flows, configuration parameters with defaults, and operational runbooks",
+     "correct": true
+    }
+   ],
+   "explanation": "A delivery team building the system needs component responsibilities, contracts between components, sequence diagrams for the dominant flows, configuration parameters with defaults, and operational runbooks. A, B and C each omit essential pieces."
+  },
+  {
+   "id": 87,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are running a discovery session with a business sponsor who asks for \"an AI system to fix our customer escalations\". Which approach best yields actionable requirements?",
+   "options": [
+    {
+     "text": "Defer the discovery session indefinitely on the grounds that the sponsor must fully specify the system before the architect can ask any clarifying or scoping questions."
+    },
+    {
+     "text": "Decompose the request by asking targeted questions about who escalates, what triggers escalation, what good resolution looks like, and which constraints (latency, cost, audit, data sensitivity) apply.",
+     "correct": true
+    },
+    {
+     "text": "Accept the sponsor's original phrasing as a complete and final requirement and proceed directly to design without asking targeted questions to surface actors, triggers, or constraints."
+    },
+    {
+     "text": "Assume the requirement matches the architect's previous engagement in a different industry and proceed with that context, without validating actors, triggers, or constraints for this sponsor."
+    }
+   ],
+   "explanation": "Decompose the vague request with targeted questions: who escalates, what triggers escalation, what good resolution looks like, and which latency, cost, audit and data-sensitivity constraints apply. A stalls, C accepts an unactionable brief, D imports assumptions from another engagement."
+  },
+  {
+   "id": 88,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are distinguishing functional from non-functional requirements during discovery. Which item is a non-functional requirement?",
+   "options": [
+    {
+     "text": "The system must extract a defined set of specific fields from invoice attachments and populate a downstream data record."
+    },
+    {
+     "text": "The system must classify inbound tickets into a defined set of categories."
+    },
+    {
+     "text": "The system must produce a draft response that a human reviewer can edit before sending."
+    },
+    {
+     "text": "The system must respond at p95 latency under 800 milliseconds at the expected request volume.",
+     "correct": true
+    }
+   ],
+   "explanation": "A p95 latency target at expected volume describes how well the system must perform, which is non-functional. A, B and C all describe what the system must do."
+  },
+  {
+   "id": 89,
+   "type": "multiple",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "A senior architect is managing stakeholder expectations for a Claude-based reporting assistant midway through development. Stakeholders have escalating concerns about response latency. Which two actions most directly address stakeholder expectation alignment in this situation? (Choose two.)",
+   "options": [
+    {
+     "text": "Pause all development and reallocate engineering resources entirely to latency optimization."
+    },
+    {
+     "text": "Revise the SLA definition collaboratively with stakeholders if current targets are not achievable given production constraints.",
+     "correct": true
+    },
+    {
+     "text": "Communicate that latency concerns are a known LLM limitation and outside the architecture team's control."
+    },
+    {
+     "text": "Present measured p50 and p95 latency baselines against the agreed SLA thresholds so stakeholders have accurate data.",
+     "correct": true
+    },
+    {
+     "text": "Replace the current Claude model with a third-party model that may offer lower latency without evaluation."
+    }
+   ],
+   "explanation": "Present measured p50 and p95 baselines against the agreed SLA thresholds so the conversation runs on data (D), and renegotiate the SLA collaboratively if the current target is not achievable under production constraints (B). A over-reacts, C deflects, E swaps models without evaluation."
+  },
+  {
+   "id": 90,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are presenting an architectural decision to a mixed audience that includes an executive sponsor and the engineering leads who will implement the decision. Which presentation strategy best serves both audiences?",
+   "options": [
+    {
+     "text": "Open with a deep dive into low-level implementation details targeted at engineering leads, and stop there without addressing the business outcomes or trade-offs the executive sponsor needs."
+    },
+    {
+     "text": "Lead with the decision, the business outcomes it serves, and the trade-offs accepted; follow with the technical rationale, alternatives, and implementation implications for the engineering audience.",
+     "correct": true
+    },
+    {
+     "text": "Skip the rationale, alternatives, and trade-off discussion entirely and simply announce the chosen decision, leaving both audiences without the context needed to implement or validate it."
+    },
+    {
+     "text": "Present a single undifferentiated narrative that addresses technical and business concerns with equal weight throughout, treating both audiences as requiring the same depth on every section."
+    }
+   ],
+   "explanation": "Lead with the decision, the business outcomes and the trade-offs for the executive sponsor, then go deeper into rationale, alternatives and implementation implications for the engineering leads. A serves only one audience, C removes the rationale, D flattens both."
+  },
+  {
+   "id": 91,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You must present an architectural recommendation to deploy a Claude-based contract review assistant to a steering committee that includes the CFO, the general counsel, and the CIO. Each stakeholder cares about different aspects of the decision. How should you structure the recommendation document?",
+   "options": [
+    {
+     "text": "Lead with the architectural decision, then address each stakeholder's primary concerns directly.",
+     "correct": true
+    },
+    {
+     "text": "Lead with detailed cost projections across the full multi-year horizon before the rationale section."
+    },
+    {
+     "text": "Lead with the technical architecture diagram and the full component list before any other section."
+    },
+    {
+     "text": "Present the same dense narrative throughout with no stakeholder differentiation in any section."
+    }
+   ],
+   "explanation": "State the architectural decision up front, then address the CFO's cost concerns, general counsel's risk and compliance concerns, and the CIO's integration and operational concerns in turn. B and C lead with one stakeholder's lens, D differentiates for nobody."
+  },
+  {
+   "id": 92,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are transitioning a Claude-based deployment from design into implementation. Which handoff package most directly supports a clean transition?",
+   "options": [
+    {
+     "text": "the most recent set of design presentation slides without component-level diagrams, interface contracts, an evaluation framework with a reference set, runbooks, or a known-limitations register"
+    },
+    {
+     "text": "a verbal walkthrough conducted on the day of handoff with no written architecture overview, ADRs, component contracts, evaluation framework, runbooks, playbook, or known limitations"
+    },
+    {
+     "text": "architecture overview, ADRs, component contracts, evaluation framework with reference set, runbooks, on-call playbook, and known limitations",
+     "correct": true
+    },
+    {
+     "text": "source code alone with no integrating architecture overview, ADRs, component contracts, evaluation framework, runbooks, on-call playbook, or known-limitations register to support the delivery team"
+    }
+   ],
+   "explanation": "A clean design-to-implementation handoff carries the architecture overview, ADRs, component contracts, the evaluation framework with its reference set, runbooks, the on-call playbook and known limitations. A, B and D each drop most of that."
+  },
+  {
+   "id": 93,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "A business sponsor has requested an AI solution to \"improve customer experience\". The sponsor cannot articulate which customer journey is failing, which metric reflects the failure, or which decisions the AI should support. The sponsor is asking you to begin design work next week. Which delegation-competency action should you take first?",
+   "options": [
+    {
+     "text": "Recommend that the sponsor revise the request and resubmit it later for evaluation."
+    },
+    {
+     "text": "Facilitate a structured discovery to define the failing decision and the target metric.",
+     "correct": true
+    },
+    {
+     "text": "Propose a fixed scope that you commit to by default based on your own assumptions."
+    },
+    {
+     "text": "Begin prototyping a generic assistant against the broad request before the next deadline."
+    }
+   ],
+   "explanation": "The request has no defined failing decision or target metric, so facilitate structured discovery to establish them before design begins. A pushes the problem back without help, C commits to assumptions, D builds against an undefined goal."
+  },
+  {
+   "id": 94,
+   "type": "multiple",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are compiling continuity practices that span the deployment lifecycle. Which two practices belong on the list? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "Carry the evaluation framework and reference set forward across iterations rather than rebuilding each time.",
+     "correct": true
+    },
+    {
+     "text": "Capture lessons learned at the end of each phase and surface them as inputs to the next phase.",
+     "correct": true
+    },
+    {
+     "text": "Maintain a stakeholder register and notify the listed parties at every phase transition event."
+    },
+    {
+     "text": "Lock decisions made in early phases to prevent revisiting them as later phases begin."
+    },
+    {
+     "text": "Archive every phase deliverable in long-term storage to preserve a record of what was produced."
+    }
+   ],
+   "explanation": "Continuity means carrying artifacts and knowledge forward: keep the evaluation framework and reference set across iterations rather than rebuilding (A), and capture lessons learned at each phase end as inputs to the next (B). C and E are administrative, D freezes decisions that should stay revisitable."
+  },
+  {
+   "id": 95,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are identifying signals that a deployment should re-enter design rather than continue iterating in place. Which signal most directly indicates the need for a new design cycle?",
+   "options": [
+    {
+     "text": "A minor copy edit is requested in a customer-facing string within the existing UI, which can be handled as a localized content change without altering component responsibilities or contracts."
+    },
+    {
+     "text": "A runbook step requires a clarification edit to improve on-call guidance accuracy, which can be handled as a documentation update without changes to component responsibilities or core contracts."
+    },
+    {
+     "text": "A dashboard alert threshold needs a small numerical adjustment to reduce false-positive noise, which can be handled as an operational configuration change without a new design cycle."
+    },
+    {
+     "text": "The systems current architecture cannot meet the new requirements without changes to component responsibilities or core contracts.",
+     "correct": true
+    }
+   ],
+   "explanation": "A new design cycle is warranted when the current architecture cannot meet new requirements without changing component responsibilities or core contracts. A, B and C are localised content, documentation or configuration changes."
+  },
+  {
+   "id": 96,
+   "type": "multiple",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are listing characteristics of strong architectural-decision communication. Which two characteristics belong on the list? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "omission of rejected alternatives to keep the decision document focused and concise for readers"
+    },
+    {
+     "text": "ownership and review cadence for revisiting the decision when conditions or assumptions change",
+     "correct": true
+    },
+    {
+     "text": "alternatives considered along with the criteria that were used to evaluate each alternative",
+     "correct": true
+    },
+    {
+     "text": "distribution to a standing review forum with mandatory attendance from senior engineering leaders"
+    },
+    {
+     "text": "use of a consistent template across the team to standardize the visual presentation of decisions"
+    }
+   ],
+   "explanation": "Strong decision communication names the alternatives considered and the criteria used to evaluate them (C), and assigns ownership plus a review cadence for revisiting the decision as assumptions change (B). A hides the alternatives, D and E are process and formatting conventions."
+  },
+  {
+   "id": 97,
+   "type": "multiple",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "A Claude architect is leading the discovery phase for a new AI-powered customer service solution. Which two activities are characteristic of structured discovery and requirement gathering for a Claude-based deployment? (Choose two.)",
+   "options": [
+    {
+     "text": "documenting explicit success criteria and failure thresholds that will gate production deployment",
+     "correct": true
+    },
+    {
+     "text": "generating an initial prototype and iterating based on user reaction rather than written requirements"
+    },
+    {
+     "text": "selecting the Claude model tier based on the architect's prior project experience before stakeholder input is collected"
+    },
+    {
+     "text": "facilitating stakeholder workshops to surface latency, accuracy, and compliance constraints before scoping begins",
+     "correct": true
+    },
+    {
+     "text": "deferring constraint documentation until the integration design phase to avoid scope creep"
+    }
+   ],
+   "explanation": "Structured discovery documents explicit success criteria and failure thresholds that gate production (A), and runs stakeholder workshops to surface latency, accuracy and compliance constraints before scoping (D). B skips written requirements, C pre-commits the model choice, E defers constraints."
+  },
+  {
+   "id": 98,
+   "type": "multiple",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "An architect is reviewing a set of architecture documentation packages before handing off a Claude-based pipeline to an implementation team. Which two characteristics indicate that a documentation package is sufficient to support implementation without ongoing architect involvement? (Choose two.)",
+   "options": [
+    {
+     "text": "The document includes the architect's contact information for questions arising during implementation."
+    },
+    {
+     "text": "The document specifies integration contracts, configuration schemas, and expected input/output shapes for each component.",
+     "correct": true
+    },
+    {
+     "text": "The document provides a high-level narrative description of the business problem without component-level detail."
+    },
+    {
+     "text": "The document lists all Claude models that were evaluated but does not specify which was selected or why."
+    },
+    {
+     "text": "The document includes a decision log that records the rationale for key architectural choices and the alternatives rejected.",
+     "correct": true
+    }
+   ],
+   "explanation": "Sufficiency for independent implementation means integration contracts, configuration schemas and expected input/output shapes per component (B), plus a decision log recording rationale and rejected alternatives (E). A concedes ongoing dependence, C and D leave key details unspecified."
+  },
+  {
+   "id": 99,
+   "type": "single",
+   "domain": "Solution Design and Architecture",
+   "question": "A healthcare organization is evaluating two Claude-powered AI architectures for a clinical documentation assistant. Architecture X produces higher output quality scores but costs $0.18 per documentation session and averages 4.2 seconds per response. Architecture Y scores slightly lower on quality metrics but costs $0.09 per session and averages 2.1 seconds per response. The stated SLA requires responses under 3 seconds, and the annual volume is projected at 2 million documentation sessions. Which evaluation approach correctly applies business value pillar analysis to this decision?",
+   "options": [
+    {
+     "text": "Select Architecture Y based solely on the 50% cost reduction, since solution cost is the most important value pillar in healthcare budget-constrained environments."
+    },
+    {
+     "text": "Select Architecture X because the higher quality scores justify the cost premium, and any SLA gap can be addressed through infrastructure optimization after deployment."
+    },
+    {
+     "text": "Eliminate Architecture X on SLA grounds, then evaluate Architecture Y against the efficiency and solution cost pillars by calculating annual cost difference and assessing whether the quality delta materially impacts clinical workflow productivity.",
+     "correct": true
+    },
+    {
+     "text": "Recommend a hybrid approach using Architecture X for complex cases and Architecture Y for routine cases, without additional analysis, since this preserves quality where it matters most."
+    }
+   ],
+   "explanation": "The 3-second SLA is a gate, so Architecture X at 4.2 s is eliminated first; then assess Y on efficiency and solution cost — roughly $180k versus $360k annually at 2M sessions — and judge whether the quality delta materially affects clinical workflow. A ignores the SLA reasoning, B treats the SLA as negotiable post-deployment, D adds complexity without analysis."
+  },
+  {
+   "id": 100,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "You are documenting an architectural decision to support future audit and onboarding. Which artifact is the strongest fit?",
+   "options": [
+    {
+     "text": "a slide deck in a presentation folder with no accompanying written rationale"
+    },
+    {
+     "text": "a code comment in a single file that contains an opinion of one engineer"
+    },
+    {
+     "text": "a short verbal note shared during a hallway conversation with no written record"
+    },
+    {
+     "text": "an Architecture Decision Record that states the context, the decision, the alternatives considered, the consequences, and the date and authors",
+     "correct": true
+    }
+   ],
+   "explanation": "An ADR capturing context, decision, alternatives considered, consequences, date and authors is the durable artifact for audit and onboarding. A, B and C leave no reviewable rationale."
+  },
+  {
+   "id": 101,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "A solutions architect is analyzing stakeholder feedback collected after the first quarter of a Claude-powered procurement automation deployment. The feedback includes four statements: (1) \"Our procurement team is processing 3x more purchase orders per analyst per day.\" (2) \"We have eliminated the manual data entry role entirely and redeployed those staff to vendor relationship management.\" (3) \"The API integration costs are running 40% over the projected per-transaction budget.\" (4) \"Response latency during end-of-month batch runs is averaging 11 seconds, against our committed 5-second SLA.\" Which of the following correctly identifies the primary business value pillar each stakeholder statement represents?",
+   "options": [
+    {
+     "text": "Statement 1: Productivity; Statement 2: Efficiency; Statement 3: Solution Cost; Statement 4: Performance SLA"
+    },
+    {
+     "text": "Statement 1: Efficiency; Statement 2: Productivity; Statement 3: Performance SLA; Statement 4: Solution Cost"
+    },
+    {
+     "text": "Statement 1: Efficiency; Statement 2: Transformation; Statement 3: Solution Cost; Statement 4: Performance SLA",
+     "correct": true
+    },
+    {
+     "text": "Statement 1: Transformation; Statement 2: Productivity; Statement 3: Solution Cost; Statement 4: Efficiency"
+    }
+   ],
+   "explanation": "3x more purchase orders per analyst is efficiency (same work, less effort); eliminating a role and redeploying staff to a different function is transformation; a 40% overrun on per-transaction budget is solution cost; and 11 s against a 5 s commitment is a performance SLA breach."
+  },
+  {
+   "id": 102,
+   "type": "multiple",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "The engineering lead at Trenova Systems, Inc. is evaluating two proposals for improving developer workflows using Claude-assisted tooling Proposal A adds Claude Code to the IDE for inline code generation and review. Proposal B routes all code-generation requests through a shared Slack bot with no IDE integration. Which two observations most accurately evaluate these proposals against workflow-improvement objectives? (Choose two.)",
+   "options": [
+    {
+     "text": "Proposal B is superior because centralizing requests in Slack creates an auditable log of all code-generation activity."
+    },
+    {
+     "text": "Proposal B introduces workflow friction by requiring developers to leave the IDE, which undermines the productivity objective.",
+     "correct": true
+    },
+    {
+     "text": "Proposal A reduces context-switching by surfacing AI assistance at the point of development without requiring a separate tool.",
+     "correct": true
+    },
+    {
+     "text": "Proposal B improves workflow velocity because Slack notifications create an asynchronous review queue."
+    },
+    {
+     "text": "Both proposals are equivalent because the underlying model capabilities are identical regardless of integration point."
+    }
+   ],
+   "explanation": "Proposal A keeps assistance at the point of development, cutting context-switching (C), while Proposal B forces developers out of the IDE and back, adding friction against the productivity objective (B). A trades the objective for auditability, D misreads friction as velocity, E ignores the integration point entirely."
+  },
+  {
+   "id": 103,
+   "type": "multiple",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are integrating Claude Code into a team workflow and must complete the design and configuration steps before piloting the integrated workflow. Which two steps must be completed BEFORE piloting the integrated workflow with a small group? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Iterate the integrated workflow based on pilot findings before broader rollout to the team."
+    },
+    {
+     "text": "Document the integrated workflow with hand-off criteria, permission boundaries, and on-call runbooks."
+    },
+    {
+     "text": "Negotiate the workflow change with affected teams and obtain formal sign-off from each manager."
+    },
+    {
+     "text": "Identify the workflow steps where AI-assisted tooling adds value and where human authority must remain.",
+     "correct": true
+    },
+    {
+     "text": "Configure the project-scope Model Context Protocol (MCP) servers, permissions, subagents, and persistent project context.",
+     "correct": true
+    }
+   ],
+   "explanation": "Before piloting: identify which workflow steps benefit from AI assistance and where human authority must remain (D), and configure the project-scope MCP servers, permissions, subagents and persistent project context (E). A is post-pilot, B and C follow once the workflow is validated."
+  },
+  {
+   "id": 104,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "Engineering leadership wants to roll out Claude Skills to 280 developers across 14 teams. Skills will encode internal coding standards, code review checklists, and incident postmortem templates. Leadership has asked how to govern Skill authorship so that Skills remain trustworthy without bottlenecking on a single central team. Which governance model should you recommend?",
+   "options": [
+    {
+     "text": "centralized authorship by a single platform team responsible for every Skill produced"
+    },
+    {
+     "text": "fully decentralized authorship across the 14 teams with no review before publication"
+    },
+    {
+     "text": "federated authorship across the 14 teams with a central review and publish gate",
+     "correct": true
+    },
+    {
+     "text": "per-developer authorship across the 280 engineers with no team-level coordination required"
+    }
+   ],
+   "explanation": "Federated authorship with a central review and publish gate lets the 14 teams encode their own domain knowledge while keeping a single quality and trust checkpoint. A creates the bottleneck being avoided, B and D remove review entirely."
+  },
+  {
+   "id": 105,
+   "type": "single",
+   "domain": "Solution Design and Architecture",
+   "question": "A technical team is debating whether to implement a new capability for generating regulatory filings from internal data as a Claude Skill or as an MCP server. The capability requires a fixed authoring procedure with embedded examples, does not need to call live external systems, and must be portable across three Claude deployments: claude.ai, an internal API integration, and Claude Code. Which factor most strongly favors implementing the capability as a Skill?",
+   "options": [
+    {
+     "text": "The capability must be callable from a developer's command-line interface as well."
+    },
+    {
+     "text": "The capability requires authentication against the corporate identity provider directly."
+    },
+    {
+     "text": "The capability needs to query a live database for the most recent regulatory filings."
+    },
+    {
+     "text": "The capability is procedural knowledge with no live external system calls required.",
+     "correct": true
+    }
+   ],
+   "explanation": "A Skill is the right packaging for procedural knowledge — a fixed authoring procedure with embedded examples — that needs no live system calls and must be portable across claude.ai, an API integration and Claude Code. A, B and C describe live-system and auth needs, which point toward an MCP server."
+  },
+  {
+   "id": 106,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are defining when to introduce a project subagent versus relying on Claude Code's general capabilities. Which scenario most directly justifies a dedicated subagent?",
+   "options": [
+    {
+     "text": "The team has a recurring specialized task (such as database schema review) that requires a focused system prompt, narrow tool permissions, and a specific model selection across many sessions.",
+     "correct": true
+    },
+    {
+     "text": "The team has no recurring specialized tasks and uses Claude Code only for isolated general-purpose work that does not justify a dedicated system prompt or tool scope."
+    },
+    {
+     "text": "The team wants every Claude Code interaction to use the same generic system prompt with no task-specific specialization, narrow tool permissions, or dedicated model selection."
+    },
+    {
+     "text": "The team has a one-time ad-hoc question that will not recur and does not require a focused system prompt, narrow tool permissions, or a dedicated model selection."
+    }
+   ],
+   "explanation": "A dedicated subagent is justified by a recurring specialised task that benefits from its own focused system prompt, narrow tool permissions and specific model selection across many sessions. B, C and D describe one-off or generic work with no specialisation to encode."
+  },
+  {
+   "id": 107,
+   "type": "multiple",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are compiling team-setup practices for a Claude Code rollout across an engineering organization. Which two practices belong on the list? (Choose two.) Each correct answer presents a complete solution.",
+   "options": [
+    {
+     "text": "Use project scope for personal editor preferences so the preferences apply consistently within the project."
+    },
+    {
+     "text": "Use project scope for team-shared Model Context Protocol (MCP) servers and permission rules under version control.",
+     "correct": true
+    },
+    {
+     "text": "Use local scope for security-critical permission rules so each engineer can adapt them to ongoing work."
+    },
+    {
+     "text": "Use user scope for team-shared MCP servers so every engineer on the team has consistent access."
+    },
+    {
+     "text": "Apply managed configuration centrally for security-critical settings that must not be overridden by individual engineers.",
+     "correct": true
+    }
+   ],
+   "explanation": "Put team-shared MCP servers and permission rules in project scope under version control (B), and apply managed configuration centrally for security-critical settings that individuals must not override (E). A misplaces personal preferences, C puts security rules where they can be changed locally, D makes shared servers a per-user chore."
+  },
+  {
+   "id": 108,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are integrating Claude Code into the teams pull-request workflow. The team wants AI-assisted review without removing human approval. Which integration design best fits this requirement?",
+   "options": [
+    {
+     "text": "Claude Code merges every pull request automatically upon completing its analysis, bypassing the human approval step and the existing branch protection rules entirely."
+    },
+    {
+     "text": "Claude Code disables all existing branch protection rules on the repository to streamline the merge process, removing human approval as a required gate for all pull requests."
+    },
+    {
+     "text": "Claude Code silently deletes pull requests it assesses as low quality without posting a comment or notifying the author, removing the author's ability to respond or revise."
+    },
+    {
+     "text": "Claude Code reviews the pull request and posts a structured analysis as a comment, while a human reviewer retains the approval decision under the existing branch protection rules.",
+     "correct": true
+    }
+   ],
+   "explanation": "Claude Code posts a structured review as a PR comment while the human reviewer keeps the approval decision under existing branch protection. A, B and C all remove the human gate."
+  },
+  {
+   "id": 109,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are identifying inefficiency in a Claude Code workflow where each engineer manually re-explains the project's conventions and architecture in every session. Which adjustment most directly removes this inefficiency?",
+   "options": [
+    {
+     "text": "Capture the project's conventions and architecture in a project-scoped CLAUDE.md (or equivalent persistent project-context file) committed to the repository, so each session loads it automatically.",
+     "correct": true
+    },
+    {
+     "text": "Forbid the use of Claude Code on the project entirely to avoid the session-initialization overhead, accepting that the team loses all AI-assisted development productivity for this codebase."
+    },
+    {
+     "text": "Tell each engineer to retype the project conventions and architecture context more quickly at the start of each session, reducing time lost without eliminating the repeated manual effort."
+    },
+    {
+     "text": "Remove all documented project conventions and architectural standards so engineers have nothing to re-explain at session start, accepting the loss of consistency and shared coding standards."
+    }
+   ],
+   "explanation": "Commit the conventions and architecture to a project-scoped CLAUDE.md (or equivalent persistent project-context file) so every session loads it automatically. B abandons the tool, C only speeds up the waste, D deletes the standards."
+  },
+  {
+   "id": 110,
+   "type": "multiple",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "The compliance team has authored a regulatory disclosure procedure that must be applied identically across customer service, sales, and onboarding workflows. The procedure changes when regulators issue updates, currently four to six times per year. You are designing how the procedure will be packaged for use by Claude across all three workflows. Which two design decisions should you include? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Reference the same Claude Skill from all three of the workflow integrations directly.",
+     "correct": true
+    },
+    {
+     "text": "Store the procedure in a shared retrieval corpus accessed by all three workflows."
+    },
+    {
+     "text": "Have each workflow team rewrite the procedure for that team's specific context."
+    },
+    {
+     "text": "Package the procedure as a Claude Skill owned by the compliance team directly.",
+     "correct": true
+    },
+    {
+     "text": "Embed the procedure text into each workflow's system prompt at integration time."
+    }
+   ],
+   "explanation": "Package the procedure once as a Skill owned by the compliance team (D) and reference that same Skill from all three workflow integrations (A), so the four-to-six annual regulatory updates are made in one place. B loses the fixed procedural form, C forks the procedure three ways, E requires three redeployments per update."
+  },
+  {
+   "id": 111,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are supporting an engineer whose Claude Code session reports a permission denial when the engineer expected the action to be allowed. Which resolution step is most appropriate?",
+   "options": [
+    {
+     "text": "Disable the permission system entirely across all scopes to remove the denial, eliminating all tool-pattern and deny-rule controls rather than identifying and amending the specific rule."
+    },
+    {
+     "text": "Grant the engineer unrestricted Bash access to bypass the specific rule causing the denial, removing all tool-pattern constraints rather than amending only the rule in question."
+    },
+    {
+     "text": "Tell the engineer to retry the denied action verbatim repeatedly until the denial stops appearing, without inspecting the active permission rules to determine whether the denial is intentional."
+    },
+    {
+     "text": "Inspect the active permission rules across all scopes (managed, command-line, local, project, user) to identify which rule is denying the action and confirm whether it should be amended or whether the action should remain denied.",
+     "correct": true
+    }
+   ],
+   "explanation": "Inspect the active permission rules across all scopes (managed, command-line, local, project, user) to find which rule denies the action and decide whether it should be amended or is correctly denying. A, B and C remove controls or ignore the cause."
+  },
+  {
+   "id": 112,
+   "type": "multiple",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are resolving a Claude Code operational issue reported by the team and must complete the diagnostic steps before applying a targeted fix. Which two steps must be completed BEFORE applying the targeted fix? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Open a permanent change request in the change-management system to formalize the upcoming fix."
+    },
+    {
+     "text": "Document the root cause and the fix in the team runbook for future occurrences."
+    },
+    {
+     "text": "Form a hypothesis about the most likely root cause given the symptom, configuration, and recent changes.",
+     "correct": true
+    },
+    {
+     "text": "Reproduce the issue with a minimal reproduction case to confirm the symptom and isolate variables.",
+     "correct": true
+    },
+    {
+     "text": "Notify the affected users that a fix has been deployed and the operational issue is resolved."
+    }
+   ],
+   "explanation": "Diagnosis before fix: reproduce the issue with a minimal case to confirm the symptom and isolate variables (D), and form a hypothesis about the root cause given symptom, configuration and recent changes (C). A, B and E surround or follow the fix."
+  },
+  {
+   "id": 113,
+   "type": "multiple",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "A Claude architect is configuring a shared Claude Code environment for a twelve-person development team. Which two configuration decisions most directly establish a consistent, secure team environment? (Choose two.)",
+   "options": [
+    {
+     "text": "applying managed configuration to enforce non-overridable security and compliance policies across all team members",
+     "correct": true
+    },
+    {
+     "text": "committing shared MCP server definitions and tool permissions in project-scope configuration files alongside the repository",
+     "correct": true
+    },
+    {
+     "text": "instructing each engineer to configure their preferred Claude model in personal user-scope settings"
+    },
+    {
+     "text": "storing the team's shared API key in the project-scope settings.json so all engineers use the same credential"
+    },
+    {
+     "text": "setting editor theme and display preferences at the project scope so they are uniform across workstations"
+    }
+   ],
+   "explanation": "Managed configuration enforces non-overridable security and compliance policy across the team (A), and project-scope files committed alongside the repo give everyone the same MCP servers and tool permissions (B). C is a personal preference, D commits a shared credential to the repo, E puts display settings in the wrong scope."
+  },
+  {
+   "id": 114,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are configuring Claude Code for a team that needs every engineer to share the same MCP server set, permission rules, and project context across the engineering monorepo. Which configuration scope best supports this requirement?",
+   "options": [
+    {
+     "text": "user scope configured individually on each engineer's machine, with no shared configuration committed to the repository and no guarantee of consistency across the team"
+    },
+    {
+     "text": "user scope with the MCP server definitions and permission rules placed in each engineer's ~/.claude/settings.json and synchronized manually via a shared setup script outside version control"
+    },
+    {
+     "text": "local scope configured only on the lead architect's machine, with no configuration present on other engineers' machines and no mechanism to distribute MCP servers or permission rules"
+    },
+    {
+     "text": "project scope, with the configuration committed to the repository so every engineer working in the project picks up the same MCP servers, permissions, and context",
+     "correct": true
+    }
+   ],
+   "explanation": "Project scope committed to the repository gives every engineer the same MCP servers, permission rules and project context automatically. A, B and C all depend on per-machine setup with no guarantee of consistency."
+  },
+  {
+   "id": 115,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "A Claude needs to ensure that a security-hardening flag cannot be disabled by any individual engineer after it is set. Which configuration scope correctly enforces this requirement?",
+   "options": [
+    {
+     "text": "managed configuration applied centrally and marked as non-overridable",
+     "correct": true
+    },
+    {
+     "text": "environment variable defined in the CI/CD pipeline only"
+    },
+    {
+     "text": "project scope (.claude/settings.json) committed to the repository"
+    },
+    {
+     "text": "user scope (~/.claude/settings.json) on each engineer's machine"
+    }
+   ],
+   "explanation": "Managed configuration applied centrally and marked non-overridable is the only scope an individual engineer cannot change. Project and user scope are editable locally, and a CI-only environment variable does not govern engineers' sessions."
+  },
+  {
+   "id": 116,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are integrating Claude Code into a workflow that runs against a production database. Which guardrail design most directly preserves safety on data-modifying operations?",
+   "options": [
+    {
+     "text": "Allow Claude Code to write directly to the production database without subagent scoping, read-only credential defaults, or human confirmation gates on data-modifying operations."
+    },
+    {
+     "text": "Configure the database MCP server with a fully privileged credential that can perform any read or write operation, and allow all operations to proceed without explicit human confirmation."
+    },
+    {
+     "text": "Configure the database MCP server with a read-only credential by default, restrict the subagent's tool list to read-only operations, and require explicit human confirmation on any operation that would modify data.",
+     "correct": true
+    },
+    {
+     "text": "Disable all logging and auditing on database operations through the MCP server to reduce alert noise, removing the observability needed to detect unintended data modifications."
+    }
+   ],
+   "explanation": "Defence in depth on writes: a read-only credential by default on the database MCP server, a subagent tool list restricted to read operations, and explicit human confirmation on any data-modifying operation. A and B grant unchecked write access, D removes the audit trail."
+  },
+  {
+   "id": 117,
+   "type": "multiple",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "A Claude architect is auditing configuration scope assignments. Which two statements correctly identify an appropriate use of user-scope configuration versus other scopes? (Choose two.)",
+   "options": [
+    {
+     "text": "defining MCP server endpoints shared by all contributors to a specific repository"
+    },
+    {
+     "text": "persisting personal editor theme preferences that follow an engineer across projects",
+     "correct": true
+    },
+    {
+     "text": "saving a preferred Claude response language that applies to all repositories the engineer uses",
+     "correct": true
+    },
+    {
+     "text": "storing API authentication keys so they are not committed to version control"
+    },
+    {
+     "text": "enforcing a company-wide policy that disables a feature for all engineers"
+    }
+   ],
+   "explanation": "User scope carries personal settings that follow the engineer across projects: editor theme preferences (B) and a preferred response language for all repositories (C). A belongs in project scope, D belongs in a secret store or environment, E belongs in managed configuration."
+  },
+  {
+   "id": 118,
+   "type": "multiple",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are rolling out a standardized Claude Code configuration to an engineering team and must complete the planning steps before piloting the configuration. Which two steps must be completed BEFORE piloting the configuration with a small group of engineers? (Choose two.) Each correct answer presents part of the solution.",
+   "options": [
+    {
+     "text": "Roll out the stabilized configuration to additional teams with documentation and a defined support channel."
+    },
+    {
+     "text": "Define the project-scope baseline covering Model Context Protocol (MCP) servers, permission rules, and subagents.",
+     "correct": true
+    },
+    {
+     "text": "Onboard every engineer in the organization to the new configuration through mandatory training sessions."
+    },
+    {
+     "text": "Iterate the configuration based on the pilot findings and stabilize the baseline before broader rollout."
+    },
+    {
+     "text": "Identify the team workflows, security boundaries, and which decisions belong to managed configuration versus project scope.",
+     "correct": true
+    }
+   ],
+   "explanation": "Before piloting: identify team workflows, security boundaries and which decisions belong to managed configuration versus project scope (E), then define the project-scope baseline of MCP servers, permission rules and subagents (B). A, C and D come after the pilot."
+  },
+  {
+   "id": 119,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are supporting a team whose Claude Code sessions consistently load 60 or more MCP tools from many servers, exhausting context budget before the session begins. Which adjustment most directly addresses this issue without removing capability?",
+   "options": [
+    {
+     "text": "Enable Tool Search so tool definitions are deferred and discovered on demand rather than loaded into context upfront.",
+     "correct": true
+    },
+    {
+     "text": "Add additional MCP servers to give the team more capability, which increases rather than reduces the number of tool definitions loaded into the session's context budget."
+    },
+    {
+     "text": "Increase the prompt's verbosity with additional instructions and context, which consumes more of the context budget rather than reducing the tool-definition overhead causing the issue."
+    },
+    {
+     "text": "Disable every MCP server in the configuration to free up context budget, accepting that the team loses all tool access and cannot perform any MCP-dependent task in the session."
+    }
+   ],
+   "explanation": "Tool Search defers tool definitions and discovers them on demand, so 60+ tools no longer consume context before the session starts, and no capability is removed. B worsens the problem, C is unrelated, D removes capability."
+  },
+  {
+   "id": 120,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "A team manager wants all engineers working on the same repository to share identical MCP server definitions without manual synchronization. Which configuration approach satisfies this requirement?",
+   "options": [
+    {
+     "text": "project-scope .claude/settings.json and .mcp.json files committed to the repository",
+     "correct": true
+    },
+    {
+     "text": "managed configuration pushed to all endpoints by the administrator"
+    },
+    {
+     "text": "environment variables set at the operating-system level on each workstation"
+    },
+    {
+     "text": "each engineer maintains a personal ~/.claude/settings.json with the shared definitions"
+    }
+   ],
+   "explanation": "Project-scope .claude/settings.json and .mcp.json committed to the repository distribute identical MCP server definitions to everyone working in it, with no manual sync. B is for centrally enforced policy, C and D require per-machine maintenance."
+  },
+  {
+   "id": 121,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are diagnosing a Claude Code session whose subagent uses 50,000 tokens of context before the engineer types a single message. Which root cause is most likely?",
+   "options": [
+    {
+     "text": "Many MCP servers are configured, each contributing tool definitions to the context budget; Tool Search is not enabled, so all definitions load upfront.",
+     "correct": true
+    },
+    {
+     "text": "The model has internal personal preferences or default behaviors that silently consume large portions of context budget before any user message is processed, independent of tool configuration."
+    },
+    {
+     "text": "The developer's keyboard layout or input-method configuration is the cause of the elevated context consumption, introducing extra tokens before the engineer types any message."
+    },
+    {
+     "text": "The font rendering or display-scaling settings of the IDE are converting visual output into additional context tokens, causing the high pre session context consumption."
+    }
+   ],
+   "explanation": "Many configured MCP servers each contribute tool definitions to the context budget, and without Tool Search enabled every definition is loaded upfront. B, C and D are not mechanisms that consume context tokens."
+  },
+  {
+   "id": 122,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are explaining the precedence of Claude Code configuration scopes to the team. Which precedence ordering, from highest to lowest, is correct?",
+   "options": [
+    {
+     "text": "Local --> managed --> user --> command-line arguments --> project"
+    },
+    {
+     "text": "Managed --> command-line arguments --> local --> project --> user",
+     "correct": true
+    },
+    {
+     "text": "User --> project --> local --> command-line arguments --> managed"
+    },
+    {
+     "text": "Project --> user --> managed --> local --> project command-line arguments"
+    }
+   ],
+   "explanation": "Highest to lowest: managed (enterprise) settings, then command-line arguments, then local project settings, then shared project settings, then user settings. The other orderings invert the managed-at-top and user-at-bottom rule."
+  },
+  {
+   "id": 123,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are reviewing a peer's Claude Code permission rules for an enterprise rollout. The rules grant unrestricted Bash access to all projects across all developers. Which response is most appropriate?",
+   "options": [
+    {
+     "text": "Approve the unrestricted Bash access as written on the grounds that narrowing the rules would add configuration complexity, accepting the full attack surface for all engineers across all projects."
+    },
+    {
+     "text": "Replace unrestricted Bash with narrowly-scoped tool patterns that allow only the specific commands the workflows require, and add explicit deny rules for sensitive operations.",
+     "correct": true
+    },
+    {
+     "text": "Add unrestricted access to additional tool categories as well, so that Bash is not asymmetrically more permissive than other tools, expanding the attack surface further in the name of consistency."
+    },
+    {
+     "text": "Disable all permission rules for the enterprise rollout so every command across every project runs without any tool-pattern scoping or explicit deny rules for sensitive operations."
+    }
+   ],
+   "explanation": "Replace unrestricted Bash with narrowly scoped tool patterns covering only the commands the workflows need, plus explicit deny rules for sensitive operations. A accepts the full attack surface, C and D widen it."
+  },
+  {
+   "id": 124,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are integrating AI-assisted tooling into the teams documentation workflow. The team wants generated documentation that stays grounded in the actual code. Which integration approach best fits this requirement?",
+   "options": [
+    {
+     "text": "Disable all filesystem and code-search tools so the subagents cannot read any repository code, accepting that documentation generation will be entirely disconnected from the actual implementation."
+    },
+    {
+     "text": "Generate documentation from the model's training-data recall without reading any of the actual repository code, accepting that the output will not reflect the current implementation."
+    },
+    {
+     "text": "Configure subagents that read the relevant code files via filesystem and code-search tools, generate the documentation, and emit changes through the teams normal review workflow.",
+     "correct": true
+    },
+    {
+     "text": "Have the subagents publish generated documentation directly to the public-facing site without passing through the team's normal review workflow or any human approval step."
+    }
+   ],
+   "explanation": "Ground the documentation in the repository itself: subagents read the relevant code through filesystem and code-search tools, generate the docs, and route the changes through the team's normal review workflow. A and B disconnect output from the code, D bypasses review."
+  },
+  {
+   "id": 125,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "You are supporting an engineer whose newly added MCP server does not appear in their Claude Code session. Which diagnostic step should be tried first?",
+   "options": [
+    {
+     "text": "Reinstall the developer's operating system from scratch, discarding all local configuration and tool state before attempting any targeted diagnostic steps."
+    },
+    {
+     "text": "Disable every MCP server in the configuration to isolate the issue, removing all tool access rather than confirming whether the new server is registered."
+    },
+    {
+     "text": "Switch the team to a different Claude product family unrelated to the existing workflow, abandoning the current configuration rather than diagnosing the registration issue."
+    },
+    {
+     "text": "Verify the MCP server is registered using the listing command, then reconnect the session if needed, since configuration changes typically require a restart to take effect.",
+     "correct": true
+    }
+   ],
+   "explanation": "Start with the cheapest check that confirms registration: list the configured MCP servers, then reconnect or restart the session, since configuration changes generally require a restart to take effect. A, B and C are disproportionate before basic verification."
+  }
+ ]
+}

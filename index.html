@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PaNIC Study Room · Certification practice for AI and cloud</title>
+<meta name="description" content="Practice questions, timed mock exams and Vietnamese translations for AI and cloud certifications — Claude today, AWS, Microsoft and Google Cloud next. Free, no sign-up, progress stays on your device.">
+<meta name="theme-color" content="#f1f0ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14161c" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://panic-study-room.vercel.app/">
+<link rel="icon" href="/favicon.ico?v=3" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png?v=3">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="apple-mobile-web-app-title" content="PaNIC Study">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PaNIC Study Room">
+<meta property="og:title" content="PaNIC Study Room · Certification practice for AI and cloud">
+<meta property="og:description" content="Practice questions, mock exams and EN + VN translations. Claude certifications open now; AWS, Microsoft and Google Cloud on the shelf next.">
+<meta property="og:url" content="https://panic-study-room.vercel.app/">
+<meta property="og:image" content="https://panic-study-room.vercel.app/assets/images/og-image.png?v=5">
+<meta property="og:image:secure_url" content="https://panic-study-room.vercel.app/assets/images/og-image.png?v=5">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PaNIC Study Room — a bookshelf of certification study guides">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PaNIC Study Room · Certification practice for AI and cloud">
+<meta name="twitter:description" content="Practice questions, mock exams and EN + VN translations for AI and cloud certifications.">
+<meta name="twitter:image" content="https://panic-study-room.vercel.app/assets/images/og-image.png?v=5">
+<link rel="preload" href="/assets/fonts/bvp-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<script>try{var t=JSON.parse(localStorage.getItem('panic-prefs-v1')||'{}').theme;if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}</script>
+<link rel="stylesheet" href="/assets/css/app.css?v=11">
+<link rel="stylesheet" href="/assets/css/answer-fx.css?v=4">
+<script defer src="/assets/js/catalog.js?v=5"></script>
+<script defer src="/assets/js/store.js?v=5"></script>
+<script defer src="/assets/js/core.js?v=5"></script>
+<script defer src="/assets/js/keywords.js?v=5"></script>
+<script defer src="/assets/js/answer-fx.js?v=5"></script>
+<script defer src="/assets/js/app.js?v=11"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#/" aria-label="PaNIC Study Room, library">
+    <img class="brand-mark" src="/assets/favicon.svg" alt="" width="34" height="34">
+    <span class="brand-name">PaNIC <span>Study Room</span></span>
+  </a>
+  <nav class="nav-links" aria-label="Main">
+    <a href="#/" data-nav="home">Library</a>
+    <a href="#/progress" data-nav="progress">My progress</a>
+  </nav>
+  <div class="nav-tools">
+    <button class="search-trigger" id="openSearch" type="button" aria-label="Search certifications"><span data-icon="search"></span><span class="search-label">Find a certification</span><kbd>/</kbd></button>
+    <a class="streak-chip" id="streakChip" href="#/progress" title="Days in a row with at least one answer"><span data-icon="flame"></span><b id="streakCount">0</b><span class="sr"> day streak</span></a>
+    <button class="icon-button" id="themeToggle" type="button" aria-label="Switch colour theme"><span data-icon="moon"></span></button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <!-- Library -->
+  <section class="view" id="viewHome" hidden></section>
+  <!-- Certification overview -->
+  <section class="view" id="viewCert" hidden></section>
+  <!-- My progress -->
+  <section class="view" id="viewProgress" hidden></section>
+
+  <!-- Study room -->
+  <div class="app-shell" id="studyApp" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="side-head">
+        <a class="side-back" id="sideBack" href="#/"><span data-icon="back"></span><span>Overview</span></a>
+        <button class="icon-button mobile-only" id="closeSidebar" type="button" aria-label="Close question navigator"><span data-icon="close"></span></button>
+      </div>
+      <div class="side-cover" id="sideCover"></div>
+      <div class="mode-switch" role="group" aria-label="Study mode"><button id="studyMode" type="button">Practice</button><button id="examMode" type="button">Mock exam</button></div>
+      <div class="session-actions"><button class="ghost" id="resetStudy" type="button"><span data-icon="reset"></span> Reset practice</button><button class="ghost" id="newExam" type="button"><span data-icon="plus"></span> New exam</button></div>
+      <section class="progress-card" aria-label="Session progress">
+        <div class="between"><span id="progressTitle">Practice progress</span><strong id="progressCount"></strong></div>
+        <div class="progress-track"><span id="progressBar"></span></div>
+        <div class="stats"><span><b id="correctCount">0</b>Correct</span><span><b id="wrongCount">0</b>Incorrect</span><span><b id="remainingCount">0</b>Remaining</span></div>
+      </section>
+      <div class="between map-title"><h2>Questions</h2><span id="bankCount"></span></div>
+      <div class="filters"><div id="domainFilter" class="custom-select"></div><div id="statusFilter" class="custom-select"></div><div id="typeFilter" class="custom-select"></div></div>
+      <nav class="question-grid" id="questionGrid" aria-label="Choose a question"></nav>
+      <div class="legend"><span><i class="dot correct"></i>Correct</span><span><i class="dot wrong"></i>Incorrect</span><span><i class="dot flagged"></i>Flagged</span></div>
+      <p class="side-foot">Independent practice resource. Not an official exam.</p>
+    </aside>
+    <button class="backdrop" id="backdrop" type="button" aria-label="Close question navigator" hidden></button>
+    <div class="main">
+      <div class="workspace-head">
+        <div><span class="crumb" id="modeLabel"></span><h2 id="workspaceTitle"></h2></div>
+        <button class="ghost mobile-only" id="openSidebar" type="button"><span data-icon="grid"></span> <span id="mobileProgress">Questions</span></button>
+        <div class="desktop-note" id="sessionNote"></div>
+      </div>
+      <div class="exam-bar" id="examBar" hidden><span class="timer" id="mobileTimer"></span><button class="text-button" id="mobileSubmit" type="button">Submit exam</button></div>
+      <div class="question-scroll" id="questionScroll"><article class="question-card" id="question" tabindex="-1"></article><p class="study-note" id="studyNote"></p></div>
+      <footer class="question-footer">
+        <button class="ghost" id="prev" type="button"><span data-icon="back"></span> <span>Previous</span></button>
+        <button class="text-button" id="clear" type="button"><span data-icon="reset"></span> <span>Clear answer</span></button>
+        <div class="footer-right"><span id="position"></span><button class="primary" id="next" type="button"><span>Next</span> <span data-icon="arrow"></span></button></div>
+      </footer>
+    </div>
+  </div>
+</main>
+
+<dialog id="searchDialog" class="search-dialog" aria-label="Find a certification">
+  <div class="search-box"><span data-icon="search"></span><input id="searchInput" type="search" placeholder="Search by name, code or provider" autocomplete="off" aria-controls="searchResults"><kbd>Esc</kbd></div>
+  <div id="searchResults" class="search-results" role="listbox"></div>
+</dialog>
+
+<dialog id="examDialog"><form id="examForm"><h2 tabindex="-1" id="examTitle">Start a mock exam</h2><p>Questions and answer choices are shuffled. Results appear after you submit.</p><fieldset class="exam-types"><legend class="sr">Exam type</legend><label class="exam-type"><input type="radio" name="examType" value="timed" checked><span><strong>Timed mock exam</strong><small id="timedExamDescription"></small></span><span data-icon="clock"></span></label><label class="exam-type"><input type="radio" name="examType" value="range"><span><strong>Untimed range</strong><small>Pick a range of questions and go at your own pace.</small></span><span data-icon="layers"></span></label></fieldset><div id="rangeFields" hidden><div class="range-inputs"><label>From question<input id="rangeFrom" type="number" min="1" step="1" value="1" inputmode="numeric"></label><label>To question<input id="rangeTo" type="number" min="1" step="1" value="1" inputmode="numeric"></label></div><p id="rangeSummary" aria-live="polite"></p></div><p id="examPresetNote" hidden></p><p id="examWarning"></p><div class="dialog-actions"><button type="button" class="ghost" id="cancelExam">Cancel</button><button class="primary" type="submit">Start exam <span data-icon="arrow"></span></button></div></form></dialog>
+<dialog id="confirmDialog"><h2 id="confirmTitle"></h2><p id="confirmText"></p><div class="dialog-actions"><button class="ghost" id="cancelConfirm" type="button">Keep working</button><button class="primary" id="acceptConfirm" type="button">Submit exam</button></div></dialog>
+<dialog id="resultDialog"><h2>Exam complete</h2><div id="results"></div><div class="dialog-actions"><button class="ghost" id="resultStudy" type="button">Back to practice</button><button class="primary" id="reviewExam" type="button">Review answers</button></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="sr" aria-live="polite" id="announcement"></div>
+</body>
+</html>

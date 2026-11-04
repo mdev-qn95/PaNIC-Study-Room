@@ -1,0 +1,175 @@
+{
+ "schema": 2,
+ "about": "Providers and certifications shown in PaNIC Study Room. 'code' is the provider's official exam code and is optional — leave it out when the provider has none (e.g. Google Cloud); never invent one. Question banks live in data/certs/<id>/. See docs/adding-certifications.md.",
+ "levels": [
+  "Foundational",
+  "Fundamentals",
+  "Foundations",
+  "Associate",
+  "Professional",
+  "Specialty",
+  "Expert"
+ ],
+ "providers": [
+  {
+   "id": "anthropic",
+   "name": "Anthropic",
+   "short": "Claude",
+   "blurb": "Architect, associate and developer certifications for building with Claude.",
+   "color": "#781923",
+   "ink": "#f6e6bf"
+  },
+  {
+   "id": "aws",
+   "name": "Amazon Web Services",
+   "short": "AWS",
+   "blurb": "Cloud practitioner, architect and specialty tracks.",
+   "color": "#8a5a17",
+   "ink": "#fbe7c6"
+  },
+  {
+   "id": "microsoft",
+   "name": "Microsoft",
+   "short": "Microsoft",
+   "blurb": "Azure fundamentals, administration and AI engineering.",
+   "color": "#25438a",
+   "ink": "#dfe7fb"
+  },
+  {
+   "id": "google",
+   "name": "Google Cloud",
+   "short": "Google Cloud",
+   "blurb": "Cloud digital leader, engineering and data certifications.",
+   "color": "#1d6450",
+   "ink": "#d8f1e6"
+  }
+ ],
+ "certifications": [
+  {
+   "id": "ccar-p",
+   "provider": "anthropic",
+   "code": "CCAR-P",
+   "title": "Claude Certified Architect",
+   "spine": "Architect",
+   "level": "Professional",
+   "status": "live",
+   "summary": "Design, integrate, evaluate and operate Claude solutions with confidence.",
+   "updated": "2026-10-30",
+   "questions": 125,
+   "bank": {
+    "source": "questions.en.json",
+    "translations": {
+     "vi": "questions.vi.json"
+    },
+    "keywords": "keywords.json"
+   },
+   "exam": {
+    "questions": 63,
+    "minutes": 120
+   },
+   "storageKey": "panic-ccarp-v1"
+  },
+  {
+   "id": "ccar-f",
+   "provider": "anthropic",
+   "code": "CCAR-F",
+   "title": "Claude Certified Architect",
+   "spine": "Architect",
+   "level": "Foundations",
+   "status": "live",
+   "summary": "Core architectural thinking, agent workflows and tool integration.",
+   "updated": "2026-10-30",
+   "questions": 147,
+   "bank": {
+    "source": "questions.en.json",
+    "translations": {
+     "vi": "questions.vi.json"
+    }
+   },
+   "exam": {
+    "questions": 60,
+    "minutes": 120,
+    "note": "Practice preset: 60 questions in 120 minutes. This is not an official exam specification."
+   },
+   "storageKey": "panic-ccarf-v1"
+  },
+  {
+   "id": "ccao-f",
+   "provider": "anthropic",
+   "code": "CCAO-F",
+   "title": "Claude Certified Associate",
+   "spine": "Associate",
+   "level": "Foundations",
+   "status": "soon",
+   "summary": "Your starting point for foundational Claude knowledge."
+  },
+  {
+   "id": "ccdv-f",
+   "provider": "anthropic",
+   "code": "CCDV-F",
+   "title": "Claude Certified Developer",
+   "spine": "Developer",
+   "level": "Foundations",
+   "status": "soon",
+   "summary": "A foundation for building applications with Claude."
+  },
+  {
+   "id": "aws-sap",
+   "provider": "aws",
+   "code": "SAP-C02",
+   "title": "Solutions Architect",
+   "spine": "Architect",
+   "level": "Professional",
+   "status": "planned",
+   "summary": "Complex, multi-account solutions: organisational design, migration, cost control and continuous improvement on AWS."
+  },
+  {
+   "id": "aws-dop",
+   "provider": "aws",
+   "code": "DOP-C02",
+   "title": "DevOps Engineer",
+   "spine": "DevOps Engineer",
+   "level": "Professional",
+   "status": "planned",
+   "summary": "SDLC automation, infrastructure as code, monitoring, incident response and resilient operations on AWS."
+  },
+  {
+   "id": "az-900",
+   "provider": "microsoft",
+   "code": "AZ-900",
+   "title": "Azure",
+   "spine": "Fundamentals",
+   "level": "Fundamentals",
+   "status": "planned",
+   "summary": "Cloud concepts, Azure architecture, services, governance and management."
+  },
+  {
+   "id": "az-104",
+   "provider": "microsoft",
+   "code": "AZ-104",
+   "title": "Azure Administrator",
+   "spine": "Administrator",
+   "level": "Associate",
+   "status": "planned",
+   "summary": "Identities, governance, storage, compute and virtual networking in Azure."
+  },
+  {
+   "id": "gcp-pca",
+   "provider": "google",
+   "title": "Professional Cloud Architect",
+   "spine": "Cloud Architect",
+   "level": "Professional",
+   "status": "planned",
+   "summary": "Designing, planning and managing secure, scalable and reliable solutions on Google Cloud."
+  },
+  {
+   "id": "gcp-pcdoe",
+   "provider": "google",
+   "title": "Professional Cloud DevOps Engineer",
+   "spine": "DevOps Engineer",
+   "level": "Professional",
+   "status": "planned",
+   "summary": "Site reliability engineering, CI/CD pipelines, service monitoring and performance optimisation on Google Cloud."
+  }
+ ]
+}

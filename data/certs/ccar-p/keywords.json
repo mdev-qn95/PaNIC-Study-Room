@@ -1,0 +1,86 @@
+{
+ "schema": 2,
+ "certification": "ccar-p",
+ "language": "en",
+ "about": "Optional reading cues for answer choices. Not answer keys. Earlier kinds win when matches overlap. 'phrases' are literal (spaces match any whitespace, hyphens match any dash); 'patterns' are regular expressions; 'highlight' limits colouring to those words inside the match.",
+ "kinds": [
+  {
+   "id": "check",
+   "label": "CHECK",
+   "color": "amber",
+   "phrases": [
+    "Disable prompt caching",
+    "Clear the prompt cache",
+    "identify any",
+    "Move credentials out",
+    "cannot be measured",
+    "without a BAA",
+    "without requiring a separate tool",
+    "Replace unrestricted",
+    "regardless of fine-tuning"
+   ],
+   "patterns": [
+    {
+     "regex": "cannot\\b[^.!?;\\n]*?\\bwithout\\b[^.!?;\\n]*",
+     "highlight": [
+      "cannot",
+      "without"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "avoid",
+   "label": "NÉ",
+   "color": "red",
+   "phrases": [
+    "without",
+    "disable all",
+    "remove all",
+    "discard all",
+    "unrestricted",
+    "rely on",
+    "entirely",
+    "regardless of",
+    "accepting that"
+   ],
+   "patterns": []
+  },
+  {
+   "id": "pick",
+   "label": "LỤM",
+   "color": "green",
+   "phrases": [
+    "risk-stratified",
+    "cache",
+    "caching",
+    "cacheable",
+    "Inspect",
+    "Verify",
+    "define",
+    "defined cost",
+    "defined level",
+    "defined data",
+    "defined metric",
+    "defined slices",
+    "Identify",
+    "reproduce",
+    "Tool Search",
+    "prompt-level",
+    "Credentials",
+    "present measured",
+    "rate measured",
+    "cost measured",
+    "explicit",
+    "alternatives rejected",
+    "alternatives considered",
+    "trade-offs accepted"
+   ],
+   "patterns": [
+    {
+     "regex": "per[-‐‑–]role\\b[^.!?;\\n]*?\\ballow[-‐‑–]list"
+    }
+   ]
+  }
+ ]
+}
