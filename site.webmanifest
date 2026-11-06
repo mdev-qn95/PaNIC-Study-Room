@@ -3,7 +3,7 @@
   "short_name": "PaNIC Study",
   "start_url": "/#/",
   "scope": "/",
-  "display": "browser",
+  "display": "standalone",
   "background_color": "#efefe9",
   "theme_color": "#781923",
   "icons": [
@@ -19,5 +19,7 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "id": "/",
+  "lang": "en"
 }
