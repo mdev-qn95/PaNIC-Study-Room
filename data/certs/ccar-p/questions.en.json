@@ -3097,6 +3097,858 @@
     }
    ],
    "explanation": "Start with the cheapest check that confirms registration: list the configured MCP servers, then reconnect or restart the session, since configuration changes generally require a restart to take effect. A, B and C are disproportionate before basic verification."
+  },
+  {
+   "id": 126,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "You are comparing two configurations for an internal compliance Q&A assistant. Configuration X reduces top-k retrieval and uses a lighter model, lowering p95 latency by 38 percent while producing a measured 2 percent reduction in the accuracy benchmark. Configuration Y retains the existing top-k retrieval setting and heavier model, with unchanged p95 latency and no measurable change in accuracy. The deployment's stated priorities are accuracy first and latency second. Which configuration is the better recommendation?",
+   "options": [
+    {
+     "text": "Configuration X, because the 2 percent accuracy reduction falls within normal benchmark variance and is not a meaningful regression."
+    },
+    {
+     "text": "Configuration Y, because the deployment's stated priority is accuracy first, and Configuration X produces a measured reduction in accuracy.",
+     "correct": true
+    },
+    {
+     "text": "Configuration X, because lower latency generally matters more than accuracy, regardless of the deployment's stated priorities."
+    },
+    {
+     "text": "Configuration X, because a 38 percent latency improvement outweighs a 2 percent accuracy reduction as a general rule across compliance deployments."
+    }
+   ],
+   "explanation": "The deployment's stated priorities are accuracy first and latency second, and Configuration X produces a measured accuracy loss, so Y is the right recommendation (B). A dismisses a measured regression as noise without evidence; C and D apply a generic rule that ignores the stated priorities."
+  },
+  {
+   "id": 127,
+   "type": "single",
+   "domain": "Integration",
+   "question": "A software vendor wants to build a RAG assistant over its own internal support-ticket archive (not the public web) and needs the same quality of source attribution that citation-grounded answers provide, without sending queries to an external search index. Which feature fits this requirement?",
+   "options": [
+    {
+     "text": "Search results, because it provides citation-quality source attribution for custom knowledge bases outside the public web.",
+     "correct": true
+    },
+    {
+     "text": "Code execution, because running retrieval scripts in a sandbox lets the model fetch and cite ticket content directly."
+    },
+    {
+     "text": "Web fetch, because retrieving full page content from specified URLs works equally well for private ticket archives."
+    },
+    {
+     "text": "Web search tool, because it augments Claude's knowledge with current information regardless of where the documents are hosted."
+    }
+   ],
+   "explanation": "Search result content blocks let your own retrieval system return passages with source and title metadata, so Claude cites them with the same quality as web-search citations, without any external index (A). Code execution (B) is not an attribution mechanism; web fetch (C) and the web search tool (D) target public URLs and the web."
+  },
+  {
+   "id": 128,
+   "type": "multiple",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "A long-running autonomous coding agent needs two things in its architecture: automatically clearing stale tool results from context as a session approaches the token limit, and retaining key project facts across separate sessions run days apart. Select all components that correctly satisfy these two needs.",
+   "options": [
+    {
+     "text": "Compaction, positioned as the sole mechanism that fully replaces context editing for long-running sessions"
+    },
+    {
+     "text": "Code execution, which runs code in a sandboxed container for data analysis and file processing tasks"
+    },
+    {
+     "text": "The memory tool, which lets Claude store and retrieve information across separate conversations over time",
+     "correct": true
+    },
+    {
+     "text": "Fine-grained tool streaming, which reduces latency by streaming tool parameters without JSON buffering"
+    },
+    {
+     "text": "The Files API, which lets uploaded documents be referenced repeatedly without re-uploading their content"
+    },
+    {
+     "text": "Context editing, which supports clearing tool results automatically as a conversation approaches the token limit",
+     "correct": true
+    }
+   ],
+   "explanation": "Context editing clears stale tool results automatically as the conversation approaches the token limit (F), and the memory tool stores and retrieves facts across separate conversations (C). A is wrong because compaction does not fully replace context editing; code execution, fine-grained tool streaming and the Files API address neither need."
+  },
+  {
+   "id": 129,
+   "type": "multiple",
+   "domain": "Solution Design and Architecture",
+   "question": "A team is choosing between orchestrator-workers and parallelization by sectioning for a document-analysis pipeline. Which statements correctly distinguish orchestrator-workers from parallelization by sectioning?",
+   "options": [
+    {
+     "text": "Orchestrator-workers and parallelization by sectioning both aggregate multiple independent votes on one input to reach a majority-based answer"
+    },
+    {
+     "text": "Orchestrator-workers suits subtasks that vary unpredictably case to case, while sectioning suits tasks that split cleanly into known subtasks",
+     "correct": true
+    },
+    {
+     "text": "Parallelization by sectioning always requires a second LLM to evaluate the sectioned outputs before combining them into a final result"
+    },
+    {
+     "text": "In orchestrator-workers, worker LLMs run in a fixed, predetermined order, whereas sectioning always runs its subtasks simultaneously"
+    },
+    {
+     "text": "In orchestrator-workers, a central LLM determines subtasks at runtime, whereas sectioning requires subtasks predefined before execution",
+     "correct": true
+    }
+   ],
+   "explanation": "In orchestrator-workers a central LLM decides the subtasks at runtime, which suits work that varies unpredictably; sectioning splits a task into subtasks known before execution (B, E). A describes the voting variant of parallelization; C invents a mandatory evaluator; D is wrong because workers are not run in a fixed order."
+  },
+  {
+   "id": 130,
+   "type": "single",
+   "domain": "Solution Design and Architecture",
+   "question": "A team is building an agent that must audit a large codebase across three distinct dimensions: security vulnerabilities, code quality, and test coverage. Each dimension requires a different set of tools and a different area of focus. Which approach best decomposes this problem using the Agent SDK?",
+   "options": [
+    {
+     "text": "Define an orchestrator agent that invokes specialized subagents through the Agent tool, each configured with a scoped tool set and description matching its subtask domain",
+     "correct": true
+    },
+    {
+     "text": "Send one prompt to the main agent instructing it to sequentially perform code quality checks, then security scanning, then test coverage analysis without additional configuration"
+    },
+    {
+     "text": "Increase the primary agent's context window and rely on extended thinking so it can reason through all three review dimensions within one continuous session"
+    },
+    {
+     "text": "Configure a single MCP server that exposes security, quality, and coverage checks as three separate tools, and let the primary agent call each tool directly instead of delegating"
+    }
+   ],
+   "explanation": "Three independent dimensions, each with its own tools and focus, map naturally to an orchestrator that delegates to specialized subagents with scoped tool sets and descriptions (A). B keeps everything in one undifferentiated prompt, C relies on a bigger context instead of decomposition, and D still leaves one agent juggling all three concerns."
+  },
+  {
+   "id": 131,
+   "type": "multiple",
+   "domain": "Solution Design and Architecture",
+   "question": "An enterprise customer's support desk has committed to a contractual 99.9% uptime and sub-2-second p95 response SLA for its Claude-powered ticket triage assistant. During architecture review, the team must select which platform capabilities to prioritize primarily to protect this SLA commitment. Which two capabilities are the most directly relevant to protecting a latency and availability SLA? (Select 2)",
+   "options": [
+    {
+     "text": "Server-side fallback, which retries a refused request against a backup model within the same API call for a timely response",
+     "correct": true
+    },
+    {
+     "text": "Choosing a model with faster comparative latency, such as Claude Haiku 4.5, for the latency-sensitive triage path",
+     "correct": true
+    },
+    {
+     "text": "The Files API, which lets documents be uploaded once and referenced across multiple requests without re-uploading content"
+    },
+    {
+     "text": "Batch processing, which processes large volumes of requests asynchronously at a discounted rate over an extended completion window"
+    },
+    {
+     "text": "Agent Skills, which extend Claude's capabilities with pre-built instructions and scripts for document-format tasks"
+    }
+   ],
+   "explanation": "An SLA of this kind covers availability and latency: server-side fallback keeps requests answered when the primary model refuses or fails (A), and a faster model such as Haiku 4.5 protects the p95 latency target (B). Batch processing is asynchronous and slow; the Files API and Agent Skills do not bear on the SLA."
+  },
+  {
+   "id": 132,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "A manufacturing client wants a Claude-based quality-inspection assistant that repeatedly analyzes the same reference specification documents alongside new inspection reports throughout the day. The client's stated goal is to reduce redundant token spend on the unchanging reference material while keeping individual inspection turnaround fast. Which architectural choice best serves this efficiency and cost goal?",
+   "options": [
+    {
+     "text": "Use prompt caching so the unchanging reference specification is cached and reused across requests, cutting cost and latency",
+     "correct": true
+    },
+    {
+     "text": "Increase the effort parameter to xhigh on every inspection request so Claude reasons more thoroughly each time"
+    },
+    {
+     "text": "Re-upload the full reference specification as plain text in every single request to guarantee the model always has the latest version"
+    },
+    {
+     "text": "Move the entire workload to the Message Batches API so all inspection reports are processed together once per day"
+    }
+   ],
+   "explanation": "The reference specification is identical across many requests, which is exactly what prompt caching is for: the cached prefix is reused, lowering cost and latency (A). Higher effort (B) increases spend, re-sending the full text (C) is the redundancy to remove, and once-a-day batching (D) breaks the fast-turnaround requirement."
+  },
+  {
+   "id": 133,
+   "type": "single",
+   "domain": "Solution Design and Architecture",
+   "question": "A coding assistant must modify an unknown number of files across a repository to implement a feature, where the exact files and scope of changes can only be determined once the assistant inspects the codebase. Which pattern is most appropriate?",
+   "options": [
+    {
+     "text": "Routing, where the assistant classifies the feature request and sends it to one of several fixed file-editing prompts"
+    },
+    {
+     "text": "Parallelization by sectioning, where the assistant edits every file in the repository simultaneously using a predetermined split"
+    },
+    {
+     "text": "Prompt chaining, where the assistant edits files in a fixed sequence determined before inspecting the repository"
+    },
+    {
+     "text": "Orchestrator-workers, where a central LLM inspects the repository and dynamically delegates each file edit to a worker LLM",
+     "correct": true
+    }
+   ],
+   "explanation": "The number of files and the scope of changes are only known after inspecting the codebase, so subtasks must be decided at runtime by a central LLM that delegates to workers (D). Routing (A), predetermined sectioning (B) and fixed prompt chaining (C) all require the steps to be known in advance."
+  },
+  {
+   "id": 134,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "A developer is building an email-triage agent that reads inbound email bodies via a tool and drafts replies. To harden it against embedded instructions in email bodies, which combination of design choices should the developer apply? (Select all that apply)",
+   "options": [
+    {
+     "text": "State a system prompt policy that content returned by tools is untrusted data and must never override the system prompt or the user's original request",
+     "correct": true
+    },
+    {
+     "text": "Place the developer's own operating instructions inside the same tool_result block as the email body so both travel together in one message"
+    },
+    {
+     "text": "JSON-encode the email body when passing it as a tool result so quotes or tags in the content cannot break out of the surrounding structure",
+     "correct": true
+    },
+    {
+     "text": "Screen tool outputs with a lightweight classifier model before passing them to the main agent, and strip or flag content if an injection is suspected",
+     "correct": true
+    },
+    {
+     "text": "Grant the agent broad, unscoped access to the user's full mailbox and account settings so it never needs to ask for additional permissions mid-task"
+    }
+   ],
+   "explanation": "Defending against indirect prompt injection means treating tool output as untrusted data in the system prompt (A), encoding it so content cannot break out of its structure (C), and screening it with a classifier before the main agent sees it (D). Mixing your own instructions into the tool_result (B) blurs data and instructions, and broad unscoped access (E) magnifies the damage of a successful injection."
+  },
+  {
+   "id": 135,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "A team is building an English-to-Spanish translation feature that will be called repeatedly with different user-submitted text. They want to keep the instructional wording consistent across calls while making it easy to swap in new text and track changes to the instructions separately from the text being translated. Which approach best fits this goal?",
+   "options": [
+    {
+     "text": "Define a prompt template with the fixed instruction text and a placeholder such as {{text}}, substituting only the variable content on each call while the surrounding instructions stay constant.",
+     "correct": true
+    },
+    {
+     "text": "Send the fixed instruction text and the user's text to the model in two separate API calls, then concatenate the responses, placing the translation after the instruction output to form the final result."
+    },
+    {
+     "text": "Regenerate the complete translation prompt on every call by constructing the instruction string dynamically with the user's text, ensuring that each request carries an up-to-date version of the wording."
+    },
+    {
+     "text": "Store the entire prompt containing the fixed instructions and the user's text as one static string, editing the string by hand for each new translation request so the prompt is always up to date."
+    }
+   ],
+   "explanation": "A prompt template keeps the fixed instructions constant and substitutes only the variable text through a placeholder such as {{text}}, so the instructions can be versioned separately (A). Splitting into two calls (B) breaks the task, rebuilding the prompt each call (C) loses the stable wording, and hand-editing one static string (D) mixes instructions and data."
+  },
+  {
+   "id": 136,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "An agent runs long tool-use loops involving dozens of file reads per session. The team wants old tool results automatically cleared once input tokens exceed 30,000, while always preserving the 3 most recent tool exchanges and never clearing results from the web_search tool. Which context_management configuration achieves this?",
+   "options": [
+    {
+     "text": "A clear_tool_uses_20250919 edit with trigger set to tool_uses 30000, with no keep value explicitly set, and with no exclude_tools value explicitly set."
+    },
+    {
+     "text": "A clear_thinking_20251015 edit with trigger set to 30000 input tokens, keep set to 3 thinking turns, and exclude_tools set to web_search should be used."
+    },
+    {
+     "text": "A clear_tool_uses_20250919 edit with trigger set to 30000 input tokens, keep set to 3 tool uses, and exclude_tools set to file_read should be used."
+    },
+    {
+     "text": "Configure a clear_tool_uses_20250919 edit with trigger set to 30000 input tokens, keep 3 tool uses, exclude_tools set to web_search.",
+     "correct": true
+    }
+   ],
+   "explanation": "All three conditions must match: a clear_tool_uses_20250919 edit triggered at 30,000 input tokens, keeping the 3 most recent tool uses, and excluding web_search from clearing (D). A triggers on the wrong unit and sets no keep or exclusion, B uses the thinking-clearing edit, and C excludes the wrong tool."
+  },
+  {
+   "id": 137,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "A code-review prompt needs Claude to generate a fix, verify the fix against a set of criteria, and then refine the fix if criteria are not met. The team wants to inspect the intermediate review step and log it separately before the final refinement is produced. Which approach best fits this requirement?",
+   "options": [
+    {
+     "text": "Break the task into separate API calls: generate a fix, review it against the criteria, then refine the fix, so each step can be logged independently.",
+     "correct": true
+    },
+    {
+     "text": "Ask Claude to generate, verify, and refine the fix in one response using extended reasoning, but this keeps the review internal and unloggable."
+    },
+    {
+     "text": "Add tags around the review step so Claude places the review inside and the fix outside, and the review can be extracted and logged apart."
+    },
+    {
+     "text": "Provide five few-shot examples of correct fixes for Claude to mimic, bypassing the review step, removing the intermediate step and preventing logging."
+    }
+   ],
+   "explanation": "Prompt chaining splits generate, review and refine into separate API calls, so the intermediate review is a distinct output that can be inspected and logged before refinement (A). A single response (B) hides the review, tags (C) still produce one combined output in one call, and few-shot examples (D) remove the review step altogether."
+  },
+  {
+   "id": 138,
+   "type": "single",
+   "domain": "Integration",
+   "question": "A platform wants Claude to discover tools using an existing embeddings index rather than the built-in regex or BM25 matching, because tool descriptions are sparse but semantically related through the embedding space. Which implementation matches this requirement?",
+   "options": [
+    {
+     "text": "Build a custom tool that runs the embeddings search and returns tool_reference blocks in its tool_result for Claude to expand.",
+     "correct": true
+    },
+    {
+     "text": "Enable the built-in regex tool search variant and rely on broad wildcard patterns to approximate semantic matching."
+    },
+    {
+     "text": "Disable tool search and load every tool definition up front so the embeddings index becomes unnecessary."
+    },
+    {
+     "text": "Enable the built-in BM25 tool search variant, since BM25 ranking approximates embedding-based semantic similarity closely enough."
+    }
+   ],
+   "explanation": "When the built-in regex and BM25 variants are not a fit, you can implement your own tool search: a custom tool runs the embeddings query and returns tool_reference blocks in its tool_result for Claude to expand (A). Wildcard regex (B) and BM25 (D) remain lexical matching, and loading every tool up front (C) gives up tool search instead of improving it."
+  },
+  {
+   "id": 139,
+   "type": "single",
+   "domain": "Integration",
+   "question": "A support-ticket assistant retrieves passages from a 500-document internal knowledge base for each incoming ticket and must cite the exact source passage in every reply, without re-sending the entire corpus on each request. Which approach best matches this data shape and query pattern?",
+   "options": [
+    {
+     "text": "Upload all 500 documents as citable text documents in the system prompt so that Claude can reference any passage directly, and then instruct it to cite the source document and section for every reply."
+    },
+    {
+     "text": "Store the corpus in the memory tool by saving each document as a separate entry, configure assistant to load all entries before answering, and prompt it to cite source document for any retrieved passage."
+    },
+    {
+     "text": "Return the retrieved passages as search result content blocks from a retrieval tool, each carrying source and title metadata, so Claude generates natural citations per ticket.",
+     "correct": true
+    },
+    {
+     "text": "Concatenate the full corpus into a single long-context user message with all 500 documents separated by titles, then prompt Claude to extract the relevant passage and cite its source."
+    }
+   ],
+   "explanation": "Retrieving only the relevant passages per ticket and returning them as search result content blocks with source and title metadata gives natural, passage-level citations without re-sending the corpus (C). A and D push all 500 documents into every request, and the memory tool (B) is not a retrieval or citation mechanism."
+  },
+  {
+   "id": 140,
+   "type": "single",
+   "domain": "Integration",
+   "question": "A team originally split their onboarding manual into fixed 500-character chunks with no overlap. They now find that many chunks begin or end mid-sentence, and answers near a chunk boundary are frequently missed because the relevant sentence is split across two separate embeddings. Which chunking adjustment most directly addresses this specific failure?",
+   "options": [
+    {
+     "text": "Keep the fixed 500-character boundaries and increase the embedding model's context window so that each vector encodes more surrounding text, reducing missed answers near splits."
+    },
+    {
+     "text": "Reduce the chunk size so each chunk contains exactly one sentence, splitting on punctuation such as periods or exclamation points, and drop the fixed character limit to prevent mid-sentence breaks."
+    },
+    {
+     "text": "Split chunks along natural boundaries such as paragraphs or sections, and add a small overlap between adjacent chunks so boundary sentences appear intact in at least one chunk.",
+     "correct": true
+    },
+    {
+     "text": "Remove overlap and set a smaller fixed chunk size, such as 250 characters, to lower the vector index count and accelerate semantic search without changing how sentences are split."
+    }
+   ],
+   "explanation": "The failure comes from fixed-size cuts with no overlap splitting sentences across chunks; chunking along paragraph or section boundaries with a small overlap keeps boundary sentences intact in at least one chunk (C). A leaves the bad boundaries in place, B over-fragments context into single sentences, and D makes the split problem worse."
+  },
+  {
+   "id": 141,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "An agent's project has accumulated a dozen skills, several of which perform side-effecting actions such as sending Slack messages or deleting stale branches. Reviewers notice Claude occasionally auto-triggers these side-effecting skills based on vague description matches, and want to reduce the agent's effective capability surface so these skills only run when a person explicitly invokes them. What is the most direct fix?",
+   "options": [
+    {
+     "text": "Rewrite the instructions of each side-effecting skill to instruct Claude to ask for confirmation before performing the side effect, without modifying frontmatter fields."
+    },
+    {
+     "text": "Set disable-model-invocation: true in the frontmatter of each side-effecting skill so Claude cannot select them automatically and only the user can invoke them with /name.",
+     "correct": true
+    },
+    {
+     "text": "Delete the skill descriptions from the frontmatter of each side-effecting skill so Claude has no basis for automatic matching and only the user can invoke those skills by name."
+    },
+    {
+     "text": "Move the side-effecting skills into CLAUDE.md so they load as always-on context, which ensures Claude only uses them when the user explicitly invokes them by name in a request."
+    }
+   ],
+   "explanation": "Setting disable-model-invocation: true in a skill's frontmatter stops Claude from selecting it automatically, so it runs only when a person invokes it with /name (B). A still lets Claude trigger the skill, C removes information without guaranteeing the behavior, and moving skills into CLAUDE.md (D) makes them always-on context, the opposite of the goal."
+  },
+  {
+   "id": 142,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "A team is defining the success criteria for a new claims-summarization feature before building the evaluation dataset. The current draft criterion reads: \"the summaries should be concise and helpful.\" Which revised criterion best follows the SMART framework for evaluation design?",
+   "options": [
+    {
+     "text": "Require summaries to average at least 4 out of 5 on a completeness rubric across a 500-claim sample",
+     "correct": true
+    },
+    {
+     "text": "Require summaries to sound less robotic and read more naturally to the adjusters who review them"
+    },
+    {
+     "text": "Require every summary to be signed off by a senior adjuster before it counts as acceptable"
+    },
+    {
+     "text": "Require summaries to earn a perfect 5 out of 5 completeness score from every adjuster in the sample"
+    }
+   ],
+   "explanation": "A SMART criterion is specific, measurable and achievable: an average of at least 4 out of 5 on a completeness rubric over a 500-claim sample meets all three (A). B is still vague, C is a process gate rather than a measurable quality target, and D demands perfection from every reviewer, which is not achievable."
+  },
+  {
+   "id": 143,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "A platform engineer sets CLAUDE_CODE_ENABLE_TELEMETRY=1 on every CI runner but the team's OTLP collector never receives any spans, metrics, or logs from Claude Code jobs. No other telemetry variables were configured. What is the most likely cause of the missing data?",
+   "options": [
+    {
+     "text": "The CLI only emits telemetry once the console exporter has been configured first as a required local fallback"
+    },
+    {
+     "text": "Telemetry is enabled but no exporter was selected, so OTEL_METRICS_EXPORTER and OTEL_LOGS_EXPORTER default to producing no export at all",
+     "correct": true
+    },
+    {
+     "text": "The organization's Admin API key must be exported through OTEL_EXPORTER_OTLP_HEADERS before the CLI will emit any signal"
+    },
+    {
+     "text": "The collector rejects every signal until CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1 is also set, regardless of which exporters are chosen"
+    }
+   ],
+   "explanation": "CLAUDE_CODE_ENABLE_TELEMETRY=1 only turns telemetry on; nothing is exported until an exporter is chosen with OTEL_METRICS_EXPORTER and OTEL_LOGS_EXPORTER (for example otlp), plus the endpoint settings (B). The console exporter is not a prerequisite (A), no Admin API key header is required (C), and the enhanced-telemetry beta flag is not needed for basic export (D)."
+  },
+  {
+   "id": 144,
+   "type": "multiple",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "An agentic coding assistant runs long sessions that accumulate hundreds of tool calls, and the conversation regularly approaches the model's context window limit before the task is finished. Engineers want strategies that let the session continue productively without losing critical state. Which approaches address this goal?",
+   "options": [
+    {
+     "text": "Lower the effort parameter to low so Claude generates shorter replies, preventing the context window from ever filling up"
+    },
+    {
+     "text": "Use the memory tool to persist critical state to durable storage before old context is cleared, so a session recovers quickly",
+     "correct": true
+    },
+    {
+     "text": "Switch the session to the Message Batches API so each turn runs as an independent asynchronous request with fresh context"
+    },
+    {
+     "text": "Configure context editing to clear old tool results once a token threshold is reached, keeping only recent tool use/result pairs",
+     "correct": true
+    },
+    {
+     "text": "Enable server-side compaction so earlier turns are automatically summarized once the conversation nears the context window limit",
+     "correct": true
+    },
+    {
+     "text": "Increase the effort parameter to max so Claude reasons more thoroughly and needs fewer total turns to finish the task"
+    }
+   ],
+   "explanation": "Long sessions stay productive by persisting critical state with the memory tool (B), clearing old tool results with context editing (D), and summarizing earlier turns with server-side compaction (E). Effort settings (A, F) change reasoning depth, not context growth, and the Batches API (C) throws away the conversation's continuity."
+  },
+  {
+   "id": 145,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "A team wants to lower per-request cost and latency for a chat feature without switching models or losing response quality on genuinely hard questions. They want the model itself to spend fewer tokens on easy turns while still reasoning thoroughly on complex ones. Which lever should they reach for first?",
+   "options": [
+    {
+     "text": "Set max_tokens to a small fixed value on all requests so Claude cannot generate long responses on hard questions"
+    },
+    {
+     "text": "Force every request through the Message Batches API, since batch requests are billed at a flat discounted rate"
+    },
+    {
+     "text": "Disable prompt caching entirely, since removing all cached writes always guarantees the very lowest possible token count of all"
+    },
+    {
+     "text": "Lower the effort parameter for routine turns, since it reduces token spend while letting Claude think harder when warranted",
+     "correct": true
+    }
+   ],
+   "explanation": "The effort parameter lets the same model spend fewer tokens on routine turns while still thinking harder when a question warrants it (D). A hard max_tokens cap truncates hard answers, batching (B) adds delay and does not suit interactive chat, and disabling prompt caching (C) increases cost and latency."
+  },
+  {
+   "id": 146,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "Ahead of launch, a product manager sets a success criterion requiring the model to achieve 100% accuracy on an open-ended reasoning task, with zero tolerance for any incorrect or incomplete answer, matching or exceeding what a domain expert could produce. What is the main problem with this success criterion, and how should it be revised?",
+   "options": [
+    {
+     "text": "The target is not measurable because open-ended tasks cannot be scored automatically under any circumstances, so the criterion should rely on subjective human ratings with no automated evaluation."
+    },
+    {
+     "text": "The target is not specific enough because it does not name a single numeric metric, so it should be replaced with a quantifiable percentage like a 95% accuracy score, regardless of feasibility."
+    },
+    {
+     "text": "The target is unachievable because it exceeds realistic frontier-model capability. It should instead be grounded in benchmark results, prior experiments, or comparable industry performance.",
+     "correct": true
+    },
+    {
+     "text": "The target is not relevant because reasoning tasks should never have accuracy targets; instead, the criterion should specify maximum latency and cost, which are the only meaningful production metrics."
+    }
+   ],
+   "explanation": "100% accuracy with zero tolerance on an open-ended reasoning task is not achievable, which breaks the A in SMART; the target should be grounded in benchmarks, prior experiments or comparable industry performance (C). Open-ended tasks can be scored with rubrics or graders (A), an arbitrary number regardless of feasibility (B) repeats the mistake, and accuracy targets are legitimate for reasoning tasks (D)."
+  },
+  {
+   "id": 147,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "A team has been iterating on a claims-processing prompt using the same 200-example development set for every round of refinement. They now want to declare a final winning version before shipping. What should they do before making that final decision?",
+   "options": [
+    {
+     "text": "Reduce the development set to only the examples that the current prompt candidate already passes, then present the accuracy on that subset as the final metric to make the score appear higher."
+    },
+    {
+     "text": "Run one more round of refinement on the same 200-example development set, perhaps switching to a different model or adding few-shot examples, to maximize the score before finalizing the prompt."
+    },
+    {
+     "text": "Ship the candidate that achieves the highest score on the 200-example development set right away, as iteratively refining on that same set already demonstrates its production readiness."
+    },
+    {
+     "text": "Evaluate the leading prompt candidate on a separate held-out test set not used during iteration to confirm that improvements generalize beyond the development set.",
+     "correct": true
+    }
+   ],
+   "explanation": "Refining repeatedly on the same 200 examples risks overfitting to that set, so the leading candidate must be confirmed on a held-out test set that was never used during iteration (D). A cherry-picks the data, B deepens the overfitting, and C treats a tuned development score as proof of production readiness."
+  },
+  {
+   "id": 148,
+   "type": "multiple",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "A team currently runs a moderately complex data-extraction workflow on Claude Haiku 4.5. Which of the following observations would be valid evidence that the workflow has a model-capability mismatch and should be evaluated on a more capable model like Claude Opus 4.8? (Select all that apply.)",
+   "options": [
+    {
+     "text": "The workflow needs nuanced understanding across long chains of interdependent steps where partial errors compound.",
+     "correct": true
+    },
+    {
+     "text": "The workflow occasionally times out because of ordinary network latency between the client and the API."
+    },
+    {
+     "text": "The team's monthly API spend for the workflow is higher than they originally budgeted for the project."
+    },
+    {
+     "text": "Manual review shows the extraction errors resemble genuine reasoning mistakes rather than missing or truncated input.",
+     "correct": true
+    },
+    {
+     "text": "On a use-case benchmark, accuracy on multi-step reasoning subtasks stays below threshold even after prompt revisions.",
+     "correct": true
+    },
+    {
+     "text": "The workflow's prompt was designed for an older model and has not been adapted to the current model's capabilities."
+    }
+   ],
+   "explanation": "Evidence of a capability mismatch is about reasoning: long chains of interdependent steps where errors compound (A), errors that look like genuine reasoning mistakes rather than input problems (D), and benchmark accuracy that stays low even after prompt revisions (E). Network timeouts (B) and budget overruns (C) say nothing about capability, and an unadapted prompt (F) should be fixed before blaming the model."
+  },
+  {
+   "id": 149,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "A compliance analyst asks Claude to review a 40-page vendor contract and flag every clause that conflicts with the company's data-retention policy. In early testing, Claude cites clause numbers and language that do not actually appear in the contract. Which prompting change is most effective at grounding the review in the actual document text for this kind of long-document task?",
+   "options": [
+    {
+     "text": "Instruct Claude to first extract exact, word-for-word quotes relevant to data retention, and only then analyze compliance by referencing those extracted quotes",
+     "correct": true
+    },
+    {
+     "text": "Instruct Claude to summarize the entire contract into three paragraphs first, then perform the compliance analysis using only that summary as its source"
+    },
+    {
+     "text": "Reduce the max_tokens parameter for the response so Claude produces a shorter, more focused answer that is less likely to drift from the source contract"
+    },
+    {
+     "text": "Ask Claude to answer using its general knowledge of standard contract clauses instead of the specific text, since standard clauses are usually representative"
+    }
+   ],
+   "explanation": "For long documents, asking Claude to first extract word-for-word quotes relevant to the task and then reason only from those quotes grounds the analysis in the actual text and curbs invented citations (A). A summary first (B) loses the exact language, a shorter max_tokens (C) does not prevent fabrication, and relying on general knowledge (D) abandons the document entirely."
+  },
+  {
+   "id": 150,
+   "type": "single",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "A fintech company's Claude-powered agent can initiate wire transfers through a custom MCP tool. Even though the operations team has configured allowedTools to auto-approve most read and reporting tools, they want every wire-transfer tool call to require a human's explicit approval no matter what permission mode the session is later switched to, including bypassPermissions. Which approach best satisfies this requirement?",
+   "options": [
+    {
+     "text": "Switch the session's permission mode to acceptEdits, expecting the wire-transfer tool to fall outside its file-edit scope and always route to canUseTool, though other tools under acceptEdits still fall through to any allow rules that already approve them."
+    },
+    {
+     "text": "Add a bare allowedTools entry for the wire-transfer tool so it auto-approves, then depend on the canUseTool callback to intercept it, since bare allow rules approve every matching call before canUseTool is ever consulted, so the callback never runs for that tool."
+    },
+    {
+     "text": "Register a PreToolUse hook scoped to the wire-transfer tool that returns permissionDecision \"ask\" for every call, since hooks execute before deny rules, ask rules, the permission mode check, and allow rules, and their decision holds even under bypassPermissions.",
+     "correct": true
+    },
+    {
+     "text": "Add the wire-transfer tool to disallowed_tools with a wildcard pattern so it is blocked by default, then have the canUseTool callback lift the deny rule per call, though deny rules are evaluated before canUseTool runs and cannot be reversed from inside that callback."
+    }
+   ],
+   "explanation": "PreToolUse hooks run first in the permission flow, before deny rules, ask rules, the permission mode check and allow rules, so a hook scoped to the wire-transfer tool that returns permissionDecision \"ask\" forces human approval even under bypassPermissions (C). A depends on a mode that can later change, B auto-approves the tool so canUseTool never runs, and D relies on reversing a deny rule from canUseTool, which is not possible."
+  },
+  {
+   "id": 151,
+   "type": "multiple",
+   "domain": "Governance, Safety and Risk Management",
+   "question": "A solutions architect is scoping the ethical-risk controls for a Claude-based assistant that will draft internal performance-review summaries from manager notes across a multinational workforce. The compliance team wants a set of concrete measures that address bias, fairness, and transparency before launch. Which of the following measures should be included? (Select 3)",
+   "options": [
+    {
+     "text": "Let each manager's personal phrasing preferences silently override the standardized summary template with absolutely no logging kept."
+    },
+    {
+     "text": "Restrict summary review access to a single manager with no secondary sign-off, to keep the rollout process deliberately lightweight."
+    },
+    {
+     "text": "Give every employee, regardless of role or seniority, a mechanism to request the specific factors that shaped their own summary.",
+     "correct": true
+    },
+    {
+     "text": "Document, in a form reviewers can inspect, which specific decision factors the assistant is instructed to weigh whenever it drafts a summary.",
+     "correct": true
+    },
+    {
+     "text": "Skip bias testing across the initial launch region and only extend testing later if formal complaints get filed after go-live."
+    },
+    {
+     "text": "Run paired-scenario evaluations comparing summary tone and detail across employee groups given identical underlying performance notes.",
+     "correct": true
+    }
+   ],
+   "explanation": "Concrete bias, fairness and transparency controls include a way for every employee to ask which factors shaped their summary (C), inspectable documentation of the decision factors the assistant weighs (D), and paired-scenario evaluations that compare outputs across groups with identical underlying notes (F). A removes consistency and auditability, B removes oversight, and E postpones bias testing until harm has occurred."
+  },
+  {
+   "id": 152,
+   "type": "multiple",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "A solutions architect is running the first discovery session with a new prospect before recommending any specific Claude model. According to Anthropic's model-selection guidance, which factors should the architect establish as key criteria during this session?",
+   "options": [
+    {
+     "text": "The version number of the prospect's internal ticketing software"
+    },
+    {
+     "text": "How quickly the model must respond within the prospect's application",
+     "correct": true
+    },
+    {
+     "text": "The exact number of employees currently working in the prospect's IT department"
+    },
+    {
+     "text": "The prospect's available budget for development and production usage",
+     "correct": true
+    },
+    {
+     "text": "The specific capabilities the model must have to meet the prospect's needs",
+     "correct": true
+    },
+    {
+     "text": "Which social media platforms the prospect uses for customer marketing"
+    }
+   ],
+   "explanation": "Anthropic's model-selection guidance weighs three criteria: the capabilities the use case needs (E), the speed or latency the application requires (B), and the budget for development and production usage (D). Ticketing software versions, IT headcount and marketing channels do not drive model choice."
+  },
+  {
+   "id": 153,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "A financial services customer's compliance team says every AI-generated answer referencing internal policy documents must point to the exact sentence it was drawn from, so auditors can verify the source without re-reading the whole document. Which capability addresses this discovery finding?",
+   "options": [
+    {
+     "text": "Citations, which let Claude reference the exact sentences and passages in source documents used to generate a response",
+     "correct": true
+    },
+    {
+     "text": "Token counting, which determines the number of tokens in a message before it is sent to Claude"
+    },
+    {
+     "text": "Search results, which enable natural citations for RAG applications by attaching proper source attribution to search results"
+    },
+    {
+     "text": "The Files API, which uploads and manages documents so they do not need to be re-sent with every request"
+    }
+   ],
+   "explanation": "Citations let Claude point to the exact sentences and passages in the supplied source documents, which is what the auditors need (A). Token counting (B) and the Files API (D) do not attribute sources, and search results (C) are for citing results returned by your own retrieval tool rather than documents you provide directly."
+  },
+  {
+   "id": 154,
+   "type": "single",
+   "domain": "Stakeholder Communication and Lifecycle Management",
+   "question": "A customer support tooling vendor still runs Claude Haiku 3.5 in a legacy component and receives Anthropic's notice that the model is retired outside of Bedrock and Google Cloud. Their engineering stakeholders want to know how this affects their committed timeline. What is the accurate expectation to set?",
+   "options": [
+    {
+     "text": "Direct API and other non-Bedrock/Vertex-hosted traffic on Haiku 3.5 must migrate to a supported model before retirement, while deployments specifically on Bedrock or Google Cloud can keep running it under those platforms' own timelines",
+     "correct": true
+    },
+    {
+     "text": "Retirement notices apply uniformly across every hosting platform including Bedrock and Google Cloud, so all deployments of Haiku 3.5 everywhere must migrate by the same date"
+    },
+    {
+     "text": "The retirement notice only affects new customers who sign up after the announcement date, so the vendor's existing production traffic is permanently exempt regardless of hosting platform"
+    },
+    {
+     "text": "Model retirement only restricts access to the Console UI for prompting Haiku 3.5, while direct Messages API traffic on any platform continues indefinitely unaffected"
+    }
+   ],
+   "explanation": "The notice says the model is retired outside Bedrock and Google Cloud, so traffic on the Claude API and other affected surfaces must move to a supported model before retirement, while Bedrock and Vertex deployments follow those platforms' own timelines (A). B ignores the platform carve-out, C invents an exemption for existing customers, and D wrongly limits retirement to the Console."
+  },
+  {
+   "id": 155,
+   "type": "single",
+   "domain": "Evaluation, Testing and Optimization",
+   "question": "Two months after a customer support assistant goes live, the operations team notices their monthly Claude spend has grown faster than ticket volume and wants to identify which workspace and model combination is driving the increase. Which monitoring approach addresses this?",
+   "options": [
+    {
+     "text": "Re-run the original evaluation set from the design phase to check whether output quality has regressed"
+    },
+    {
+     "text": "Ask the support team to manually count tickets handled per day and compare that figure to the invoice total"
+    },
+    {
+     "text": "Increase the agent's allowed_tools scope so it can investigate its own billing records directly"
+    },
+    {
+     "text": "Query the Usage and Cost Admin API grouped by workspace and model to reconcile spend against token consumption",
+     "correct": true
+    }
+   ],
+   "explanation": "The question is which workspace and model combination drives spend, which the Usage and Cost Admin API answers when grouped by workspace and model and reconciled against token consumption (D). Re-running evaluations (A) measures quality, manual ticket counts (B) cannot attribute cost, and widening the agent's tools (C) is unrelated and unsafe."
+  },
+  {
+   "id": 156,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "A team is documenting the caching architecture for a service where the same large system prompt and tool definitions are sent with nearly every request. The implementation guidance needs to explain how to cut repeated processing cost and latency for that static content. What should the guidance recommend?",
+   "options": [
+    {
+     "text": "Increase the context window to 1M tokens so the large system prompt fits entirely without ever needing to be truncated across requests."
+    },
+    {
+     "text": "Mark the reusable system prompt and tool definitions as cached blocks so repeated requests reuse the prefix instead of reprocessing it.",
+     "correct": true
+    },
+    {
+     "text": "Enable batch processing so every request carrying the large system prompt is queued and billed at half price automatically."
+    },
+    {
+     "text": "Move the system prompt into the Files API so it uploads once and Claude re-reads it fresh from storage on every single request."
+    }
+   ],
+   "explanation": "Marking the stable system prompt and tool definitions as cached blocks lets repeated requests reuse the prefix instead of reprocessing it, which cuts both cost and latency (B). A bigger context window (A) does not avoid reprocessing, batching (C) adds delay and is not automatic, and the Files API (D) still has the content processed on every request."
+  },
+  {
+   "id": 157,
+   "type": "single",
+   "domain": "Claude Models, Prompting and Context Engineering",
+   "question": "Your coding-agent product is exceeding its latency budget on Claude Opus 4.8. Before proposing a switch to a smaller model, a colleague suggests first tuning the effort parameter. How should you frame this trade-off to the team?",
+   "options": [
+    {
+     "text": "Effort tuning is only available via the Claude API, not in Claude Code, so the coding-agent product cannot lower latency this way; the team should switch to a model family with native effort controls in Claude Code."
+    },
+    {
+     "text": "The effort parameter governs only tool-call count per turn, not the model's raw inference latency, so the team should focus on switching to a smaller model that fits the latency budget for the coding-agent product."
+    },
+    {
+     "text": "Adjusting effort trades intelligence for latency and cost within the same model; lowering it from the default may recover budget without the accuracy loss that comes from switching to a different, less capable model.",
+     "correct": true
+    },
+    {
+     "text": "Effort on Claude Opus 4.8 can only be increased, never decreased, which prevents the team from lowering latency through this parameter; therefore, the migration to a model family that offers a tunable effort floor is the correct path to meet the latency budget."
+    }
+   ],
+   "explanation": "The effort parameter trades intelligence for latency and cost within the same model, so lowering it from the default can recover latency budget without the capability loss of moving to a smaller model (C). Effort is available in Claude Code (A), governs overall token spend rather than only tool-call counts (B), and can be lowered as well as raised (D)."
+  },
+  {
+   "id": 158,
+   "type": "multiple",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "A solutions architect is designing the initial rollout of Claude Code for a mid-size company with no existing device management. The company has developers on unmanaged laptops, wants centralized visibility into token spend, and needs org-wide policy to reach both local sessions and Claude Code on the web. Which set of decisions correctly matches each requirement to the right mechanism? (Select 3)",
+   "options": [
+    {
+     "text": "Rely exclusively on project-level .claude/settings.json files committed to each repository to establish organization-wide policy"
+    },
+    {
+     "text": "Choose Claude for Teams or Enterprise as the API provider so Claude Code and claude.ai share one per-seat subscription with no infrastructure to run",
+     "correct": true
+    },
+    {
+     "text": "Deploy a plist-based managed-settings policy through macOS MDM as the primary policy channel, since it is the strongest enforcement mechanism available"
+    },
+    {
+     "text": "Configure Amazon Bedrock as the API provider so the company can use server-managed settings for centralized policy delivery"
+    },
+    {
+     "text": "Use the usage dashboard at claude.ai/analytics/claude-code for centralized spend visibility, available on Claude for Teams and Enterprise plans",
+     "correct": true
+    },
+    {
+     "text": "Use server-managed settings delivered from the claude.ai admin console, since it reaches both local sessions and Claude Code on the web",
+     "correct": true
+    }
+   ],
+   "explanation": "With no device management, policy has to come from the claude.ai admin console as server-managed settings, which reach both local sessions and Claude Code on the web (F); Claude for Teams or Enterprise provides the shared per-seat subscription with no infrastructure (B) and the usage dashboard at claude.ai/analytics/claude-code for spend visibility (E). Repository settings (A) are not organization-wide policy, MDM plists (C) need device management the company does not have, and server-managed settings are not delivered through Bedrock (D)."
+  },
+  {
+   "id": 159,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "A platform team is wiring Claude Code into a locked-down CI pipeline where no human is available to approve prompts, and only a pre-approved set of tools defined in permission rules should ever run. Which permission mode fits this pipeline?",
+   "options": [
+    {
+     "text": "dontAsk mode, which auto-denies anything not covered by an explicit allow rule",
+     "correct": true
+    },
+    {
+     "text": "acceptEdits mode, which auto-approves file edits and common filesystem commands"
+    },
+    {
+     "text": "plan mode, which restricts Claude to reads and a proposed plan with no execution"
+    },
+    {
+     "text": "auto mode, which relies on a classifier to approve most actions in real time"
+    }
+   ],
+   "explanation": "In a non-interactive pipeline that may run only pre-approved tools, dontAsk mode fits: anything not covered by an explicit allow rule is denied automatically instead of waiting for a prompt (A). acceptEdits (B) approves edits beyond the allow list, plan mode (C) cannot execute anything, and auto mode (D) lets a classifier approve actions outside the defined rules."
+  },
+  {
+   "id": 160,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "During a long debugging session, Claude Code raises \"Autocompact is thrashing: the context refilled to the limit...\" immediately after automatic compaction completes, and it stops retrying. The team was asking Claude to read an entire 40,000-line production log file to find the root cause of an outage. What is the most effective way to recover and continue the investigation?",
+   "options": [
+    {
+     "text": "Run /clear to discard the conversation, then paste only the final error line from the log file into a fresh session."
+    },
+    {
+     "text": "Set DISABLE_AUTO_COMPACT so Claude Code stops summarizing history and keeps the entire log output available for reference."
+    },
+    {
+     "text": "Raise CLAUDE_CODE_MAX_RETRIES so Claude Code keeps retrying compaction until the log file finishes loading successfully."
+    },
+    {
+     "text": "Ask Claude to read the log file in smaller chunks, such as a specific line range, or delegate the analysis to a subagent instead.",
+     "correct": true
+    }
+   ],
+   "explanation": "The thrashing comes from one oversized read refilling the context as soon as it is compacted, so the fix is to read the log in smaller chunks such as line ranges, or delegate the analysis to a subagent with its own context (D). /clear with one error line (A) throws away the evidence, disabling auto-compaction (B) only hits the limit sooner, and more retries (C) repeat the same failure."
+  },
+  {
+   "id": 161,
+   "type": "single",
+   "domain": "Developer Productivity and Operational Enablement",
+   "question": "A team's project relies on an internal MCP server for ticket lookups. Running /mcp shows the server status as connected, but Claude reports it has no tools available from that server and cannot look up tickets. What is the correct next step to diagnose the failure?",
+   "options": [
+    {
+     "text": "Select Reconnect for the server from /mcp, and if the tool count stays at zero, run claude --debug mcp to see the server's stderr output.",
+     "correct": true
+    },
+    {
+     "text": "Edit .mcp.json to change the server's command from a relative path to an absolute path, since a relative path always prevents any tools from loading."
+    },
+    {
+     "text": "Restart Claude Code with claude --safe-mode, since a server that reports zero tools while connected is always disabled under safe mode."
+    },
+    {
+     "text": "Approve the server from /mcp again, since project-scoped MCP servers silently stop returning tools after the one-time approval expires."
+    }
+   ],
+   "explanation": "A server that shows as connected but exposes zero tools should first be reconnected from /mcp; if the tool count stays at zero, claude --debug mcp shows the server's stderr so you can see why it registers no tools (A). B, C and D each claim an \"always\" or silent-expiry cause that does not match a connected server with zero tools."
   }
  ]
 }

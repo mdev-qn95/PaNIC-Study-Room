@@ -55,7 +55,7 @@
    "status": "live",
    "summary": "Design, integrate, evaluate and operate Claude solutions with confidence.",
    "updated": "2026-10-30",
-   "questions": 125,
+   "questions": 161,
    "bank": {
     "source": "questions.en.json",
     "translations": {
