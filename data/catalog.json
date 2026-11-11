@@ -54,7 +54,7 @@
    "level": "Professional",
    "status": "live",
    "summary": "Design, integrate, evaluate and operate Claude solutions with confidence.",
-   "updated": "2026-10-30",
+   "updated": "2026-11-11",
    "questions": 161,
    "bank": {
     "source": "questions.en.json",
