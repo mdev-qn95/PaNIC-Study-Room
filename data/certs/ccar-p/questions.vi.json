@@ -1479,6 +1479,417 @@
     "Dùng lệnh liệt kê để xác minh MCP server đã được đăng ký, rồi kết nối lại phiên nếu cần, vì thay đổi cấu hình thường yêu cầu khởi động lại mới có hiệu lực."
    ],
    "explanation": "Bắt đầu bằng kiểm tra ít tốn công nhất để xác nhận việc đăng ký: liệt kê các MCP server đã cấu hình, sau đó kết nối lại hoặc khởi động lại phiên, vì thay đổi cấu hình thường cần khởi động lại để có hiệu lực. A, B và C là các biện pháp quá mức trước khi thực hiện xác minh cơ bản."
+  },
+  {
+   "id": 126,
+   "question": "Bạn đang so sánh hai cấu hình cho một trợ lý hỏi đáp tuân thủ nội bộ. Cấu hình X giảm top-k retrieval và dùng model nhẹ hơn, giảm 38% độ trễ p95 nhưng làm điểm benchmark độ chính xác giảm 2% (đã đo được). Cấu hình Y giữ nguyên top-k retrieval và model nặng hơn, độ trễ p95 không đổi và độ chính xác không thay đổi đáng kể. Thứ tự ưu tiên đã nêu của triển khai là độ chính xác trước, độ trễ sau. Cấu hình nào là khuyến nghị tốt hơn?",
+   "options": [
+    "Cấu hình X, vì mức giảm 2% độ chính xác nằm trong biên dao động bình thường của benchmark và không phải là suy giảm đáng kể.",
+    "Cấu hình Y, vì ưu tiên đã nêu của triển khai là độ chính xác trước, và Cấu hình X gây ra mức giảm độ chính xác đã đo được.",
+    "Cấu hình X, vì độ trễ thấp hơn nhìn chung quan trọng hơn độ chính xác, bất kể thứ tự ưu tiên đã nêu của triển khai.",
+    "Cấu hình X, vì cải thiện 38% độ trễ là quy tắc chung vượt trội so với mức giảm 2% độ chính xác trong mọi triển khai tuân thủ."
+   ],
+   "explanation": "Thứ tự ưu tiên đã nêu là độ chính xác trước, độ trễ sau, và Cấu hình X gây giảm độ chính xác đã đo được, nên Y là khuyến nghị đúng (B). A gạt đi một suy giảm đã đo được như nhiễu mà không có bằng chứng; C và D áp dụng quy tắc chung, bỏ qua thứ tự ưu tiên đã nêu."
+  },
+  {
+   "id": 127,
+   "question": "Một nhà cung cấp phần mềm muốn xây dựng trợ lý RAG trên kho ticket hỗ trợ nội bộ của chính họ (không phải web công khai) và cần chất lượng ghi nguồn tương đương câu trả lời có citation, mà không gửi truy vấn tới search index bên ngoài. Tính năng nào phù hợp yêu cầu này?",
+   "options": [
+    "Search results, vì tính năng này cung cấp ghi nguồn đạt chất lượng citation cho knowledge base tùy chỉnh nằm ngoài web công khai.",
+    "Code execution, vì chạy script retrieval trong sandbox cho phép model lấy và trích dẫn trực tiếp nội dung ticket.",
+    "Web fetch, vì việc lấy toàn bộ nội dung trang từ các URL chỉ định hoạt động tốt như nhau với kho ticket riêng tư.",
+    "Web search tool, vì nó bổ sung thông tin cập nhật cho kiến thức của Claude bất kể tài liệu được lưu trữ ở đâu."
+   ],
+   "explanation": "Search result content blocks cho phép hệ thống retrieval của bạn trả về các đoạn văn kèm metadata source và title, để Claude trích dẫn với chất lượng như citation của web search mà không cần index bên ngoài (A). Code execution (B) không phải cơ chế ghi nguồn; web fetch (C) và web search tool (D) nhắm tới URL công khai và web."
+  },
+  {
+   "id": 128,
+   "question": "Một coding agent tự động chạy dài hạn cần hai thứ trong kiến trúc: tự động xóa các tool result cũ khỏi context khi phiên làm việc gần chạm giới hạn token, và giữ lại các thông tin quan trọng của dự án qua nhiều phiên riêng biệt cách nhau nhiều ngày. Chọn tất cả các thành phần đáp ứng đúng hai nhu cầu này.",
+   "options": [
+    "Compaction, được xem là cơ chế duy nhất thay thế hoàn toàn context editing cho các phiên chạy dài",
+    "Code execution, chạy code trong container sandbox cho các tác vụ phân tích dữ liệu và xử lý file",
+    "Memory tool, cho phép Claude lưu và truy xuất thông tin qua các cuộc hội thoại riêng biệt theo thời gian",
+    "Fine-grained tool streaming, giảm độ trễ bằng cách stream tham số tool mà không cần buffer JSON",
+    "Files API, cho phép tham chiếu tài liệu đã tải lên nhiều lần mà không cần tải lại nội dung",
+    "Context editing, hỗ trợ tự động xóa tool result khi cuộc hội thoại gần chạm giới hạn token"
+   ],
+   "explanation": "Context editing tự động xóa tool result cũ khi hội thoại gần chạm giới hạn token (F), còn memory tool lưu và truy xuất thông tin qua các cuộc hội thoại riêng biệt (C). A sai vì compaction không thay thế hoàn toàn context editing; code execution, fine-grained tool streaming và Files API không giải quyết nhu cầu nào."
+  },
+  {
+   "id": 129,
+   "question": "Một nhóm đang chọn giữa orchestrator-workers và parallelization by sectioning cho một pipeline phân tích tài liệu. Những phát biểu nào phân biệt đúng orchestrator-workers với parallelization by sectioning?",
+   "options": [
+    "Cả orchestrator-workers và parallelization by sectioning đều tổng hợp nhiều phiếu bầu độc lập trên cùng một đầu vào để đi tới câu trả lời theo đa số",
+    "Orchestrator-workers phù hợp với subtask thay đổi khó đoán theo từng trường hợp, còn sectioning phù hợp với tác vụ chia gọn thành các subtask đã biết",
+    "Parallelization by sectioning luôn cần một LLM thứ hai đánh giá các kết quả đã chia trước khi gộp thành kết quả cuối cùng",
+    "Trong orchestrator-workers, các worker LLM chạy theo thứ tự cố định định sẵn, còn sectioning luôn chạy các subtask đồng thời",
+    "Trong orchestrator-workers, một LLM trung tâm xác định subtask lúc chạy, còn sectioning yêu cầu subtask được định nghĩa trước khi thực thi"
+   ],
+   "explanation": "Trong orchestrator-workers, một LLM trung tâm quyết định subtask lúc chạy, phù hợp với công việc thay đổi khó đoán; sectioning chia tác vụ thành các subtask đã biết trước khi thực thi (B, E). A mô tả biến thể voting của parallelization; C bịa ra một evaluator bắt buộc; D sai vì worker không chạy theo thứ tự cố định."
+  },
+  {
+   "id": 130,
+   "question": "Một nhóm đang xây dựng agent cần audit một codebase lớn theo ba khía cạnh riêng biệt: lỗ hổng bảo mật, chất lượng code và độ bao phủ test. Mỗi khía cạnh cần một bộ tool và trọng tâm khác nhau. Cách nào phân rã bài toán này tốt nhất khi dùng Agent SDK?",
+   "options": [
+    "Định nghĩa một orchestrator agent gọi các subagent chuyên biệt thông qua Agent tool, mỗi subagent được cấu hình bộ tool giới hạn và mô tả khớp với miền subtask của nó",
+    "Gửi một prompt cho agent chính, yêu cầu lần lượt kiểm tra chất lượng code, rồi quét bảo mật, rồi phân tích độ bao phủ test mà không cấu hình thêm",
+    "Tăng context window của agent chính và dựa vào extended thinking để nó suy luận qua cả ba khía cạnh trong một phiên liên tục",
+    "Cấu hình một MCP server cung cấp kiểm tra bảo mật, chất lượng và độ bao phủ thành ba tool riêng, để agent chính gọi trực tiếp từng tool thay vì ủy quyền"
+   ],
+   "explanation": "Ba khía cạnh độc lập, mỗi khía cạnh có tool và trọng tâm riêng, khớp tự nhiên với một orchestrator ủy quyền cho các subagent chuyên biệt có bộ tool và mô tả riêng (A). B dồn mọi thứ vào một prompt chung, C dựa vào context lớn hơn thay vì phân rã, còn D vẫn để một agent ôm cả ba mối quan tâm."
+  },
+  {
+   "id": 131,
+   "question": "Bộ phận hỗ trợ của một khách hàng doanh nghiệp đã cam kết theo hợp đồng uptime 99,9% và SLA phản hồi p95 dưới 2 giây cho trợ lý phân loại ticket chạy bằng Claude. Trong buổi review kiến trúc, nhóm phải chọn những năng lực nền tảng cần ưu tiên chủ yếu để bảo vệ cam kết SLA này. Hai năng lực nào liên quan trực tiếp nhất tới việc bảo vệ SLA về độ trễ và tính sẵn sàng? (Chọn 2)",
+   "options": [
+    "Server-side fallback, thử lại request bị từ chối với một model dự phòng ngay trong cùng API call để có phản hồi kịp thời",
+    "Chọn model có độ trễ tương đối nhanh hơn, như Claude Haiku 4.5, cho luồng phân loại nhạy cảm với độ trễ",
+    "Files API, cho phép tải tài liệu lên một lần và tham chiếu qua nhiều request mà không cần tải lại nội dung",
+    "Batch processing, xử lý bất đồng bộ khối lượng lớn request với giá chiết khấu trong khoảng thời gian hoàn thành kéo dài",
+    "Agent Skills, mở rộng năng lực của Claude bằng hướng dẫn và script dựng sẵn cho các tác vụ định dạng tài liệu"
+   ],
+   "explanation": "SLA loại này gồm tính sẵn sàng và độ trễ: server-side fallback giúp request vẫn được trả lời khi model chính từ chối hoặc lỗi (A), và model nhanh hơn như Haiku 4.5 bảo vệ mục tiêu độ trễ p95 (B). Batch processing là bất đồng bộ và chậm; Files API và Agent Skills không liên quan tới SLA."
+  },
+  {
+   "id": 132,
+   "question": "Một khách hàng sản xuất muốn có trợ lý kiểm tra chất lượng dựa trên Claude, liên tục phân tích cùng các tài liệu đặc tả tham chiếu cùng với các báo cáo kiểm tra mới trong suốt cả ngày. Mục tiêu đã nêu của khách hàng là giảm chi phí token dư thừa cho phần tài liệu tham chiếu không đổi, đồng thời giữ thời gian xử lý từng báo cáo kiểm tra nhanh. Lựa chọn kiến trúc nào phục vụ tốt nhất mục tiêu hiệu quả và chi phí này?",
+   "options": [
+    "Dùng prompt caching để đặc tả tham chiếu không đổi được cache và tái sử dụng qua các request, giảm chi phí và độ trễ",
+    "Tăng tham số effort lên xhigh cho mọi request kiểm tra để Claude suy luận kỹ hơn mỗi lần",
+    "Tải lại toàn bộ đặc tả tham chiếu dạng văn bản thuần trong mỗi request để đảm bảo model luôn có phiên bản mới nhất",
+    "Chuyển toàn bộ khối lượng công việc sang Message Batches API để mọi báo cáo kiểm tra được xử lý cùng lúc mỗi ngày một lần"
+   ],
+   "explanation": "Đặc tả tham chiếu giống hệt nhau qua nhiều request, đúng là trường hợp dùng prompt caching: phần prefix được cache sẽ tái sử dụng, giảm chi phí và độ trễ (A). Effort cao hơn (B) làm tăng chi phí, gửi lại toàn văn (C) chính là phần dư thừa cần loại bỏ, còn batch mỗi ngày một lần (D) phá vỡ yêu cầu xử lý nhanh."
+  },
+  {
+   "id": 133,
+   "question": "Một coding assistant phải sửa một số lượng file chưa biết trước trong repository để triển khai một tính năng, và chỉ xác định được chính xác các file cũng như phạm vi thay đổi sau khi assistant kiểm tra codebase. Pattern nào phù hợp nhất?",
+   "options": [
+    "Routing, trong đó assistant phân loại yêu cầu tính năng và gửi tới một trong vài prompt sửa file cố định",
+    "Parallelization by sectioning, trong đó assistant sửa đồng thời mọi file trong repository theo cách chia định sẵn",
+    "Prompt chaining, trong đó assistant sửa file theo trình tự cố định được xác định trước khi kiểm tra repository",
+    "Orchestrator-workers, trong đó một LLM trung tâm kiểm tra repository và linh hoạt ủy quyền từng thao tác sửa file cho một worker LLM"
+   ],
+   "explanation": "Số lượng file và phạm vi thay đổi chỉ biết được sau khi kiểm tra codebase, nên subtask phải do một LLM trung tâm quyết định lúc chạy rồi ủy quyền cho worker (D). Routing (A), sectioning định sẵn (B) và prompt chaining cố định (C) đều yêu cầu biết trước các bước."
+  },
+  {
+   "id": 134,
+   "question": "Một developer đang xây dựng agent phân loại email, đọc nội dung email đến qua một tool và soạn thư trả lời. Để tăng khả năng chống lại các chỉ dẫn được nhúng trong nội dung email, developer nên áp dụng tổ hợp lựa chọn thiết kế nào? (Chọn tất cả đáp án đúng)",
+   "options": [
+    "Nêu chính sách trong system prompt rằng nội dung do tool trả về là dữ liệu không tin cậy và không bao giờ được ghi đè system prompt hoặc yêu cầu ban đầu của người dùng",
+    "Đặt các chỉ dẫn vận hành của chính developer vào cùng khối tool_result với nội dung email để cả hai đi cùng nhau trong một message",
+    "JSON-encode nội dung email khi truyền dưới dạng tool result để dấu ngoặc kép hay thẻ trong nội dung không thể thoát khỏi cấu trúc bao quanh",
+    "Sàng lọc output của tool bằng một classifier model nhẹ trước khi chuyển cho agent chính, và loại bỏ hoặc gắn cờ nội dung nếu nghi ngờ có injection",
+    "Cấp cho agent quyền truy cập rộng, không giới hạn vào toàn bộ hộp thư và cài đặt tài khoản của người dùng để nó không bao giờ phải xin thêm quyền giữa chừng"
+   ],
+   "explanation": "Chống indirect prompt injection nghĩa là coi output của tool là dữ liệu không tin cậy trong system prompt (A), mã hóa nó để nội dung không thoát khỏi cấu trúc (C), và sàng lọc bằng classifier trước khi agent chính thấy (D). Trộn chỉ dẫn của mình vào tool_result (B) làm nhòa ranh giới giữa dữ liệu và chỉ dẫn, còn quyền truy cập rộng không giới hạn (E) khuếch đại thiệt hại khi injection thành công."
+  },
+  {
+   "id": 135,
+   "question": "Một nhóm đang xây dựng tính năng dịch từ tiếng Anh sang tiếng Tây Ban Nha sẽ được gọi nhiều lần với các đoạn văn bản khác nhau do người dùng gửi. Họ muốn giữ phần câu chữ hướng dẫn nhất quán giữa các lần gọi, đồng thời dễ dàng thay văn bản mới và theo dõi thay đổi của phần hướng dẫn tách biệt khỏi văn bản cần dịch. Cách tiếp cận nào phù hợp nhất với mục tiêu này?",
+   "options": [
+    "Định nghĩa một prompt template chứa phần hướng dẫn cố định và một placeholder như {{text}}, mỗi lần gọi chỉ thay phần nội dung biến đổi, còn phần hướng dẫn xung quanh giữ nguyên.",
+    "Gửi phần hướng dẫn cố định và văn bản của người dùng tới model trong hai API call riêng, rồi nối các phản hồi, đặt bản dịch sau output của phần hướng dẫn để tạo kết quả cuối.",
+    "Tạo lại toàn bộ prompt dịch ở mỗi lần gọi bằng cách dựng động chuỗi hướng dẫn cùng văn bản của người dùng, đảm bảo mỗi request mang phiên bản câu chữ mới nhất.",
+    "Lưu toàn bộ prompt gồm phần hướng dẫn cố định và văn bản của người dùng thành một chuỗi tĩnh, sửa tay chuỗi này cho mỗi request dịch mới để prompt luôn được cập nhật."
+   ],
+   "explanation": "Prompt template giữ phần hướng dẫn cố định và chỉ thay văn bản biến đổi qua placeholder như {{text}}, nên phần hướng dẫn có thể được quản lý phiên bản riêng (A). Tách thành hai call (B) phá vỡ tác vụ, dựng lại prompt mỗi lần (C) làm mất câu chữ ổn định, còn sửa tay một chuỗi tĩnh (D) trộn lẫn hướng dẫn và dữ liệu."
+  },
+  {
+   "id": 136,
+   "question": "Một agent chạy các vòng lặp tool-use dài với hàng chục lần đọc file mỗi phiên. Nhóm muốn tool result cũ được tự động xóa khi input token vượt 30.000, đồng thời luôn giữ 3 lượt trao đổi tool gần nhất và không bao giờ xóa kết quả từ tool web_search. Cấu hình context_management nào đạt được điều này?",
+   "options": [
+    "Một edit clear_tool_uses_20250919 với trigger đặt là tool_uses 30000, không đặt giá trị keep, và không đặt giá trị exclude_tools.",
+    "Nên dùng một edit clear_thinking_20251015 với trigger đặt là 30000 input tokens, keep đặt là 3 thinking turns, và exclude_tools đặt là web_search.",
+    "Nên dùng một edit clear_tool_uses_20250919 với trigger đặt là 30000 input tokens, keep đặt là 3 tool uses, và exclude_tools đặt là file_read.",
+    "Cấu hình một edit clear_tool_uses_20250919 với trigger đặt là 30000 input tokens, keep 3 tool uses, exclude_tools đặt là web_search."
+   ],
+   "explanation": "Phải khớp cả ba điều kiện: edit clear_tool_uses_20250919 kích hoạt ở 30.000 input tokens, giữ 3 tool use gần nhất, và loại web_search khỏi việc xóa (D). A kích hoạt sai đơn vị và không đặt keep hay exclude, B dùng edit xóa thinking, còn C loại trừ sai tool."
+  },
+  {
+   "id": 137,
+   "question": "Một prompt review code cần Claude tạo bản sửa lỗi, kiểm tra bản sửa theo một bộ tiêu chí, rồi tinh chỉnh bản sửa nếu chưa đạt tiêu chí. Nhóm muốn xem xét bước review trung gian và ghi log riêng trước khi bản tinh chỉnh cuối cùng được tạo ra. Cách tiếp cận nào phù hợp nhất với yêu cầu này?",
+   "options": [
+    "Chia tác vụ thành các API call riêng: tạo bản sửa, review theo tiêu chí, rồi tinh chỉnh bản sửa, để mỗi bước có thể được ghi log độc lập.",
+    "Yêu cầu Claude tạo, kiểm tra và tinh chỉnh bản sửa trong một phản hồi bằng extended reasoning, nhưng cách này giữ phần review ở bên trong và không ghi log được.",
+    "Thêm thẻ quanh bước review để Claude đặt phần review bên trong và bản sửa bên ngoài, rồi trích xuất và ghi log phần review riêng.",
+    "Cung cấp năm ví dụ few-shot về bản sửa đúng để Claude bắt chước, bỏ qua bước review, loại bỏ bước trung gian và không thể ghi log."
+   ],
+   "explanation": "Prompt chaining tách tạo, review và tinh chỉnh thành các API call riêng, nên phần review trung gian là một output độc lập có thể xem xét và ghi log trước bước tinh chỉnh (A). Một phản hồi duy nhất (B) che giấu phần review, dùng thẻ (C) vẫn tạo một output gộp trong một call, còn ví dụ few-shot (D) bỏ hẳn bước review."
+  },
+  {
+   "id": 138,
+   "question": "Một nền tảng muốn Claude tìm tool bằng embeddings index có sẵn thay vì so khớp regex hoặc BM25 tích hợp sẵn, vì mô tả tool rất ngắn gọn nhưng có liên hệ ngữ nghĩa trong không gian embedding. Cách triển khai nào khớp với yêu cầu này?",
+   "options": [
+    "Xây dựng một custom tool chạy embeddings search và trả về các khối tool_reference trong tool_result để Claude mở rộng.",
+    "Bật biến thể regex tool search tích hợp sẵn và dựa vào các pattern wildcard rộng để mô phỏng so khớp ngữ nghĩa.",
+    "Tắt tool search và tải mọi định nghĩa tool ngay từ đầu để không cần embeddings index nữa.",
+    "Bật biến thể BM25 tool search tích hợp sẵn, vì xếp hạng BM25 xấp xỉ đủ tốt độ tương đồng ngữ nghĩa dựa trên embedding."
+   ],
+   "explanation": "Khi các biến thể regex và BM25 tích hợp sẵn không phù hợp, bạn có thể tự triển khai tool search: một custom tool chạy truy vấn embeddings và trả về các khối tool_reference trong tool_result để Claude mở rộng (A). Regex wildcard (B) và BM25 (D) vẫn là so khớp từ vựng, còn tải mọi tool từ đầu (C) là bỏ tool search chứ không cải thiện nó."
+  },
+  {
+   "id": 139,
+   "question": "Một trợ lý xử lý ticket hỗ trợ truy xuất các đoạn văn từ knowledge base nội bộ gồm 500 tài liệu cho mỗi ticket đến và phải trích dẫn chính xác đoạn nguồn trong mọi phản hồi, mà không gửi lại toàn bộ kho tài liệu ở mỗi request. Cách tiếp cận nào khớp nhất với dạng dữ liệu và kiểu truy vấn này?",
+   "options": [
+    "Tải toàn bộ 500 tài liệu dưới dạng văn bản có thể trích dẫn vào system prompt để Claude tham chiếu trực tiếp bất kỳ đoạn nào, rồi yêu cầu nó trích dẫn tài liệu và mục nguồn trong mọi phản hồi.",
+    "Lưu kho tài liệu vào memory tool bằng cách lưu mỗi tài liệu thành một mục riêng, cấu hình trợ lý tải mọi mục trước khi trả lời, và yêu cầu nó trích dẫn tài liệu nguồn cho mọi đoạn truy xuất được.",
+    "Trả về các đoạn đã truy xuất dưới dạng search result content blocks từ một retrieval tool, mỗi khối mang metadata source và title, để Claude tạo citation tự nhiên cho từng ticket.",
+    "Nối toàn bộ kho tài liệu thành một user message long-context duy nhất, 500 tài liệu được phân tách bằng tiêu đề, rồi yêu cầu Claude trích đoạn liên quan và trích dẫn nguồn."
+   ],
+   "explanation": "Chỉ truy xuất các đoạn liên quan cho mỗi ticket và trả về dưới dạng search result content blocks có metadata source và title sẽ cho citation tự nhiên ở mức đoạn văn mà không gửi lại kho tài liệu (C). A và D đẩy cả 500 tài liệu vào mọi request, còn memory tool (B) không phải cơ chế truy xuất hay trích dẫn."
+  },
+  {
+   "id": 140,
+   "question": "Ban đầu một nhóm chia tài liệu hướng dẫn nhân viên mới thành các chunk cố định 500 ký tự, không có overlap. Giờ họ thấy nhiều chunk bắt đầu hoặc kết thúc giữa câu, và câu trả lời nằm gần ranh giới chunk thường bị bỏ sót vì câu liên quan bị tách ra hai embedding riêng. Điều chỉnh chunking nào giải quyết trực tiếp nhất lỗi cụ thể này?",
+   "options": [
+    "Giữ nguyên ranh giới cố định 500 ký tự và tăng context window của embedding model để mỗi vector mã hóa thêm văn bản xung quanh, giảm việc bỏ sót câu trả lời gần chỗ cắt.",
+    "Giảm kích thước chunk để mỗi chunk chứa đúng một câu, cắt theo dấu câu như dấu chấm hoặc dấu chấm than, và bỏ giới hạn ký tự cố định để tránh cắt giữa câu.",
+    "Chia chunk theo ranh giới tự nhiên như đoạn văn hoặc mục, và thêm một phần overlap nhỏ giữa các chunk liền kề để câu ở ranh giới xuất hiện nguyên vẹn trong ít nhất một chunk.",
+    "Bỏ overlap và đặt kích thước chunk cố định nhỏ hơn, chẳng hạn 250 ký tự, để giảm số vector trong index và tăng tốc semantic search mà không thay đổi cách cắt câu."
+   ],
+   "explanation": "Lỗi xuất phát từ việc cắt kích thước cố định, không overlap, làm câu bị tách giữa các chunk; chia theo ranh giới đoạn hoặc mục kèm overlap nhỏ giữ câu ở ranh giới nguyên vẹn trong ít nhất một chunk (C). A giữ nguyên ranh giới tệ, B chia vụn context thành từng câu, còn D làm vấn đề cắt câu tệ hơn."
+  },
+  {
+   "id": 141,
+   "question": "Dự án của một agent đã tích lũy khoảng một chục skill, trong đó vài skill thực hiện hành động có tác dụng phụ như gửi tin nhắn Slack hoặc xóa các branch cũ. Người review nhận thấy Claude thỉnh thoảng tự kích hoạt các skill có tác dụng phụ này dựa trên việc khớp mô tả một cách mơ hồ, và muốn thu hẹp phạm vi năng lực thực tế của agent để các skill này chỉ chạy khi có người gọi rõ ràng. Cách sửa trực tiếp nhất là gì?",
+   "options": [
+    "Viết lại phần hướng dẫn của từng skill có tác dụng phụ để yêu cầu Claude xin xác nhận trước khi thực hiện tác dụng phụ, không sửa các trường frontmatter.",
+    "Đặt disable-model-invocation: true trong frontmatter của từng skill có tác dụng phụ để Claude không thể tự chọn chúng và chỉ người dùng mới gọi được bằng /name.",
+    "Xóa mô tả skill khỏi frontmatter của từng skill có tác dụng phụ để Claude không có cơ sở tự so khớp và chỉ người dùng gọi được các skill đó theo tên.",
+    "Chuyển các skill có tác dụng phụ vào CLAUDE.md để chúng được tải như context luôn bật, đảm bảo Claude chỉ dùng chúng khi người dùng gọi rõ tên trong request."
+   ],
+   "explanation": "Đặt disable-model-invocation: true trong frontmatter của skill sẽ ngăn Claude tự chọn nó, nên skill chỉ chạy khi có người gọi bằng /name (B). A vẫn để Claude kích hoạt skill, C bỏ bớt thông tin mà không đảm bảo hành vi, còn chuyển skill vào CLAUDE.md (D) biến chúng thành context luôn bật, ngược với mục tiêu."
+  },
+  {
+   "id": 142,
+   "question": "Một nhóm đang xác định tiêu chí thành công cho tính năng tóm tắt hồ sơ bồi thường mới trước khi xây dựng tập dữ liệu đánh giá. Bản nháp hiện tại ghi: \"bản tóm tắt cần ngắn gọn và hữu ích.\" Tiêu chí sửa đổi nào tuân theo framework SMART cho thiết kế đánh giá tốt nhất?",
+   "options": [
+    "Yêu cầu bản tóm tắt đạt trung bình ít nhất 4/5 điểm theo rubric về độ đầy đủ trên một mẫu 500 hồ sơ bồi thường",
+    "Yêu cầu bản tóm tắt bớt máy móc và đọc tự nhiên hơn đối với các chuyên viên thẩm định xem xét chúng",
+    "Yêu cầu mọi bản tóm tắt phải được một chuyên viên thẩm định cấp cao phê duyệt thì mới được tính là chấp nhận được",
+    "Yêu cầu bản tóm tắt đạt điểm tuyệt đối 5/5 về độ đầy đủ từ mọi chuyên viên thẩm định trong mẫu"
+   ],
+   "explanation": "Tiêu chí SMART phải cụ thể, đo lường được và khả thi: trung bình ít nhất 4/5 theo rubric độ đầy đủ trên mẫu 500 hồ sơ đáp ứng cả ba (A). B vẫn mơ hồ, C là một cửa phê duyệt quy trình chứ không phải mục tiêu chất lượng đo được, còn D đòi hỏi điểm tuyệt đối từ mọi người đánh giá, không khả thi."
+  },
+  {
+   "id": 143,
+   "question": "Một platform engineer đặt CLAUDE_CODE_ENABLE_TELEMETRY=1 trên mọi CI runner nhưng OTLP collector của nhóm không bao giờ nhận được span, metric hay log nào từ các job Claude Code. Không có biến telemetry nào khác được cấu hình. Nguyên nhân nhiều khả năng nhất khiến dữ liệu bị thiếu là gì?",
+   "options": [
+    "CLI chỉ phát telemetry khi console exporter đã được cấu hình trước như một phương án dự phòng cục bộ bắt buộc",
+    "Telemetry đã bật nhưng chưa chọn exporter, nên OTEL_METRICS_EXPORTER và OTEL_LOGS_EXPORTER mặc định không export gì cả",
+    "Admin API key của tổ chức phải được export qua OTEL_EXPORTER_OTLP_HEADERS thì CLI mới phát bất kỳ tín hiệu nào",
+    "Collector từ chối mọi tín hiệu cho tới khi CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1 cũng được đặt, bất kể chọn exporter nào"
+   ],
+   "explanation": "CLAUDE_CODE_ENABLE_TELEMETRY=1 chỉ bật telemetry; không có gì được export cho tới khi chọn exporter bằng OTEL_METRICS_EXPORTER và OTEL_LOGS_EXPORTER (ví dụ otlp), cùng các thiết lập endpoint (B). Console exporter không phải điều kiện tiên quyết (A), không cần header Admin API key (C), và cờ beta enhanced telemetry không cần cho việc export cơ bản (D)."
+  },
+  {
+   "id": 144,
+   "question": "Một agentic coding assistant chạy các phiên dài tích lũy hàng trăm tool call, và cuộc hội thoại thường xuyên tiến sát giới hạn context window của model trước khi hoàn thành tác vụ. Các kỹ sư muốn có chiến lược để phiên làm việc tiếp tục hiệu quả mà không mất trạng thái quan trọng. Những cách nào giải quyết mục tiêu này?",
+   "options": [
+    "Hạ tham số effort xuống low để Claude tạo phản hồi ngắn hơn, ngăn context window không bao giờ bị đầy",
+    "Dùng memory tool để lưu trạng thái quan trọng vào bộ nhớ bền vững trước khi context cũ bị xóa, để phiên làm việc khôi phục nhanh",
+    "Chuyển phiên sang Message Batches API để mỗi lượt chạy như một request bất đồng bộ độc lập với context mới",
+    "Cấu hình context editing để xóa tool result cũ khi đạt ngưỡng token, chỉ giữ các cặp tool use/result gần nhất",
+    "Bật server-side compaction để các lượt trước được tự động tóm tắt khi cuộc hội thoại gần chạm giới hạn context window",
+    "Tăng tham số effort lên max để Claude suy luận kỹ hơn và cần ít lượt hơn để hoàn thành tác vụ"
+   ],
+   "explanation": "Phiên dài giữ được hiệu quả khi lưu trạng thái quan trọng bằng memory tool (B), xóa tool result cũ bằng context editing (D), và tóm tắt các lượt trước bằng server-side compaction (E). Thiết lập effort (A, F) thay đổi độ sâu suy luận chứ không kiểm soát sự tăng của context, còn Batches API (C) làm mất tính liên tục của cuộc hội thoại."
+  },
+  {
+   "id": 145,
+   "question": "Một nhóm muốn giảm chi phí và độ trễ mỗi request cho một tính năng chat mà không đổi model hay giảm chất lượng phản hồi với những câu hỏi thực sự khó. Họ muốn chính model tốn ít token hơn ở các lượt dễ nhưng vẫn suy luận kỹ ở các lượt phức tạp. Họ nên dùng đòn bẩy nào trước tiên?",
+   "options": [
+    "Đặt max_tokens ở một giá trị nhỏ cố định cho mọi request để Claude không thể tạo phản hồi dài cho câu hỏi khó",
+    "Ép mọi request đi qua Message Batches API, vì request batch được tính phí theo mức chiết khấu cố định",
+    "Tắt hẳn prompt caching, vì loại bỏ mọi lượt ghi cache luôn đảm bảo số token thấp nhất có thể",
+    "Hạ tham số effort cho các lượt thông thường, vì nó giảm chi tiêu token trong khi vẫn để Claude suy nghĩ kỹ hơn khi cần"
+   ],
+   "explanation": "Tham số effort cho phép cùng một model tốn ít token hơn ở lượt thông thường mà vẫn suy nghĩ kỹ hơn khi câu hỏi đòi hỏi (D). Giới hạn cứng max_tokens cắt cụt câu trả lời khó, batch (B) gây trễ và không hợp với chat tương tác, còn tắt prompt caching (C) làm tăng chi phí và độ trễ."
+  },
+  {
+   "id": 146,
+   "question": "Trước khi ra mắt, một product manager đặt tiêu chí thành công yêu cầu model đạt độ chính xác 100% trên một tác vụ suy luận mở, không chấp nhận bất kỳ câu trả lời sai hoặc thiếu nào, ngang bằng hoặc vượt mức một chuyên gia trong lĩnh vực có thể làm. Vấn đề chính của tiêu chí này là gì, và nên sửa như thế nào?",
+   "options": [
+    "Mục tiêu không đo lường được vì tác vụ mở không thể chấm điểm tự động trong bất kỳ trường hợp nào, nên tiêu chí phải dựa vào đánh giá chủ quan của con người, không có đánh giá tự động.",
+    "Mục tiêu chưa đủ cụ thể vì không nêu một chỉ số dạng số duy nhất, nên cần thay bằng một tỷ lệ định lượng như 95% độ chính xác, bất kể có khả thi hay không.",
+    "Mục tiêu không khả thi vì vượt quá năng lực thực tế của các frontier model. Thay vào đó, nên dựa trên kết quả benchmark, các thử nghiệm trước đây hoặc hiệu năng tương đương trong ngành.",
+    "Mục tiêu không phù hợp vì tác vụ suy luận không bao giờ nên có mục tiêu độ chính xác; thay vào đó, tiêu chí nên nêu độ trễ và chi phí tối đa, là các chỉ số production có ý nghĩa duy nhất."
+   ],
+   "explanation": "Độ chính xác 100% không dung sai trên tác vụ suy luận mở là không khả thi, vi phạm chữ A trong SMART; mục tiêu nên dựa trên benchmark, thử nghiệm trước đây hoặc hiệu năng tương đương trong ngành (C). Tác vụ mở vẫn chấm được bằng rubric hoặc grader (A), một con số tùy ý bất kể khả thi (B) lặp lại sai lầm, và mục tiêu độ chính xác là hợp lý cho tác vụ suy luận (D)."
+  },
+  {
+   "id": 147,
+   "question": "Một nhóm đã liên tục tinh chỉnh prompt xử lý hồ sơ bồi thường bằng cùng một tập phát triển 200 ví dụ cho mọi vòng cải tiến. Giờ họ muốn chốt phiên bản thắng cuộc cuối cùng trước khi phát hành. Họ nên làm gì trước khi đưa ra quyết định cuối cùng?",
+   "options": [
+    "Thu hẹp tập phát triển chỉ còn những ví dụ mà prompt ứng viên hiện tại đã vượt qua, rồi trình bày độ chính xác trên tập con đó làm chỉ số cuối để điểm số trông cao hơn.",
+    "Chạy thêm một vòng tinh chỉnh trên cùng tập phát triển 200 ví dụ, có thể đổi sang model khác hoặc thêm ví dụ few-shot, để tối đa hóa điểm trước khi chốt prompt.",
+    "Phát hành ngay ứng viên đạt điểm cao nhất trên tập phát triển 200 ví dụ, vì việc tinh chỉnh lặp lại trên chính tập đó đã chứng minh nó sẵn sàng cho production.",
+    "Đánh giá prompt ứng viên dẫn đầu trên một held-out test set riêng chưa dùng trong quá trình lặp, để xác nhận các cải thiện tổng quát hóa được ra ngoài tập phát triển."
+   ],
+   "explanation": "Tinh chỉnh lặp lại trên cùng 200 ví dụ có nguy cơ overfit vào tập đó, nên ứng viên dẫn đầu phải được xác nhận trên một held-out test set chưa từng dùng khi lặp (D). A chọn lọc dữ liệu có lợi, B làm overfit nặng hơn, còn C coi điểm trên tập đã tinh chỉnh là bằng chứng sẵn sàng cho production."
+  },
+  {
+   "id": 148,
+   "question": "Một nhóm hiện đang chạy workflow trích xuất dữ liệu có độ phức tạp vừa phải trên Claude Haiku 4.5. Những quan sát nào sau đây là bằng chứng hợp lệ cho thấy workflow có sự không tương xứng về năng lực model và nên được đánh giá trên một model mạnh hơn như Claude Opus 4.8? (Chọn tất cả đáp án đúng.)",
+   "options": [
+    "Workflow cần hiểu biết tinh tế xuyên suốt các chuỗi dài gồm nhiều bước phụ thuộc lẫn nhau, nơi lỗi nhỏ tích lũy dần.",
+    "Workflow thỉnh thoảng bị timeout do độ trễ mạng thông thường giữa client và API.",
+    "Chi tiêu API hằng tháng của nhóm cho workflow cao hơn ngân sách dự kiến ban đầu của dự án.",
+    "Review thủ công cho thấy các lỗi trích xuất giống lỗi suy luận thực sự, chứ không phải do đầu vào bị thiếu hoặc bị cắt cụt.",
+    "Trên benchmark theo use case, độ chính xác của các subtask suy luận nhiều bước vẫn dưới ngưỡng ngay cả sau khi đã sửa prompt.",
+    "Prompt của workflow được thiết kế cho một model cũ hơn và chưa được điều chỉnh theo năng lực của model hiện tại."
+   ],
+   "explanation": "Bằng chứng về sự không tương xứng năng lực liên quan tới suy luận: chuỗi dài các bước phụ thuộc nhau khiến lỗi tích lũy (A), lỗi giống lỗi suy luận thực sự chứ không phải vấn đề đầu vào (D), và độ chính xác benchmark vẫn thấp sau khi đã sửa prompt (E). Timeout mạng (B) và vượt ngân sách (C) không nói gì về năng lực, còn prompt chưa được điều chỉnh (F) cần sửa trước khi đổ lỗi cho model."
+  },
+  {
+   "id": 149,
+   "question": "Một chuyên viên tuân thủ yêu cầu Claude rà soát hợp đồng nhà cung cấp dài 40 trang và đánh dấu mọi điều khoản mâu thuẫn với chính sách lưu trữ dữ liệu của công ty. Trong lần thử nghiệm đầu, Claude trích dẫn số điều khoản và câu chữ không hề có trong hợp đồng. Thay đổi prompt nào hiệu quả nhất để neo việc rà soát vào chính văn bản tài liệu cho loại tác vụ tài liệu dài này?",
+   "options": [
+    "Yêu cầu Claude trước tiên trích xuất nguyên văn từng chữ các đoạn liên quan tới lưu trữ dữ liệu, rồi mới phân tích tuân thủ bằng cách tham chiếu tới các trích dẫn đã trích xuất",
+    "Yêu cầu Claude tóm tắt toàn bộ hợp đồng thành ba đoạn trước, rồi phân tích tuân thủ chỉ dựa trên bản tóm tắt đó làm nguồn",
+    "Giảm tham số max_tokens của phản hồi để Claude tạo câu trả lời ngắn hơn, tập trung hơn và ít khả năng lệch khỏi hợp đồng gốc",
+    "Yêu cầu Claude trả lời bằng kiến thức chung về các điều khoản hợp đồng tiêu chuẩn thay vì văn bản cụ thể, vì điều khoản tiêu chuẩn thường mang tính đại diện"
+   ],
+   "explanation": "Với tài liệu dài, yêu cầu Claude trích nguyên văn các đoạn liên quan trước rồi chỉ suy luận từ các trích dẫn đó sẽ neo phân tích vào văn bản thật và hạn chế trích dẫn bịa đặt (A). Tóm tắt trước (B) làm mất câu chữ chính xác, max_tokens ngắn hơn (C) không ngăn được bịa đặt, còn dựa vào kiến thức chung (D) bỏ hẳn tài liệu."
+  },
+  {
+   "id": 150,
+   "question": "Agent chạy bằng Claude của một công ty fintech có thể khởi tạo lệnh chuyển khoản qua một MCP tool tùy chỉnh. Dù đội vận hành đã cấu hình allowedTools để tự động chấp thuận hầu hết các tool đọc và báo cáo, họ muốn mọi lần gọi tool chuyển khoản đều cần con người phê duyệt rõ ràng, bất kể phiên sau này bị chuyển sang permission mode nào, kể cả bypassPermissions. Cách tiếp cận nào đáp ứng tốt nhất yêu cầu này?",
+   "options": [
+    "Chuyển permission mode của phiên sang acceptEdits, kỳ vọng tool chuyển khoản nằm ngoài phạm vi sửa file của mode này và luôn được chuyển tới canUseTool, dù các tool khác dưới acceptEdits vẫn rơi vào những allow rule đã chấp thuận chúng.",
+    "Thêm một mục allowedTools trần cho tool chuyển khoản để nó tự động được chấp thuận, rồi dựa vào callback canUseTool để chặn lại, dù allow rule trần chấp thuận mọi lần gọi khớp trước khi canUseTool được tham khảo, nên callback không bao giờ chạy cho tool đó.",
+    "Đăng ký một PreToolUse hook giới hạn cho tool chuyển khoản, trả về permissionDecision \"ask\" cho mọi lần gọi, vì hook chạy trước deny rule, ask rule, bước kiểm tra permission mode và allow rule, và quyết định của nó vẫn giữ nguyên ngay cả dưới bypassPermissions.",
+    "Thêm tool chuyển khoản vào disallowed_tools với pattern wildcard để mặc định bị chặn, rồi để callback canUseTool gỡ deny rule cho từng lần gọi, dù deny rule được đánh giá trước khi canUseTool chạy và không thể đảo ngược từ bên trong callback đó."
+   ],
+   "explanation": "PreToolUse hook chạy đầu tiên trong luồng cấp quyền, trước deny rule, ask rule, bước kiểm tra permission mode và allow rule, nên một hook giới hạn cho tool chuyển khoản trả về permissionDecision \"ask\" sẽ buộc có người phê duyệt ngay cả dưới bypassPermissions (C). A phụ thuộc vào một mode có thể bị đổi sau này, B tự động chấp thuận tool nên canUseTool không bao giờ chạy, còn D dựa vào việc đảo ngược deny rule từ canUseTool, điều không thể."
+  },
+  {
+   "id": 151,
+   "question": "Một solutions architect đang xác định phạm vi các biện pháp kiểm soát rủi ro đạo đức cho một trợ lý dựa trên Claude, sẽ soạn bản tóm tắt đánh giá hiệu suất nội bộ từ ghi chú của quản lý trong một lực lượng lao động đa quốc gia. Nhóm tuân thủ muốn có một bộ biện pháp cụ thể giải quyết thiên lệch, công bằng và minh bạch trước khi ra mắt. Những biện pháp nào sau đây nên được đưa vào? (Chọn 3)",
+   "options": [
+    "Để sở thích diễn đạt cá nhân của từng quản lý âm thầm ghi đè mẫu tóm tắt chuẩn hóa mà hoàn toàn không lưu log.",
+    "Giới hạn quyền review bản tóm tắt cho một quản lý duy nhất, không có người phê duyệt thứ hai, để giữ quy trình triển khai gọn nhẹ có chủ đích.",
+    "Cung cấp cho mọi nhân viên, bất kể vai trò hay thâm niên, một cơ chế để yêu cầu biết các yếu tố cụ thể đã định hình bản tóm tắt của chính họ.",
+    "Ghi lại, dưới dạng người review có thể kiểm tra, những yếu tố quyết định cụ thể mà trợ lý được hướng dẫn cân nhắc mỗi khi soạn bản tóm tắt.",
+    "Bỏ qua kiểm thử thiên lệch ở khu vực ra mắt ban đầu và chỉ mở rộng kiểm thử sau này nếu có khiếu nại chính thức sau khi go-live.",
+    "Chạy đánh giá theo cặp kịch bản, so sánh giọng điệu và mức chi tiết của bản tóm tắt giữa các nhóm nhân viên khi có cùng ghi chú hiệu suất gốc."
+   ],
+   "explanation": "Các biện pháp cụ thể về thiên lệch, công bằng và minh bạch gồm cơ chế để mọi nhân viên hỏi những yếu tố nào định hình bản tóm tắt của họ (C), tài liệu có thể kiểm tra về các yếu tố quyết định mà trợ lý cân nhắc (D), và đánh giá theo cặp kịch bản so sánh output giữa các nhóm có cùng ghi chú gốc (F). A làm mất tính nhất quán và khả năng audit, B bỏ giám sát, còn E trì hoãn kiểm thử thiên lệch cho tới khi tác hại đã xảy ra."
+  },
+  {
+   "id": 152,
+   "question": "Một solutions architect đang thực hiện buổi discovery đầu tiên với một khách hàng tiềm năng mới trước khi khuyến nghị bất kỳ model Claude cụ thể nào. Theo hướng dẫn chọn model của Anthropic, architect nên xác lập những yếu tố nào làm tiêu chí chính trong buổi này?",
+   "options": [
+    "Số phiên bản phần mềm quản lý ticket nội bộ của khách hàng",
+    "Tốc độ phản hồi cần thiết của model trong ứng dụng của khách hàng",
+    "Số lượng chính xác nhân viên đang làm việc trong bộ phận IT của khách hàng",
+    "Ngân sách sẵn có của khách hàng cho phát triển và sử dụng production",
+    "Các năng lực cụ thể mà model phải có để đáp ứng nhu cầu của khách hàng",
+    "Các nền tảng mạng xã hội mà khách hàng dùng để tiếp thị tới khách hàng"
+   ],
+   "explanation": "Hướng dẫn chọn model của Anthropic cân nhắc ba tiêu chí: năng lực mà use case cần (E), tốc độ hay độ trễ mà ứng dụng yêu cầu (B), và ngân sách cho phát triển và sử dụng production (D). Phiên bản phần mềm ticket, số nhân sự IT và kênh tiếp thị không quyết định việc chọn model."
+  },
+  {
+   "id": 153,
+   "question": "Nhóm tuân thủ của một khách hàng dịch vụ tài chính cho biết mọi câu trả lời do AI tạo có tham chiếu tới tài liệu chính sách nội bộ đều phải trỏ tới chính xác câu mà nó được rút ra, để kiểm toán viên xác minh nguồn mà không cần đọc lại cả tài liệu. Năng lực nào giải quyết phát hiện này trong buổi discovery?",
+   "options": [
+    "Citations, cho phép Claude tham chiếu chính xác các câu và đoạn trong tài liệu nguồn đã dùng để tạo phản hồi",
+    "Token counting, xác định số token trong một message trước khi gửi tới Claude",
+    "Search results, cho phép citation tự nhiên trong ứng dụng RAG bằng cách gắn ghi nguồn phù hợp cho kết quả tìm kiếm",
+    "Files API, tải lên và quản lý tài liệu để không cần gửi lại chúng trong mỗi request"
+   ],
+   "explanation": "Citations cho phép Claude trỏ tới chính xác các câu và đoạn trong tài liệu nguồn được cung cấp, đúng điều kiểm toán viên cần (A). Token counting (B) và Files API (D) không ghi nguồn, còn search results (C) dùng để trích dẫn kết quả do retrieval tool của bạn trả về chứ không phải tài liệu bạn cung cấp trực tiếp."
+  },
+  {
+   "id": 154,
+   "question": "Một nhà cung cấp công cụ hỗ trợ khách hàng vẫn chạy Claude Haiku 3.5 trong một thành phần cũ và nhận được thông báo của Anthropic rằng model này bị ngừng (retired) bên ngoài Bedrock và Google Cloud. Các bên liên quan phía kỹ thuật muốn biết điều này ảnh hưởng thế nào tới tiến độ đã cam kết. Kỳ vọng chính xác cần đặt ra là gì?",
+   "options": [
+    "Lưu lượng Haiku 3.5 qua direct API và các nền tảng khác không phải Bedrock/Vertex phải chuyển sang model được hỗ trợ trước ngày ngừng, còn các triển khai trên Bedrock hoặc Google Cloud có thể tiếp tục chạy theo lịch riêng của các nền tảng đó",
+    "Thông báo ngừng model áp dụng đồng loạt trên mọi nền tảng, kể cả Bedrock và Google Cloud, nên mọi triển khai Haiku 3.5 ở khắp nơi phải chuyển đổi trước cùng một ngày",
+    "Thông báo ngừng model chỉ ảnh hưởng tới khách hàng mới đăng ký sau ngày công bố, nên lưu lượng production hiện có của nhà cung cấp được miễn vĩnh viễn bất kể nền tảng",
+    "Việc ngừng model chỉ hạn chế truy cập giao diện Console để prompt Haiku 3.5, còn lưu lượng Messages API trực tiếp trên mọi nền tảng tiếp tục không bị ảnh hưởng vô thời hạn"
+   ],
+   "explanation": "Thông báo nói model bị ngừng bên ngoài Bedrock và Google Cloud, nên lưu lượng trên Claude API và các nền tảng bị ảnh hưởng khác phải chuyển sang model được hỗ trợ trước ngày ngừng, còn triển khai trên Bedrock và Vertex theo lịch riêng của nền tảng đó (A). B bỏ qua ngoại lệ theo nền tảng, C bịa ra miễn trừ cho khách hàng hiện có, còn D giới hạn sai việc ngừng model vào Console."
+  },
+  {
+   "id": 155,
+   "question": "Hai tháng sau khi một trợ lý hỗ trợ khách hàng đi vào hoạt động, đội vận hành nhận thấy chi tiêu Claude hằng tháng tăng nhanh hơn số lượng ticket và muốn xác định tổ hợp workspace và model nào đang gây ra mức tăng này. Cách giám sát nào giải quyết được việc này?",
+   "options": [
+    "Chạy lại tập đánh giá ban đầu từ giai đoạn thiết kế để kiểm tra chất lượng output có suy giảm hay không",
+    "Yêu cầu đội hỗ trợ đếm thủ công số ticket xử lý mỗi ngày và so sánh con số đó với tổng hóa đơn",
+    "Mở rộng phạm vi allowed_tools của agent để nó tự điều tra hồ sơ thanh toán của chính mình",
+    "Truy vấn Usage and Cost Admin API nhóm theo workspace và model để đối chiếu chi tiêu với lượng token tiêu thụ"
+   ],
+   "explanation": "Câu hỏi là tổ hợp workspace và model nào làm tăng chi tiêu, và Usage and Cost Admin API trả lời được khi nhóm theo workspace và model rồi đối chiếu với lượng token tiêu thụ (D). Chạy lại đánh giá (A) đo chất lượng, đếm ticket thủ công (B) không phân bổ được chi phí, còn mở rộng tool của agent (C) không liên quan và không an toàn."
+  },
+  {
+   "id": 156,
+   "question": "Một nhóm đang viết tài liệu kiến trúc caching cho một dịch vụ mà cùng một system prompt lớn và các định nghĩa tool được gửi kèm gần như mọi request. Hướng dẫn triển khai cần giải thích cách giảm chi phí xử lý lặp lại và độ trễ cho phần nội dung tĩnh đó. Hướng dẫn nên khuyến nghị gì?",
+   "options": [
+    "Tăng context window lên 1M token để system prompt lớn vừa trọn vẹn mà không bao giờ phải cắt bớt giữa các request.",
+    "Đánh dấu system prompt và các định nghĩa tool dùng lại được là khối cache để các request lặp lại tái sử dụng prefix thay vì xử lý lại.",
+    "Bật batch processing để mọi request mang system prompt lớn được xếp hàng và tự động tính phí một nửa.",
+    "Chuyển system prompt vào Files API để nó được tải lên một lần và Claude đọc lại mới hoàn toàn từ bộ lưu trữ ở mỗi request."
+   ],
+   "explanation": "Đánh dấu system prompt và định nghĩa tool ổn định là khối cache giúp các request lặp lại tái sử dụng prefix thay vì xử lý lại, giảm cả chi phí lẫn độ trễ (B). Context window lớn hơn (A) không tránh được việc xử lý lại, batch (C) gây trễ và không tự động, còn với Files API (D) nội dung vẫn được xử lý ở mỗi request."
+  },
+  {
+   "id": 157,
+   "question": "Sản phẩm coding agent của bạn đang vượt ngân sách độ trễ trên Claude Opus 4.8. Trước khi đề xuất chuyển sang model nhỏ hơn, một đồng nghiệp gợi ý điều chỉnh tham số effort trước. Bạn nên trình bày sự đánh đổi này với nhóm như thế nào?",
+   "options": [
+    "Điều chỉnh effort chỉ có trong Claude API, không có trong Claude Code, nên sản phẩm coding agent không thể giảm độ trễ theo cách này; nhóm nên chuyển sang dòng model có điều khiển effort gốc trong Claude Code.",
+    "Tham số effort chỉ điều khiển số tool call mỗi lượt, không ảnh hưởng độ trễ suy luận thuần của model, nên nhóm nên tập trung chuyển sang model nhỏ hơn vừa ngân sách độ trễ cho sản phẩm coding agent.",
+    "Điều chỉnh effort là đánh đổi trí tuệ lấy độ trễ và chi phí trong cùng một model; hạ nó xuống khỏi mức mặc định có thể lấy lại ngân sách mà không mất độ chính xác như khi chuyển sang một model khác kém năng lực hơn.",
+    "Effort trên Claude Opus 4.8 chỉ có thể tăng, không bao giờ giảm, khiến nhóm không thể giảm độ trễ qua tham số này; vì vậy chuyển sang dòng model có mức effort tối thiểu điều chỉnh được là con đường đúng để đạt ngân sách độ trễ."
+   ],
+   "explanation": "Tham số effort đánh đổi trí tuệ lấy độ trễ và chi phí trong cùng một model, nên hạ nó khỏi mức mặc định có thể lấy lại ngân sách độ trễ mà không mất năng lực như khi chuyển sang model nhỏ hơn (C). Effort có trong Claude Code (A), điều khiển tổng chi tiêu token chứ không chỉ số tool call (B), và có thể giảm cũng như tăng (D)."
+  },
+  {
+   "id": 158,
+   "question": "Một solutions architect đang thiết kế đợt triển khai Claude Code đầu tiên cho một công ty quy mô vừa chưa có hệ thống quản lý thiết bị. Công ty có developer dùng laptop không được quản lý, muốn có khả năng theo dõi tập trung chi tiêu token, và cần chính sách toàn tổ chức áp dụng cho cả phiên local lẫn Claude Code on the web. Bộ quyết định nào ghép đúng từng yêu cầu với cơ chế phù hợp? (Chọn 3)",
+   "options": [
+    "Chỉ dựa vào các file .claude/settings.json cấp dự án được commit vào từng repository để thiết lập chính sách toàn tổ chức",
+    "Chọn Claude for Teams hoặc Enterprise làm nhà cung cấp API để Claude Code và claude.ai dùng chung một gói thuê bao theo seat mà không cần vận hành hạ tầng",
+    "Triển khai chính sách managed-settings dạng plist qua macOS MDM làm kênh chính sách chính, vì đây là cơ chế thực thi mạnh nhất hiện có",
+    "Cấu hình Amazon Bedrock làm nhà cung cấp API để công ty dùng server-managed settings cho việc phân phối chính sách tập trung",
+    "Dùng dashboard sử dụng tại claude.ai/analytics/claude-code để theo dõi chi tiêu tập trung, có trên gói Claude for Teams và Enterprise",
+    "Dùng server-managed settings được phân phối từ admin console của claude.ai, vì nó áp dụng cho cả phiên local lẫn Claude Code on the web"
+   ],
+   "explanation": "Khi không có quản lý thiết bị, chính sách phải đến từ admin console của claude.ai dưới dạng server-managed settings, áp dụng cho cả phiên local lẫn Claude Code on the web (F); Claude for Teams hoặc Enterprise cung cấp gói thuê bao theo seat dùng chung, không cần hạ tầng (B), cùng dashboard tại claude.ai/analytics/claude-code để theo dõi chi tiêu (E). Settings trong repository (A) không phải chính sách toàn tổ chức, plist qua MDM (C) cần hệ thống quản lý thiết bị mà công ty không có, và server-managed settings không được phân phối qua Bedrock (D)."
+  },
+  {
+   "id": 159,
+   "question": "Một platform team đang tích hợp Claude Code vào một pipeline CI bị khóa chặt, nơi không có người để phê duyệt prompt và chỉ một tập tool đã được duyệt trước, định nghĩa trong permission rules, mới được phép chạy. Permission mode nào phù hợp với pipeline này?",
+   "options": [
+    "dontAsk mode, tự động từ chối mọi thứ không được bao phủ bởi một allow rule rõ ràng",
+    "acceptEdits mode, tự động chấp thuận việc sửa file và các lệnh filesystem phổ biến",
+    "plan mode, giới hạn Claude chỉ đọc và đề xuất kế hoạch, không thực thi",
+    "auto mode, dựa vào một classifier để chấp thuận hầu hết hành động theo thời gian thực"
+   ],
+   "explanation": "Trong pipeline không tương tác chỉ được chạy tool đã duyệt trước, dontAsk mode là phù hợp: mọi thứ không được allow rule rõ ràng bao phủ sẽ bị tự động từ chối thay vì chờ prompt (A). acceptEdits (B) chấp thuận việc sửa file ngoài allow list, plan mode (C) không thực thi được gì, còn auto mode (D) để classifier chấp thuận hành động ngoài các rule đã định nghĩa."
+  },
+  {
+   "id": 160,
+   "question": "Trong một phiên debug dài, Claude Code báo \"Autocompact is thrashing: the context refilled to the limit...\" ngay sau khi tự động compaction hoàn tất, và ngừng thử lại. Nhóm đang yêu cầu Claude đọc toàn bộ file log production 40.000 dòng để tìm nguyên nhân gốc của sự cố ngừng dịch vụ. Cách hiệu quả nhất để khôi phục và tiếp tục điều tra là gì?",
+   "options": [
+    "Chạy /clear để bỏ cuộc hội thoại, rồi chỉ dán dòng lỗi cuối cùng từ file log vào một phiên mới.",
+    "Đặt DISABLE_AUTO_COMPACT để Claude Code ngừng tóm tắt lịch sử và giữ toàn bộ output log để tham chiếu.",
+    "Tăng CLAUDE_CODE_MAX_RETRIES để Claude Code tiếp tục thử compaction cho tới khi file log tải xong thành công.",
+    "Yêu cầu Claude đọc file log theo từng phần nhỏ hơn, chẳng hạn một khoảng dòng cụ thể, hoặc giao việc phân tích cho một subagent."
+   ],
+   "explanation": "Tình trạng thrashing đến từ một lần đọc quá lớn làm đầy lại context ngay khi vừa compaction, nên cách sửa là đọc log theo từng phần nhỏ như khoảng dòng, hoặc giao phân tích cho một subagent có context riêng (D). /clear rồi chỉ giữ một dòng lỗi (A) làm mất bằng chứng, tắt auto-compaction (B) chỉ khiến chạm giới hạn sớm hơn, còn tăng số lần thử (C) lặp lại cùng lỗi."
+  },
+  {
+   "id": 161,
+   "question": "Dự án của một nhóm dựa vào một MCP server nội bộ để tra cứu ticket. Chạy /mcp cho thấy trạng thái server là connected, nhưng Claude báo không có tool nào từ server đó và không thể tra cứu ticket. Bước tiếp theo đúng để chẩn đoán lỗi là gì?",
+   "options": [
+    "Chọn Reconnect cho server trong /mcp, và nếu số tool vẫn bằng 0, chạy claude --debug mcp để xem output stderr của server.",
+    "Sửa .mcp.json để đổi command của server từ đường dẫn tương đối sang tuyệt đối, vì đường dẫn tương đối luôn khiến không tool nào được tải.",
+    "Khởi động lại Claude Code bằng claude --safe-mode, vì server báo 0 tool khi đang connected luôn bị vô hiệu hóa trong safe mode.",
+    "Phê duyệt lại server trong /mcp, vì MCP server cấp project âm thầm ngừng trả về tool sau khi phê duyệt một lần hết hạn."
+   ],
+   "explanation": "Server hiển thị connected nhưng có 0 tool trước tiên nên được Reconnect trong /mcp; nếu số tool vẫn bằng 0, claude --debug mcp hiển thị stderr của server để thấy vì sao nó không đăng ký tool nào (A). B, C và D đều đưa ra nguyên nhân kiểu \"luôn luôn\" hoặc hết hạn âm thầm, không khớp với một server connected có 0 tool."
   }
  ]
 }

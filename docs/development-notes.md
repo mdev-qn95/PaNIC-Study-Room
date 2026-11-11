@@ -38,7 +38,7 @@ Checks: `node tests/catalog.cjs && node tests/banks.cjs && node tests/keywords.c
 ## Experience
 
 - Home: four Claude certification cards. Architect — Professional (CCAR-P) and Architect — Foundations (CCAR-F) are available; Associate Foundations and Developer Foundations remain disabled.
-- Practice: questions stay in source order: 1–125 for CCAR-P, 1–147 for CCAR-F. Answer choices shuffle when entering/revisiting a question, reloading, or clearing its answer. They remain stable while selecting answers, flagging, or toggling translation.
+- Practice: questions stay in source order: 1–161 for CCAR-P, 1–147 for CCAR-F. Answer choices shuffle when entering/revisiting a question, reloading, or clearing its answer. They remain stable while selecting answers, flagging, or toggling translation.
 - Timed mock exam: CCAR-P uses 63 questions/120 minutes; CCAR-F uses a practice preset of 60 questions/120 minutes (not an official exam specification). Questions and choices are shuffled.
 - Untimed range: inclusive start/end question IDs, from 1 through the selected bank size. Example: 5–11 includes exactly seven questions, presented in random order. Invalid or reversed ranges cannot start.
 - Practice gives immediate results; multi-answer questions are graded once the required selection count is reached. Classification rows give individual results. Mock exams hide all results until submission.
@@ -55,7 +55,7 @@ Checks: `node tests/catalog.cjs && node tests/banks.cjs && node tests/keywords.c
 `assets/data/questions.en.js` is byte-identical to the uploaded source.
 SHA-256: `428c1c94409fd90b7b7433e50477242413422a4478142e3e347b838b7148429f`.
 
-`questions.vi.js` contains all 125 translated questions, choices, classification rows and explanations. Technical terms are retained. The provided source is not independently certified as an official Anthropic exam bank.
+`questions.vi.js` contains all 161 translated questions, choices, classification rows and explanations. Technical terms are retained. The provided source is not independently certified as an official Anthropic exam bank.
 
 Shuffle arrays contain original option indices. Scoring and selected answers always refer to original IDs, never visual position. Original option letters remain with their content even after shuffling, so references such as A/B/C in the unchanged EN explanations still identify the correct options.
 
