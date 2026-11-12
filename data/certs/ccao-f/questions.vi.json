@@ -1,0 +1,680 @@
+{
+ "$schema": "../../schema/questions.schema.json",
+ "schema": 2,
+ "certification": "ccao-f",
+ "language": "vi",
+ "translates": "questions.en.json",
+ "about": "Vietnamese translation of questions.en.json, matched by id and array position.",
+ "questions": [
+  {
+   "id": 1,
+   "question": "Một nhân viên marketing gõ “viết gì đó về sản phẩm mới của chúng ta” và thất vọng vì kết quả quá chung chung. Cách viết lại nào thể hiện tốt nhất prompting hiệu quả cho một tác vụ kinh doanh?",
+   "options": [
+    "“Viết gì đó hay hơn về sản phẩm mới của chúng ta.”",
+    "“Viết một bài LinkedIn 150 từ giới thiệu ứng dụng lập lịch của chúng ta tới chủ doanh nghiệp nhỏ; giọng thân thiện, chuyên nghiệp; kết thúc bằng lời kêu gọi đăng ký danh sách chờ.”",
+    "Lặp lại “Viết về sản phẩm của chúng ta” ba lần liên tiếp để model hiểu yêu cầu là nghiêm túc.",
+    "“Bạn là copywriter giỏi nhất thế giới, hàng chục năm kinh nghiệm đoạt giải. Hãy viết gì đó về sản phẩm thể hiện nó tuyệt vời thế nào.”"
+   ],
+   "explanation": "Prompt hiệu quả cung cấp những gì model không thể đoán: sản phẩm đầu ra, độ dài, đối tượng, giọng điệu và mục tiêu. Phương án B nêu đủ cả năm, nên kết quả khớp được ý định. A thêm áp lực nhưng không thêm thông tin; C lặp lại đúng phần ngữ cảnh còn thiếu; D thêm persona nhưng vẫn thiếu đối tượng, định dạng và mục đích — những chi tiết quyết định kết quả. Ghi nhớ: prompt tốt = deliverable + độ dài + đối tượng + giọng điệu + mục tiêu."
+  },
+  {
+   "id": 2,
+   "question": "Một trưởng nhóm vận hành phải soạn báo cáo quý gồm chênh lệch ngân sách, tình trạng dự án, nhân sự và rủi ro quý tới. Một prompt yêu cầu cả tài liệu cho ra nội dung nông và không đều. Kỹ thuật nào giải quyết việc này?",
+   "options": [
+    "Yêu cầu lại cả tài liệu nhưng nhân đôi số từ để mỗi phần có đủ chỗ viết sâu",
+    "Bảo Claude cố gắng hơn ở các phần yếu",
+    "Chuyển sang chỉ dùng gạch đầu dòng để chỗ thiếu ít lộ hơn",
+    "Chia nhỏ: làm từng phần như một yêu cầu riêng, rà soát từng phần, rồi yêu cầu một bản tổng hợp nhất quán"
+   ],
+   "explanation": "Chia nhỏ tác vụ biến một yêu cầu quá tải thành chuỗi yêu cầu tập trung. Mỗi phần được chú ý đầy đủ, lỗi được phát hiện ngay ở bước phát sinh, và bản ghép cuối bắt đầu từ các phần đã kiểm tra. A cho nội dung dài hơn nhưng vẫn nông; B không phải chỉ dẫn model hành động được; C che giấu vấn đề thay vì sửa. Ghi nhớ: tài liệu nhiều phần bị nông → decomposition, review từng phần, rồi ghép."
+  },
+  {
+   "id": 3,
+   "question": "Bản nháp email khách hàng đầu tiên của Claude quá trang trọng và chôn yêu cầu chính ở đoạn cuối. Cách lặp (iterate) hiệu quả nhất là gì?",
+   "options": [
+    "Phản hồi cụ thể: “Viết ấm áp, tự nhiên hơn, và chuyển yêu cầu dời lịch lên hai câu đầu”",
+    "Gửi lại y nguyên prompt và hy vọng biến thiên tự nhiên cho bản tốt hơn",
+    "Mở hội thoại mới và gõ lại prompt ban đầu",
+    "Chấp nhận bản nháp và tự sửa tay toàn bộ, vì lặp với model hiếm khi cải thiện được gì"
+   ],
+   "explanation": "Lặp hiệu quả khi phản hồi cụ thể, hành động được: chỉ ra cái gì sai và “tốt hơn” trông thế nào. Model sẽ sửa có chủ đích thay vì sinh lại mù quáng. B và C dựa vào may rủi — cùng input thường cho cùng thiếu sót; D bỏ con đường nhanh nhất trong khi một chỉ dẫn nhắm đúng là đủ. Ghi nhớ: iterate = feedback cụ thể: sai gì + tốt hơn là gì."
+  },
+  {
+   "id": 4,
+   "question": "Một quản lý dự án muốn dùng Claude cho hai việc: brainstorm tên cho chương trình nội bộ, và soạn điều lệ (charter) chính thức của chương trình. Chiến lược prompt nên khác nhau thế nào?",
+   "options": [
+    "Hai việc dùng prompt giống hệt, vì nguyên tắc prompting là phổ quát",
+    "Brainstorm đặt luật định dạng chính xác và giới hạn chặt; charter yêu cầu sáng tạo tối đa và cho model toàn quyền về cấu trúc",
+    "Brainstorm: yêu cầu nhiều phương án đa dạng, chưa phán xét; charter: đưa cấu trúc, các mục bắt buộc, giọng điệu và ràng buộc",
+    "Nên tránh brainstorm vì model không tạo được ý tưởng mới"
+   ],
+   "explanation": "Điều chỉnh chiến lược theo loại tác vụ: tác vụ phân kỳ (brainstorm) cần số lượng, đa dạng, ràng buộc lỏng; tác vụ hội tụ (soạn văn bản chính thức) cần cấu trúc, giọng điệu và yêu cầu rõ ràng. A bỏ qua việc hai tác vụ có mục tiêu ngược nhau; B áp mỗi chiến lược vào sai tác vụ; D sai — sinh ý tưởng là một trong những thế mạnh nhất. Ghi nhớ: phân kỳ (brainstorm) = nhiều, đa dạng, lỏng; hội tụ (văn bản chính thức) = cấu trúc, ràng buộc."
+  },
+  {
+   "id": 5,
+   "question": "Một analyst dán bảng doanh số theo vùng và bảo Claude “phân tích cái này”. Câu trả lời chỉ nhắc lại các con số. Yêu cầu nào tạo ra phân tích thực sự hữu ích?",
+   "options": [
+    "“Xem lại dữ liệu và phân tích lại, lần này sâu hơn và kỹ hơn nhiều.”",
+    "“Xác định ba vùng giảm mạnh nhất so với quý trước, gợi ý giả thuyết cần điều tra, đánh dấu điểm bất thường — chúng tôi đang quyết định tập trung giữ chân khách ở đâu quý tới.”",
+    "“Phân tích bảng này đúng như một data scientist hàng đầu thế giới, với toàn bộ chuyên môn thống kê, trực giác và kinh nghiệm ngành.”",
+    "“Tóm tắt bảng này với độ dài một nửa.”"
+   ],
+   "explanation": "Prompt phân tích hiệu quả khi nêu câu hỏi cần trả lời, tiêu chí quan trọng và quyết định mà phân tích phục vụ — biến “mô tả dữ liệu” thành “giúp tôi ra quyết định”. A và C chỉ đổi cách diễn đạt mà không nói model cần tìm gì; D yêu cầu nén — ngược với phân tích. Ghi nhớ: phân tích tốt = câu hỏi cụ thể + tiêu chí + quyết định phục vụ."
+  },
+  {
+   "id": 6,
+   "question": "Một nhân viên truyền thông có báo cáo sự cố kỹ thuật chi tiết và phải báo cáo tóm tắt cho ban điều hành. Yếu tố nào trong prompt quan trọng nhất để có kết quả dùng được ngay lần đầu?",
+   "options": [
+    "Yêu cầu giữ mọi chi tiết kỹ thuật để không mất gì khi chuyển đổi",
+    "Yêu cầu output dài nhất có thể để thể hiện sự kỹ lưỡng",
+    "Yêu cầu viết bằng ngôn ngữ ban điều hành không biết để giữ bí mật chi tiết sự cố",
+    "Nêu đối tượng và nhu cầu: “cho lãnh đạo không chuyên kỹ thuật — một trang, mở đầu bằng tác động tới khách hàng và chi phí, kết thúc bằng ba quyết định cần đưa ra”"
+   ],
+   "explanation": "Đối tượng đọc là chỉ dẫn có đòn bẩy lớn nhất khi chuyển đổi nội dung. Nêu ai đọc, họ quan tâm gì và phải làm gì sẽ biến tài liệu kỹ thuật thành bản tóm tắt sẵn sàng cho quyết định. A tái tạo đúng vấn đề ban đầu (lãnh đạo ngập trong chi tiết); B nhầm độ dài với giá trị; C là biện pháp vô lý, phá mục đích của bản tóm tắt. Ghi nhớ: chuyển đổi nội dung → nêu rõ audience + nhu cầu + quyết định."
+  },
+  {
+   "id": 7,
+   "question": "HAI yếu tố nào cải thiện nhiều nhất prompt soạn thông báo gửi khách hàng? (Chọn HAI.)",
+   "options": [
+    "Cố tình để yêu cầu mơ hồ để model sáng tạo",
+    "Nêu rõ đối tượng và mục đích thông báo phải đạt",
+    "Viết toàn bộ prompt bằng chữ in hoa để nhấn mạnh",
+    "Chỉ rõ định dạng, độ dài và giọng điệu của sản phẩm đầu ra",
+    "Yêu cầu model đoán xem công ty muốn nói gì"
+   ],
+   "explanation": "Đối tượng + mục đích, và ràng buộc cụ thể về sản phẩm đầu ra là hai thành phần giúp model nhắm đúng mục tiêu và ra đúng hình dạng — khác biệt giữa văn bản chung chung và bản nháp dùng được. A và E giữ lại chính thông tin quyết định chất lượng; C chỉ thay đổi mức nhấn mạnh, không làm model hiểu hơn. Ghi nhớ: audience + purpose; format + length + tone."
+  },
+  {
+   "id": 8,
+   "question": "Một nhân viên vận hành phải biến báo cáo kiểm toán nhà cung cấp 60 trang thành bản tóm tắt một trang cho hội đồng quản trị, dùng Claude xuyên suốt. Có năm hoạt động:\n1. Đối chiếu các phát hiện đã trích xuất với báo cáo gốc để kiểm tra độ chính xác\n2. Upload báo cáo và để Claude trích các phát hiện chính cho từng mảng kiểm toán\n3. Xác định đối tượng, mục đích và cấu trúc bắt buộc của bản tóm tắt\n4. Để Claude soạn bản tóm tắt một trang từ các phát hiện đã kiểm tra\n5. Tinh chỉnh giọng điệu và trọng tâm bằng phản hồi nhắm đúng chỗ\nThứ tự đúng là gì?",
+   "options": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "explanation": "Yêu cầu trước, kiểm chứng trước khi phụ thuộc: xác định mục đích (3) để việc trích xuất có mục tiêu, trích xuất (2), kiểm tra kết quả trung gian (1) trước khi xây tiếp, soạn từ phát hiện đã kiểm tra (4), tinh chỉnh sau cùng (5). A trích xuất khi chưa có mục đích; C soạn từ dữ liệu chưa kiểm tra, để lỗi chảy xuống bản cho hội đồng; D đẩy cả kiểm tra độ chính xác và xác định mục đích về sau — ngược cả hai. Ghi nhớ: thứ tự: mục đích → trích xuất → kiểm chứng → soạn → tinh chỉnh."
+  },
+  {
+   "id": 9,
+   "question": "Claude tạo bản tóm tắt thị trường có một số liệu chính xác — “ngành tăng trưởng 14,2% năm 2025, theo báo cáo ngành thường niên” — và số liệu này sẽ xuất hiện trong tài liệu trình hội đồng quản trị. Cần làm gì trước khi dùng?",
+   "options": [
+    "Không cần — con số chính xác và nguồn được nêu tên cho thấy khẳng định đủ tin cậy",
+    "Hỏi Claude có chắc không, nếu xác nhận thì dùng",
+    "Đối chiếu con số với báo cáo ngành thật hoặc nguồn có thẩm quyền khác trước khi đưa vào tài liệu",
+    "Làm tròn thành 14% để sai số nhỏ hơn"
+   ],
+   "explanation": "Số liệu trông chính xác kèm trích dẫn có tên chính là dáng vẻ điển hình của hallucination. Mọi khẳng định thực tế đưa vào tài liệu quan trọng phải được kiểm tra với nguồn gốc có thẩm quyền. A nhầm độ cụ thể với độ tin cậy — chi tiết bịa thường rất cụ thể; B để nguồn có thể sai tự chấm mình; D thu nhỏ sai số mà không kiểm tra có sai hay không. Ghi nhớ: số liệu + trích dẫn cụ thể → kiểm chứng với nguồn gốc."
+  },
+  {
+   "id": 10,
+   "question": "Một nhân viên nhờ Claude tóm tắt bảng tính. Phần diễn giải nói “nhân sự tăng ở mọi vùng”, nhưng bảng Claude tạo kèm lại cho thấy một vùng giảm. Điều này báo hiệu gì và nên làm gì?",
+   "options": [
+    "Mâu thuẫn nội tại — cảnh báo độ tin cậy. Đối chiếu cả hai với bảng tính gốc và sửa trước khi dùng",
+    "Tin phần diễn giải, vì văn xuôi phản ánh cách đọc tổng thể kỹ hơn bảng",
+    "Tin bảng, vì con số luôn đáng tin hơn văn xuôi",
+    "Lấy trung bình hai khẳng định rồi bỏ qua"
+   ],
+   "explanation": "Khi output tự mâu thuẫn, ít nhất một phần sai — và chỉ dữ liệu gốc mới phân xử được. Mâu thuẫn nội tại là tín hiệu hữu ích nhất cho thấy output cần sửa. B và C chọn bên thắng tuỳ tiện trong khi bên nào cũng có thể sai; D không phải thao tác có nghĩa với hai khẳng định trái nhau. Ghi nhớ: output tự mâu thuẫn → kiểm với dữ liệu gốc."
+  },
+  {
+   "id": 11,
+   "question": "Phòng nhân sự nhờ Claude soạn tin tuyển dụng, kết quả mô tả ứng viên lý tưởng là “trẻ, năng động, digital native”. Phản ứng phù hợp là gì?",
+   "options": [
+    "Đăng luôn — văn bản do AI tạo vốn trung lập",
+    "Nhờ Claude viết hấp dẫn hơn",
+    "Giữ nguyên câu chữ nhưng thêm tuyên bố nổi bật rằng công ty tuyển dụng bình đẳng mọi lứa tuổi, rồi đăng",
+    "Nhận ra cách diễn đạt thiên lệch tuổi tác, sửa tin để mô tả kỹ năng và năng lực, và đưa việc rà soát thiên lệch nội dung HR do AI soạn thành thông lệ"
+   ],
+   "explanation": "Model có thể tái tạo thiên lệch có sẵn trong ngôn ngữ thường ngày, và nội dung tuyển dụng là nơi điều này có hệ quả pháp lý và đạo đức. Đánh giá thiên lệch và sửa tận gốc cách diễn đạt là một phần việc review. A sai — văn bản sinh ra kế thừa thiên lệch từ ngôn ngữ; B đánh bóng vấn đề; C mâu thuẫn với chính câu chữ của tin thay vì sửa nó. Ghi nhớ: nội dung HR → rà soát bias, sửa tận gốc."
+  },
+  {
+   "id": 12,
+   "question": "Claude soạn điều khoản hợp đồng nhà cung cấp về giới hạn trách nhiệm. Bản nháp đọc trôi chảy và nhân viên không thấy gì sai. Điều gì quyết định bước tiếp theo?",
+   "options": [
+    "Gửi nhà cung cấp — không thấy sai thì là ổn",
+    "Mức độ hệ trọng: văn bản ràng buộc pháp lý phải được luật sư đủ chuyên môn rà soát trước khi dùng, dù bản nháp trông chỉn chu đến đâu",
+    "Nhờ Claude tự kiểm tra lại điều khoản theo các lỗi hợp đồng thường gặp và tin vào xác nhận của nó",
+    "Rút ngắn điều khoản để ít chỗ có thể sai hơn"
+   ],
+   "explanation": "Quyết định khi nào cần chuyên gia rà soát dựa trên hệ quả, không dựa trên độ tự tin. Văn bản hợp đồng tạo nghĩa vụ có hiệu lực pháp lý — loại này phải qua luật sư; “đọc trôi chảy” không thay thế được. A nhầm sự trôi chảy với tính đúng đắn pháp lý — nhân viên không đủ chuyên môn để thấy điều còn thiếu; C để người soạn tự chấm bài mình; D giảm số chữ, không giảm rủi ro. Ghi nhớ: văn bản pháp lý → qualified human review, bất kể trông ổn."
+  },
+  {
+   "id": 13,
+   "question": "Một nhân viên muốn kiểm chứng các khẳng định chính trong bản tóm tắt nghiên cứu do Claude tạo. Cách nào là kiểm chứng thực sự?",
+   "options": [
+    "Hỏi Claude xác nhận bản tóm tắt chính xác",
+    "Sinh lại bản tóm tắt lần hai và xem có nói giống lần đầu không",
+    "Kiểm tra từng khẳng định quan trọng với nguồn độc lập, có thẩm quyền — ấn phẩm chính thức hoặc dữ liệu gốc",
+    "Đọc kỹ để tìm lỗi chính tả và ngữ pháp"
+   ],
+   "explanation": "Kiểm chứng là so với “sự thật nền” mà model không tạo ra. Nguồn độc lập có thẩm quyền chính là sự thật nền đó; không gì sinh ra trong cùng hội thoại đóng vai trò này được. A để tác giả của khẳng định làm trọng tài; B kiểm tra tính nhất quán chứ không kiểm tra sự thật — model có thể lặp cùng một lỗi; D kiểm tra hình thức, không liên quan độ chính xác. Ghi nhớ: validation = so với nguồn độc lập bên ngoài model."
+  },
+  {
+   "id": 14,
+   "question": "Claude tóm tắt tài liệu chính sách 30 trang thành một trang. Trước khi phát hành, nhân viên muốn xác nhận bản tóm tắt đầy đủ chứ không chỉ chính xác. Cách kiểm tra thực tế là gì?",
+   "options": [
+    "Xác nhận đúng một trang như yêu cầu, vì yêu cầu độ dài là thứ đã được đặt ra",
+    "So độ bao phủ với nguồn — kiểm tra các tiêu đề mục và điều khoản chính đều có mặt hoặc được lược bỏ có chủ đích",
+    "Hỏi Claude có bỏ sót gì không",
+    "Đếm số từ của tóm tắt và tài liệu gốc, kiểm tra tỷ lệ nén đều giữa các mục"
+   ],
+   "explanation": "Tính đầy đủ được kiểm theo cấu trúc của nguồn: đi qua các tiêu đề và điều khoản quan trọng, xác nhận bản tóm tắt có đề cập. Chỗ bị bỏ sót không thể thấy trong bản tóm tắt — phải nhìn vào nơi nó bắt nguồn. A và D đo độ dài, không đo độ bao phủ; C bảo người tóm tắt tự nhận ra điều nó đã không nhận ra. Ghi nhớ: completeness = đối chiếu cấu trúc tài liệu gốc."
+  },
+  {
+   "id": 15,
+   "question": "Claude tạo bản phân tích chính xác nhưng dày đặc thuật ngữ. Giờ phải gửi cho ban tư vấn khách hàng gồm người không chuyên. Chuyển đổi output tốt trông thế nào?",
+   "options": [
+    "Nhờ Claude viết lại cho ban tư vấn — ngôn ngữ dễ hiểu, giải thích thuật ngữ, mở đầu bằng tác động tới khách hàng — rồi rà soát độ chính xác của bản viết lại",
+    "Gửi bản gốc — chỉ cần chính xác",
+    "Xoá các phần kỹ thuật để khỏi phải giải thích",
+    "Giữ nguyên bản dày đặc và thêm phụ lục thuật ngữ đầy đủ để người đọc tra"
+   ],
+   "explanation": "Chỉnh sửa cho đúng đối tượng là kỹ năng đánh giá cốt lõi: giữ nội dung, đổi hình thức cho người đọc — sau đó kiểm tra lại độ chính xác, vì viết lại có thể sinh lỗi mới. B gửi thứ người đọc không dùng được; C bỏ nội dung thay vì chuyển ngữ; D bắt người đọc tự chuyển đổi. Ghi nhớ: adapt cho audience → viết lại + kiểm tra lại độ chính xác."
+  },
+  {
+   "id": 16,
+   "question": "Trong một phiên làm việc, nhân viên nhận ba thứ từ Claude: một câu trả lời nhanh, bảng so sánh bốn nhà cung cấp theo sáu tiêu chí, và bản tóm tắt một trang chỉn chu mà đồng nghiệp sẽ sửa và dùng lại. Định dạng output nào phù hợp?",
+   "options": [
+    "Tất cả dạng artifact, vì artifact là định dạng cao cấp",
+    "Tất cả inline để giữ hội thoại ở một chỗ",
+    "Bản tóm tắt inline, bảng so sánh là một tin nhắn riêng, câu trả lời nhanh là một artifact riêng",
+    "Câu trả lời nhanh inline; so sánh nhà cung cấp dạng bảng có cấu trúc; bản tóm tắt dùng lại dạng artifact để tinh chỉnh và chia sẻ"
+   ],
+   "explanation": "Chọn định dạng theo cách dùng: câu trả lời tạm thời để inline, dữ liệu so sánh cần cấu trúc, nội dung sẽ được lặp, chỉnh và dùng lại thuộc về artifact. A và B ép một định dạng cho ba việc khác nhau; C gán mỗi output vào định dạng kém phù hợp nhất. Ghi nhớ: inline = trả lời nhanh; bảng = so sánh; artifact = tài liệu sẽ sửa/dùng lại."
+  },
+  {
+   "id": 17,
+   "question": "Nhân viên có hai bản thư xin lỗi khách hàng (nội dung nhạy cảm) do Claude soạn và phải chọn một. Cách so sánh vững chắc nhất là gì?",
+   "options": [
+    "Chọn bản dài hơn vì bao quát hơn",
+    "Xác định thư phải đạt gì — thừa nhận sai sót, nhận trách nhiệm, nêu biện pháp khắc phục, đúng giọng công ty — rồi đánh giá cả hai bản theo các tiêu chí đó",
+    "Nhờ Claude tự so hai bản, giải thích bản nào tốt hơn, rồi gửi bản model chọn",
+    "Gộp nguyên cả hai bản để không mất gì"
+   ],
+   "explanation": "So sánh output là việc theo tiêu chí: nêu thành công trông thế nào, rồi đánh giá cả hai ứng viên theo đó. Claude có thể giúp phê bình theo tiêu chí, nhưng người chịu trách nhiệm ra quyết định với văn bản nhạy cảm. A dùng độ dài làm thước đo chất lượng; C giao cho model một phán xét mà nhân viên phải chịu trách nhiệm; D tăng gấp đôi độ dài và trộn hai giọng thành không giọng nào. Ghi nhớ: so sánh output → tiêu chí trước, người quyết định."
+  },
+  {
+   "id": 18,
+   "question": "Sau một cuộc hội thoại nghiên cứu dài, các phát hiện hữu ích nằm rải rác trong hàng chục tin nhắn lẫn với các hướng đi ngõ cụt. Tuần sau ba đồng nghiệp cần dùng. Nên làm gì?",
+   "options": [
+    "Chuyển toàn bộ transcript cho ba đồng nghiệp tự đọc và tìm phần hữu ích",
+    "Dựa vào trí nhớ và hỏi lại Claude tuần sau",
+    "Chọn lọc: để Claude gom các phát hiện đã kiểm chứng thành một tài liệu có tổ chức, rà soát và sửa, rồi chia sẻ tài liệu đó",
+    "Chép từng tin nhắn vào bảng tính, mỗi dòng một tin"
+   ],
+   "explanation": "Tổ chức và chọn lọc là bước biến hội thoại thành sản phẩm công việc: gom những gì đã qua kiểm chứng, sắp xếp cho người đọc, kiểm tra một lần, chia sẻ một phiên bản chuẩn duy nhất. A gửi cả mớ lộn xộn kèm ngõ cụt; B đánh cược vào việc tạo lại thứ đã có; D giữ nguyên sự hỗn độn trong một vật chứa khác. Ghi nhớ: hội thoại dài → consolidate thành một tài liệu đã review."
+  },
+  {
+   "id": 19,
+   "question": "Nhân viên hỏi Claude cách cấu hình một thiết lập trong công cụ chi phí nội bộ do công ty tự xây. Claude tự tin đưa hướng dẫn từng bước. Nhân viên nên nhận ra điều gì?",
+   "options": [
+    "Claude không thể biết bên trong công cụ riêng của công ty; các bước tự tin kia có thể là bịa nghe hợp lý và cần đối chiếu tài liệu nội bộ",
+    "Sự tự tin cho thấy Claude thực sự hiểu công cụ",
+    "Claude nhìn thấy màn hình và đang mô tả công cụ thật",
+    "Công cụ nội bộ tuân theo chuẩn thiết kế chung nên hướng dẫn chung đáng tin cho mọi phần mềm công ty"
+   ],
+   "explanation": "Một kỹ năng đánh giá then chốt là tự hỏi “model có thể thực sự biết điều này không?”. Chi tiết riêng, nội bộ nằm ngoài kiến thức của mọi model — hướng dẫn trôi chảy về chúng chỉ là phỏng đoán theo khuôn mẫu khoác giọng tự tin. B nhầm sự trôi chảy với kiến thức; C gán một năng lực không có trong chat; D là mong muốn — công cụ tự xây khác nhau đúng ở những chi tiết quan trọng. Ghi nhớ: “model có thể biết điều này không?” — thông tin nội bộ thì không."
+  },
+  {
+   "id": 20,
+   "question": "HAI đặc điểm nào của output cho thấy rõ nhất cần kiểm chứng thêm trước khi dùng? (Chọn HAI.)",
+   "options": [
+    "Câu trả lời trình bày đẹp, có tiêu đề, gạch đầu dòng, cấu trúc chuyên nghiệp",
+    "Câu trả lời có số liệu, trích dẫn hoặc nguồn cụ thể sẽ được dựa vào",
+    "Câu trả lời dài hơn hai đoạn, cho thấy model phải làm nhiều hơn",
+    "Câu trả lời có giọng ấm áp, chuyên nghiệp",
+    "Câu trả lời khẳng định về sự kiện rất gần đây hoặc kiến thức chuyên sâu mà nhân viên không tự xác nhận được"
+   ],
+   "explanation": "Rủi ro tập trung ở những khẳng định cụ thể, có vai trò quyết định và vượt khả năng tự kiểm tra của người review: số liệu, trích dẫn, nguồn chính xác, và nhận định về sự kiện gần đây hoặc lĩnh vực chuyên sâu. A, C, D là đặc điểm hình thức — không mang thông tin gì về độ chính xác. Ghi nhớ: cần kiểm chứng: số liệu/trích dẫn cụ thể + sự kiện mới/chuyên sâu."
+  },
+  {
+   "id": 21,
+   "question": "Một nhóm đang xây quy trình kiểm chứng chuẩn cho công việc có Claude hỗ trợ. HAI thực hành nào thuộc về quy trình đó? (Chọn HAI.)",
+   "options": [
+    "Kiểm tra khẳng định quan trọng với nguồn bên ngoài có thẩm quyền trước khi công bố",
+    "Nhờ Claude tự chấm độ tự tin và coi điểm cao ổn định là đủ kiểm chứng",
+    "Sinh lại mỗi output hai lần, chấp nhận nếu khớp nhau",
+    "Chuyển nội dung chuyên ngành (pháp lý, y tế, tài chính) cho người có chuyên môn rà soát trước khi dùng",
+    "Coi output qua kiểm tra chính tả là đã kiểm chứng"
+   ],
+   "explanation": "Hai trụ cột của kiểm chứng: nguồn độc lập cho khẳng định thực tế, và chuyên gia con người cho nội dung chuyên ngành có hệ quả. Cả hai đều so output với thứ nằm ngoài model. B và C tái sử dụng chính tín hiệu của model — tự tin hay tự nhất quán không phải bằng chứng; E kiểm chính tả, vốn không phải rủi ro. Ghi nhớ: validation chuẩn = nguồn ngoài + chuyên gia con người."
+  },
+  {
+   "id": 22,
+   "question": "Hằng tháng, một nhân viên vận hành lập bảng điểm nhà cung cấp với cùng 12 tài liệu tham chiếu, cùng quy tắc định dạng và cùng thang đánh giá — hiện mỗi lần đều upload lại và giải thích lại. Tính năng nào loại bỏ công sức này?",
+   "options": [
+    "Research mode để Claude tự tìm tài liệu trên web",
+    "Tin nhắn đầu tiên dài hơn mỗi tháng chứa mọi thứ",
+    "Một Claude Project chứa tài liệu tham chiếu làm knowledge, quy tắc và thang đánh giá làm instructions, để mỗi chat hằng tháng bắt đầu với đủ trang bị",
+    "Đầu mỗi tháng nhờ Claude nhớ tài liệu và quy tắc từ hội thoại tháng trước rồi làm tiếp"
+   ],
+   "explanation": "Project dành cho công việc lặp lại có nền tảng ổn định: knowledge và instructions cấu hình một lần, áp dụng cho mọi hội thoại trong project, loại bỏ việc thiết lập lặp lại. A tìm tài liệu riêng trên web công khai; B tự dựng lại thiết lập mỗi tháng — chính là vấn đề; D dựa vào trí nhớ xuyên chat, không nên giả định cho quy trình cần kiểm soát. Ghi nhớ: công việc lặp lại cùng tài liệu + quy tắc → Project (knowledge + instructions)."
+  },
+  {
+   "id": 23,
+   "question": "Một nhân viên chiến lược cần bức tranh toàn diện về một thị trường: động thái đối thủ, xu hướng giá, thay đổi quy định gần đây, lấy từ nhiều nguồn hiện hành có trích dẫn. Cách nào phù hợp?",
+   "options": [
+    "Hỏi nhanh trong chat không dùng công cụ, dựa vào kiến thức huấn luyện",
+    "Dùng tính năng research — tìm kiếm và tổng hợp nhiều nguồn hiện hành thành báo cáo có trích dẫn",
+    "Yêu cầu trả lời bằng thơ haiku cho súc tích",
+    "Upload báo cáo thị trường năm ngoái và nhờ Claude suy đoán những gì có lẽ đã thay đổi"
+   ],
+   "explanation": "Chọn tính năng theo độ sâu cần: nghiên cứu nhiều nguồn, cập nhật, có trích dẫn là việc của research — chat thường không thấy được diễn biến mới hay trích dẫn nguồn trực tiếp. A cho câu trả lời có thể lỗi thời, không nguồn; C là trò đùa định dạng; D bắt model bịa ra chính thông tin cần nghiên cứu. Ghi nhớ: nhiều nguồn + hiện hành + trích dẫn → research."
+  },
+  {
+   "id": 24,
+   "question": "Nhân viên đang soạn đề xuất cho khách với Claude và dự kiến sửa nhiều vòng — tái cấu trúc, siết câu chữ, chỉnh giọng — trước khi chia sẻ với đồng nghiệp. Cách làm nào phù hợp nhất?",
+   "options": [
+    "Mỗi lần sửa dán thành khối mới trong chat và cuộn lên so sánh",
+    "Gõ lại toàn bộ đề xuất trong mỗi tin nhắn yêu cầu sửa",
+    "Mỗi đoạn một hội thoại riêng",
+    "Soạn đề xuất dạng artifact — một tài liệu duy nhất được cập nhật, rà soát và cuối cùng chia sẻ"
+   ],
+   "explanation": "Artifact là nơi phù hợp cho nội dung lớn đang lặp sửa: một phiên bản chuẩn được sửa trực tiếp, dễ review như tài liệu và dễ bàn giao. A chôn các phiên bản trong lịch sử cuộn, không có nguồn chuẩn; B lặp tay việc artifact làm sẵn; C chia một tài liệu ra nhiều ngữ cảnh rời rạc. Ghi nhớ: tài liệu sửa nhiều vòng → artifact."
+  },
+  {
+   "id": 25,
+   "question": "Hôm nay nhân viên có hai việc: (1) tổng hợp tinh tế ba báo cáo phân tích mâu thuẫn nhau thành khuyến nghị chiến lược, (2) định dạng lại 200 địa chỉ theo mẫu chuẩn. Chọn model nên khác nhau thế nào?",
+   "options": [
+    "Model mạnh nhất cho việc tổng hợp, nơi chất lượng suy luận quyết định; model nhanh, rẻ cho việc định dạng máy móc",
+    "Dùng model nhanh nhất cho cả hai, vì tốc độ luôn thắng",
+    "Dùng model mạnh nhất cho cả hai, vì chất lượng luôn thắng",
+    "Model nhanh cho tổng hợp, model mạnh nhất cho định dạng địa chỉ, để chi phí cân bằng trong ngày"
+   ],
+   "explanation": "Các tầng model tồn tại để ghép đúng việc với nhu cầu: phán đoán phức tạp xứng đáng chi phí và độ trễ của model mạnh nhất; biến đổi thường quy thì không — model nhỏ làm nhanh, rẻ hơn với cùng chất lượng. B thiếu sức cho việc mà suy luận là sản phẩm; C trả quá tay cho việc model nhẹ làm như nhau; D đảo ngược logic ở cả hai. Ghi nhớ: suy luận phức tạp → model mạnh; việc máy móc → model nhanh, rẻ."
+  },
+  {
+   "id": 26,
+   "question": "Một nhóm hỗ trợ soạn hàng trăm câu trả lời ngắn, thường quy mỗi ngày. Tốc độ và chi phí mỗi câu trả lời là động lực kinh doanh; không cần suy luận phức tạp. Tầng model nào phù hợp, và cái gì xác nhận lựa chọn?",
+   "options": [
+    "Tầng mạnh và đắt nhất — mọi thứ gửi khách đều xứng đáng năng lực tối đa, dù câu trả lời đơn giản",
+    "Luân phiên tầng model theo ngày trong tuần để dàn chi phí",
+    "Tầng nhanh, chi phí thấp (như lớp Haiku) phù hợp khối lượng lớn — xác nhận bằng kiểm tra mẫu một số bản nháp trước khi chuẩn hoá",
+    "Tầng nào dùng gần nhất thì dùng tiếp, cho nhất quán"
+   ],
+   "explanation": "Đây là hồ sơ điển hình “khối lượng lớn, độ phức tạp thấp” cho tầng nhanh. Tính chuyên nghiệp nằm ở bước kiểm chứng: lấy mẫu kiểm tra chất lượng rồi mới cam kết. A trả phí cao cho năng lực không dùng tới, với độ trễ khối lượng công việc không chịu được; B và D không phải logic lựa chọn. Ghi nhớ: khối lượng lớn, đơn giản → Haiku-class + kiểm tra mẫu."
+  },
+  {
+   "id": 27,
+   "question": "Giữa một cuộc hội thoại lập kế hoạch dài, một số quyết định quan trọng đã được đưa ra và sẽ cần cho công việc trong các tuần tới. Cách đúng để lưu giữ lâu dài các quyết định này là gì?",
+   "options": [
+    "Tin rằng Claude sẽ nhớ khi được hỏi ở các chat sau",
+    "Lưu có chủ đích: để Claude tạo bản tóm tắt quyết định, kiểm tra lại, rồi lưu ở nơi bền vững — như knowledge của Project",
+    "Để hội thoại mở mãi trong một tab trình duyệt và coi đó là nơi lưu trữ chính thức của nhóm",
+    "Làm lại toàn bộ hội thoại mỗi khi cần các quyết định"
+   ],
+   "explanation": "Quản lý trí nhớ là biết cái gì được giữ lại và cái gì không — rồi hành động: kết quả quan trọng được ghi lại, kiểm tra và lưu ở nơi công việc sau này thực sự tìm thấy. A giả định khả năng nhớ không nên dựa vào cho quy trình nhiều tuần; C biến một tab trình duyệt thành điểm lỗi duy nhất; D trả lại toàn bộ chi phí mỗi lần. Ghi nhớ: quyết định quan trọng → tóm tắt, kiểm tra, lưu vào Project knowledge."
+  },
+  {
+   "id": 28,
+   "question": "HAI tình huống nào rõ ràng nhất cần tạo Claude Project thay vì dùng chat riêng lẻ? (Chọn HAI.)",
+   "options": [
+    "Tác vụ lặp lại mà mọi hội thoại cần dùng cùng tài liệu tham chiếu và chỉ dẫn",
+    "Một câu hỏi đơn lẻ cần trả lời nhanh",
+    "Làm model phản hồi nhanh hơn rõ rệt nhờ có không gian làm việc riêng",
+    "Một nhóm muốn hành vi nhất quán — ngữ cảnh, giọng điệu, quy tắc chung — trong hội thoại của mọi người",
+    "Xoá bỏ hoàn toàn giới hạn ngữ cảnh nhờ có chỗ lưu lịch sử hội thoại không giới hạn"
+   ],
+   "explanation": "Project phát huy khi ngữ cảnh ổn định và được dùng lại: công việc lặp lại của cá nhân trên nền cố định, và luồng công việc nhóm cần mọi hội thoại dựa trên cùng knowledge và instructions. B không cần thiết lập gì; C và E gán cho Project năng lực không có — Project tổ chức ngữ cảnh, không tăng tốc model hay bỏ giới hạn ngữ cảnh. Ghi nhớ: Project = ngữ cảnh lặp lại / dùng chung cho nhóm; không tăng tốc, không bỏ giới hạn context."
+  },
+  {
+   "id": 29,
+   "question": "Một business analyst có 40 trang ghi chép phỏng vấn stakeholder thô cho dự án intranet mới. Claude hỗ trợ giai đoạn phân tích yêu cầu tốt nhất bằng cách nào?",
+   "options": [
+    "Để Claude phân tích và tự quyết định yêu cầu cuối cùng, khỏi phải hỏi lại stakeholder",
+    "Để Claude sắp xếp ghi chép theo chủ đề, trích nhu cầu và vấn đề, soạn danh sách yêu cầu có cấu trúc để analyst xác nhận lại với stakeholder",
+    "Bỏ qua ghi chép và hỏi Claude intranet thường cần gì",
+    "Chỉ dùng Claude sửa ngữ pháp ghi chép"
+   ],
+   "explanation": "Claude mạnh ở phần giữa tốn công của việc phân tích yêu cầu: cấu trúc hoá dữ liệu định tính thô thành chủ đề và yêu cầu ứng viên. Analyst giữ các bước phán đoán — xác nhận và ưu tiên với người sở hữu nhu cầu. A loại stakeholder khỏi quyết định về chính nhu cầu của họ; C thay điều stakeholder thực sự nói bằng khuôn mẫu chung; D dùng công cụ tổng hợp như trình sửa chính tả. Ghi nhớ: Claude cấu trúc hoá + soạn nháp; con người xác nhận với stakeholder."
+  },
+  {
+   "id": 30,
+   "question": "Một quản lý dự án bắt đầu dự án chuyển văn phòng và muốn đi từ trang trắng tới một kế hoạch đáng tin. Cách dùng Claude hiệu quả ở giai đoạn này là gì?",
+   "options": [
+    "Yêu cầu Claude đưa kế hoạch cuối cùng đã duyệt và phát hành không chỉnh sửa",
+    "Tránh dùng Claude vì lập kế hoạch chỉ cần trực giác con người",
+    "Chỉ dùng Claude sau khi nhóm làm xong kế hoạch, để biến thành slide trình bày",
+    "Nhờ Claude soạn kế hoạch bản đầu — các luồng công việc, trình tự, rủi ro, stakeholder — rồi tinh chỉnh với hiểu biết về tổ chức và ngân sách thực tế"
+   ],
+   "explanation": "Hỗ trợ nghiên cứu và lập kế hoạch nghĩa là dùng Claude vượt qua trang trắng: một bản nháp có cấu trúc mà ngữ cảnh của con người sửa và hoàn thiện. Bản nháp tăng tốc; hiểu biết của quản lý quyết định. A phát hành kế hoạch chưa từng đối chiếu thực tế tổ chức; B bỏ lỡ hàng giờ tăng tốc vì nguyên tắc; C chỉ dùng Claude để trang trí sau khi việc khó đã xong. Ghi nhớ: trang trắng → Claude soạn bản đầu, con người tinh chỉnh."
+  },
+  {
+   "id": 31,
+   "question": "Nhóm vận hành nghi quy trình duyệt hoá đơn kém hiệu quả nhưng không chỉ ra được chỗ nào. Claude hỗ trợ tối ưu quy trình thế nào?",
+   "options": [
+    "Mô tả quy trình từng bước, nhờ Claude chỉ ra điểm nghẽn khả dĩ, bước duyệt thừa và câu hỏi cần điều tra, rồi kiểm chứng với dữ liệu thật",
+    "Để Claude tự duyệt hoá đơn từ nay",
+    "Nhờ Claude viết thư truyền cảm hứng về hiệu quả",
+    "Bỏ ngay quy trình hiện tại và thay bằng quy trình Claude mô tả là best practice của ngành"
+   ],
+   "explanation": "Claude là đối tác phân tích tốt cho việc cải tiến quy trình: soi một quy trình được mô tả, phát hiện dấu hiệu bất ổn về cấu trúc, đưa ra giả thuyết. Kỷ luật là coi đó là giả thuyết cần kiểm chứng bằng dữ liệu, không phải kết luận. B nhảy từ phân tích sang tự thực thi một kiểm soát tài chính không giám sát; C là hình thức; D thay quy trình chưa được chẩn đoán bằng khuôn mẫu chung không có bằng chứng. Ghi nhớ: Claude đưa giả thuyết điểm nghẽn → kiểm chứng bằng dữ liệu thật."
+  },
+  {
+   "id": 32,
+   "question": "Quy trình của nhóm nội dung: nghiên cứu → dàn ý → bản nháp đầu → chuyên gia rà soát → xuất bản. Bản nháp đầu là điểm nghẽn kinh niên; khâu chuyên gia rà soát chạy tốt. Nên tích hợp Claude thế nào?",
+   "options": [
+    "Thay toàn bộ quy trình, kể cả khâu chuyên gia rà soát, bằng một bước Claude duy nhất",
+    "Đưa Claude vào khâu xuất bản vì đó là bước cuối",
+    "Tăng cường đúng điểm nghẽn: dùng Claude tạo bản nháp đầu có cấu trúc từ dàn ý, giữ nguyên định hướng nghiên cứu và khâu chuyên gia rà soát",
+    "Dùng Claude đo thời gian từng khâu chính xác hơn"
+   ],
+   "explanation": "Tích hợp tốt là “phẫu thuật” đúng chỗ: nhắm Claude vào khâu đang thực sự giới hạn năng suất và giữ nguyên các khâu đang chạy tốt — nhất là cổng kiểm soát chất lượng của con người. Quy trình nhanh hơn mà không rủi ro hơn. A bỏ chính lớp bảo vệ làm output đáng tin; B tối ưu khâu không phải vấn đề; D đo điểm nghẽn thay vì giải toả. Ghi nhớ: tích hợp = augment đúng điểm nghẽn, giữ human review."
+  },
+  {
+   "id": 33,
+   "question": "Một trưởng nhóm muốn tích hợp Claude vào quy trình báo cáo khách hàng hằng tuần. Có năm hoạt động:\n1. Mở rộng cách làm cho cả nhóm thành quy trình chuẩn\n2. Vẽ quy trình hiện tại và đo baseline thời gian mỗi khâu\n3. Thí điểm Claude ở khâu đã chọn trong vài chu kỳ báo cáo\n4. Chọn khâu Claude tạo giá trị nhiều nhất với rủi ro thấp nhất\n5. Đánh giá kết quả thí điểm so với baseline\nThứ tự đúng là gì?",
+   "options": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "explanation": "Hiểu trước khi thay đổi, chứng minh trước khi mở rộng: vẽ và đo baseline (2), chọn khâu dựa trên bằng chứng (4), thí điểm (3), đánh giá so với baseline (5), rồi mới chuẩn hoá (1). Baseline ở bước 2 làm cho bước đánh giá có ý nghĩa. A chọn khâu trước khi hiểu quy trình, baseline muộn không đo được thay đổi; B thí điểm trước khi biết Claude nên đặt ở đâu; C mở rộng cả nhóm trước khi đánh giá thí điểm thành công hay không. Ghi nhớ: thứ tự: baseline → chọn khâu → pilot → đánh giá → mở rộng."
+  },
+  {
+   "id": 34,
+   "question": "Tuần làm việc điển hình của một nhân viên tri thức gồm: phân loại hộp thư chung theo nhóm hành động, đàm phán điều khoản hợp đồng trong họp với nhà cung cấp, tổng hợp cập nhật dự án thành báo cáo tuần, duyệt thanh toán hoá đơn, và kèm cặp đồng nghiệp mới. HAI phần nào là ứng viên tốt nhất để tích hợp Claude hỗ trợ hằng ngày? (Chọn HAI.)",
+   "options": [
+    "Phân loại hộp thư: Claude soạn phân loại và đề xuất hành động, người làm rà soát và xác nhận",
+    "Đàm phán nhà cung cấp: Claude dự họp và đàm phán điều khoản",
+    "Báo cáo tình hình: Claude soạn từ các cập nhật dự án, người làm rà soát và chỉnh sửa",
+    "Duyệt hoá đơn: Claude tự rà soát và duyệt thanh toán mỗi tuần, bỏ hoàn toàn điểm nghẽn duyệt",
+    "Kèm cặp: Claude thay các buổi 1-1 bằng lời khuyên nghề nghiệp được sinh ra"
+   ],
+   "explanation": "Công việc thường xuyên, nặng về ngôn ngữ, có người kiểm tra kết quả là nơi Claude tích hợp tốt: nháp phân loại và nháp báo cáo là tác vụ văn bản khối lượng lớn, dễ kiểm tra, người làm giữ phán quyết cuối. B và E là công việc quan hệ — đàm phán và kèm cặp cần sự hiện diện, niềm tin và trách nhiệm của con người; D giao quyết định kiểm soát tài chính tự động cho công cụ — sai cả về rủi ro lẫn giám sát. Ghi nhớ: ứng viên tốt = việc văn bản thường xuyên, dễ kiểm tra, có người review."
+  },
+  {
+   "id": 35,
+   "question": "Sau thí điểm thành công dùng Claude soạn đề xuất, nhân viên phải trình bày kết quả cho ban lãnh đạo đang hoài nghi. Cách trình bày nào đúng?",
+   "options": [
+    "Báo cáo kết quả cụ thể — thời gian soạn giảm từ 6 giờ xuống 2, chất lượng giữ nguyên theo điểm người rà soát — kèm các hạn chế một cách trung thực",
+    "Khẳng định công cụ hoàn hảo để nhanh có ngân sách",
+    "Chỉ trình bày hạn chế để tỏ ra thận trọng",
+    "Cố tình không đưa số liệu cụ thể để lãnh đạo không có gì để chất vấn"
+   ],
+   "explanation": "Truyền đạt giá trị = bằng chứng + trung thực: lợi ích đo được và hạn chế nói rõ. Sự kết hợp này tạo niềm tin bền vững — và bảo vệ sáng kiến khi hạn chế lộ ra. B tạo kỳ vọng thực tế sẽ phá vỡ; C chôn kết quả thật dưới sự thận trọng giả tạo; D đổi uy tín lấy sự không thể kiểm chứng. Ghi nhớ: trình bày giá trị = số liệu cụ thể + hạn chế trung thực."
+  },
+  {
+   "id": 36,
+   "question": "Nhóm của nhân viên rất thích quy trình phân loại có Claude hỗ trợ và giờ muốn nó tự chạy: kết nối CRM qua API, tự kích hoạt với mỗi ticket mới, không ai phải mở chat. Nhân viên nên làm gì?",
+   "options": [
+    "Tự xây tích hợp API CRM vào cuối tuần bằng code Claude sinh ra, để nhóm khỏi chờ",
+    "Nói với nhóm rằng tự động hoá kiểu này là không thể",
+    "Nhận ra việc này đã sang phạm vi triển khai kỹ thuật — tích hợp API và kích hoạt tự động — và chuyển cho developer hoặc Architect",
+    "Tự mô phỏng tự động hoá: chép tay từng ticket vào Claude và dán kết quả lại CRM"
+   ],
+   "explanation": "Biết ranh giới là năng lực của Associate: tính năng nền tảng, workflow, Project là trong phạm vi; tích hợp API và kích hoạt tự động là việc kỹ thuật thuộc nhánh chuyên môn khác, Associate đóng góp thiết kế workflow đã được kiểm chứng. A làm việc kỹ thuật production ngoài phạm vi và lưới an toàn của vai trò; B sai — khả thi, chỉ là không phải việc Associate tự xây; D biến một người thành API thủ công. Ghi nhớ: API + tự động kích hoạt → ngoài phạm vi Associate, chuyển developer/Architect."
+  },
+  {
+   "id": 37,
+   "question": "Nhân viên đang thiết kế thí điểm cho workflow Claude đầu tiên của phòng. HAI thực hành nào cho kết quả thí điểm đáng tin nhất? (Chọn HAI.)",
+   "options": [
+    "Triển khai cho cả tổ chức một lần để mẫu thí điểm lớn nhất",
+    "Chọn tác vụ thường xuyên, rủi ro thấp, output dễ đối chiếu với thực tế",
+    "Chọn quy trình hệ trọng nhất để chứng minh giá trị tối đa",
+    "Xác định thước đo thành công — thời gian tiết kiệm, chất lượng giữ nguyên, mức độ sử dụng — trước khi bắt đầu",
+    "Không đo quy trình hiện tại để so sánh không thiên lệch"
+   ],
+   "explanation": "Thí điểm tốt kết hợp môi trường thử phù hợp — đủ thường xuyên để có bằng chứng, đủ ít rủi ro để kiểm soát sai sót — với tiêu chí thành công đặt trước, để kết quả là phép đo chứ không phải cảm nhận. A và C phóng đại phạm vi ảnh hưởng trước khi có gì được chứng minh; E bỏ baseline — thứ cho số liệu thí điểm ý nghĩa. Ghi nhớ: pilot tốt = tác vụ thường xuyên, rủi ro thấp + tiêu chí thành công đặt trước."
+  },
+  {
+   "id": 38,
+   "question": "Một nhân viên nghiên cứu đang chuẩn bị bản tóm tắt bối cảnh cạnh tranh. HAI cách dùng Claude nào tạo giá trị thực cho workflow này? (Chọn HAI.)",
+   "options": [
+    "Tổng hợp chồng bài viết và báo cáo đã thu thập thành các chủ đề có tổ chức và điểm bất đồng giữa các nguồn",
+    "Làm trọng tài cuối cùng về việc khẳng định nào của đối thủ là đúng",
+    "Tạo bảng so sánh đối thủ có cấu trúc theo các chiều đã chọn làm bản nháp ban đầu để rà soát",
+    "Bỏ nhu cầu kiểm tra mọi khẳng định trước khi gửi cho ban lãnh đạo",
+    "Tự quyết định chiến lược cạnh tranh của công ty từ bản tóm tắt"
+   ],
+   "explanation": "Đóng góp của Claude trong workflow nghiên cứu là cấu trúc và tổng hợp nhanh: biến tài liệu nguồn thành chủ đề có tổ chức và bản nháp so sánh có thể rà soát, để con người kiểm chứng và xây dựng phán đoán. B, D, E đều chuyển Claude từ vai trò tăng tốc sang sở hữu sự thật và quyết định — những phần phải do con người giữ. Ghi nhớ: Claude = tổng hợp + nháp so sánh; con người = kiểm chứng + quyết định."
+  },
+  {
+   "id": 39,
+   "question": "Nhân viên bắt đầu mọi hội thoại trong Project báo cáo bằng cách dán cùng ba đoạn: quy tắc giọng điệu, cấu trúc báo cáo, yêu cầu định dạng. Cách sửa cấu hình đúng là gì?",
+   "options": [
+    "Tiếp tục dán ở đầu mỗi hội thoại — lặp lại giúp model học quy tắc vĩnh viễn",
+    "Rút ngắn ba đoạn để dán nhanh hơn",
+    "Đính kèm ba đoạn thành file knowledge và hy vọng Claude để ý áp dụng",
+    "Chuyển các quy tắc cố định vào custom instructions của Project, nơi chúng tự áp dụng cho mọi hội thoại"
+   ],
+   "explanation": "Quy tắc hành vi cố định — giọng điệu, cấu trúc, định dạng — là thứ project instructions sinh ra để chứa: cấu hình một lần, áp dụng mọi chat, không thể quên dán. A hiểu sai cơ chế — không có gì được học giữa các chat, lặp tay dễ bỏ sót; B tối ưu cách làm tạm thay vì loại bỏ nó; C đặt quy tắc hành vi vào nơi dành cho tài liệu tham chiếu, làm yếu hiệu lực. Ghi nhớ: quy tắc hành vi lặp lại → custom instructions."
+  },
+  {
+   "id": 40,
+   "question": "Khi thiết lập Project hỗ trợ gia hạn hợp đồng, nhân viên băn khoăn nên upload gì làm knowledge. Drive của nhóm có khoảng 2.000 file; khoảng 15 file thực sự liên quan: mẫu hiện hành, bảng giá, hướng dẫn đàm phán. Nên upload gì?",
+   "options": [
+    "Toàn bộ khoảng 2.000 file để không bao giờ thiếu thông tin",
+    "15 tài liệu liên quan, hiện hành — một knowledge base được chọn lọc gồm những gì công việc thực sự dùng, được duy trì khi có thay đổi",
+    "Không gì cả — prompt tốt thì không cần knowledge",
+    "Chỉ các tài liệu cũ nhất vì chúng chứa nhiều lịch sử nhất"
+   ],
+   "explanation": "Chọn lọc knowledge tốt hơn số lượng: một tập nguồn tập trung, hiện hành, liên quan giúp truy xuất chính xác và câu trả lời có căn cứ. Thứ được upload định nghĩa điều Project coi là đúng. A chôn 15 tài liệu tín hiệu dưới 1.985 tài liệu nhiễu và lỗi thời; C bắt mọi chat tự cung cấp lại thứ Project lẽ ra đã có; D tối ưu sai thuộc tính. Ghi nhớ: knowledge = ít, liên quan, hiện hành, được duy trì."
+  },
+  {
+   "id": 41,
+   "question": "Tài liệu báo cáo tình hình của nhóm nằm trên Google Drive và được nhiều đồng nghiệp cập nhật trong tuần. Nhân viên muốn Claude làm việc với phiên bản mới nhất mà không phải upload lại thủ công. Cách đúng là gì, và cần kiểm tra gì trước?",
+   "options": [
+    "Dùng Google Drive connector để Claude truy cập trực tiếp file hiện hành — sau khi xác nhận kết nối tuân thủ chính sách dữ liệu và quyền truy cập",
+    "Upload lại mọi file vào Project mỗi sáng, coi như thói quen rèn kỷ luật cho cả nhóm",
+    "Bảo đồng nghiệp ngừng cập nhật tài liệu để phiên bản ổn định",
+    "Để Claude đoán những gì có lẽ đã thay đổi từ lần upload trước"
+   ],
+   "explanation": "Connector sinh ra cho đúng việc này: truy cập trực tiếp file đang làm việc thay vì bản chụp cũ. Bước chuyên nghiệp là kiểm tra quản trị — xác nhận connector truy cập được gì và việc truy cập này đúng chính sách. B là công sức thủ công mà tính năng loại bỏ; C bẻ quy trình nhóm theo một khoảng trống công cụ vốn đã có giải pháp; D mời model bịa khi dữ liệu thật chỉ cách một connector. Ghi nhớ: file thay đổi liên tục → connector, kiểm tra chính sách trước."
+  },
+  {
+   "id": 42,
+   "question": "Bộ chỉ dẫn cấp hệ thống nào hiệu quả nhất cho một Project giao tiếp khách hàng?",
+   "options": [
+    "“Luôn hữu ích và chuyên nghiệp, làm tốt, phán đoán đúng, giao tiếp rõ ràng, làm mọi khách hàng hài lòng nhất có thể.”",
+    "“Không bao giờ được mắc lỗi.”",
+    "“Bạn soạn câu trả lời CSKH cho một công ty phần mềm. Giọng: ấm áp, tiếng Anh dễ hiểu, không thuật ngữ. Luôn: thừa nhận vấn đề, nêu bước tiếp theo. Không bao giờ: hứa hoàn tiền (chuyển cấp thay vào đó) hoặc vượt 200 từ.”",
+    "Dán nguyên sổ tay chính sách 30 trang làm instructions — mọi chính sách, ngoại lệ và sửa đổi từ 2015 — để không sót tình huống nào"
+   ],
+   "explanation": "Instructions hiệu quả thì cụ thể, có cấu trúc và mô tả hành vi: Claude đóng vai gì, giọng điệu, điều luôn phải làm, điều không bao giờ làm, ràng buộc cứng. Mỗi dòng đều áp dụng được cho mọi câu trả lời. A và B là mong muốn, không phải chỉ dẫn — không thay đổi hành vi; D nhấn chìm quy tắc vận hành trong tài liệu lưu trữ vốn thuộc về knowledge (đã chọn lọc) nếu cần. Ghi nhớ: instructions tốt = vai trò + giọng điệu + Always + Never + ràng buộc cứng."
+  },
+  {
+   "id": 43,
+   "question": "Nhân viên đang cấu hình Project và có hai loại tài sản: (1) quy tắc về cách Claude hành xử — giọng điệu, cấu trúc, điều kiện chuyển cấp; (2) tài liệu tham chiếu Claude cần dùng — catalog sản phẩm và tài liệu chính sách. Mỗi loại đặt ở đâu?",
+   "options": [
+    "Cả hai dán vào tin nhắn đầu mỗi chat",
+    "Quy tắc hành vi trong custom instructions; tài liệu tham chiếu là Project knowledge",
+    "Cả hai upload thành file knowledge, để trống instructions",
+    "Quy tắc hành vi upload thành knowledge, catalog sản phẩm viết vào custom instructions"
+   ],
+   "explanation": "Hai bề mặt cấu hình có vai trò riêng: instructions điều khiển hành vi ở mọi lượt; knowledge là thư viện tham chiếu được tra khi liên quan. Đặt đúng chỗ thì cả hai hoạt động đúng thiết kế. A bỏ cấu hình để lặp tay; C hạ quy tắc cố định thành tài liệu Claude có thể tra hoặc không; D đảo ngược hai bề mặt. Ghi nhớ: hành vi → instructions; tham chiếu → knowledge."
+  },
+  {
+   "id": 44,
+   "question": "Nhân viên bán hàng báo Project báo giá cứ trích giá đã bị thay thế. Kiểm tra cho thấy knowledge chứa “pricing_2024.xlsx”, trong khi giá hiện hành có hiệu lực từ tháng Một. Bảo trì knowledge đúng cách là gì?",
+   "options": [
+    "Mỗi lần chat thêm chỉ dẫn: “bỏ qua giá cũ bạn có thể đã thấy”",
+    "Upload file giá mới bên cạnh file cũ để cả hai phiên bản đều tham khảo được",
+    "Bảo nhân viên tự nhẩm điều chỉnh con số",
+    "Gỡ file lỗi thời, upload tài liệu giá hiện hành, và đặt lịch rà soát định kỳ cho các nguồn knowledge"
+   ],
+   "explanation": "Bảo trì cấu hình nghĩa là knowledge phản ánh thực tế: nguồn lỗi thời bị gỡ bỏ — không chỉ được bổ sung — và chu kỳ rà soát giữ tài liệu nhạy thời gian như bảng giá không âm thầm lỗi thời. A coi lỗi cấu hình như câu thần chú mỗi chat; B để hai nguồn mâu thuẫn tranh nhau khi truy xuất; C thể chế hoá số liệu sai trong báo giá. Ghi nhớ: knowledge lỗi thời → gỡ cũ + thêm mới + lịch rà soát."
+  },
+  {
+   "id": 45,
+   "question": "Nhân viên đang thiết lập Claude Project hỗ trợ quy trình viết đề xuất của nhóm. Có năm hoạt động:\n1. Kiểm thử Project với một tác vụ mẫu thực tế và rà soát output\n2. Viết custom instructions: giọng điệu, cấu trúc, quy tắc chuyển cấp\n3. Upload tài liệu tham chiếu đã chọn lọc làm knowledge\n4. Tạo Project\n5. Tinh chỉnh instructions và knowledge dựa trên kết quả kiểm thử\nThứ tự đúng là gì?",
+   "options": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "explanation": "Project phải tồn tại trước khi cấu hình (4); cấu hình — instructions và knowledge (2, 3) — trước khi đánh giá; tinh chỉnh (5) chỉ có ý nghĩa sau khi kiểm thử (1) cho ra điều gì đó để học. Cấu hình → kiểm thử → tinh chỉnh cũng là vòng lặp của prompting tốt. A kiểm thử Project chưa cấu hình; B cấu hình Project chưa tồn tại và tinh chỉnh trước kiểm thử; D tinh chỉnh trước khi chạy kiểm thử. Ghi nhớ: thứ tự: tạo → instructions → knowledge → test → refine."
+  },
+  {
+   "id": 46,
+   "question": "Tác vụ nào nhân viên có thể coi là cách dùng Claude phù hợp, rủi ro thấp, không cần phê duyệt thêm?",
+   "options": [
+    "Soạn văn bản trả lời chính thức của công ty cho yêu cầu từ cơ quan quản lý và gửi đi không qua người rà soát",
+    "Phân tích bản xuất dữ liệu định danh khách hàng chưa ẩn danh từ CRM",
+    "Biến ghi chép thô của chính mình từ cuộc họp nội bộ thành biên bản có tổ chức, rà soát trước khi chia sẻ",
+    "Chẩn đoán bệnh cho triệu chứng một nhân viên mô tả"
+   ],
+   "explanation": "Phán đoán về cách dùng phù hợp cân nhắc độ nhạy dữ liệu, mức hệ trọng và giám sát. Nội dung nội bộ, không nhạy cảm, do chính người dùng viết, có rà soát trước khi chia sẻ thuộc vùng an toàn. A là giao tiếp đối ngoại hệ trọng mà bỏ bước rà soát; B xử lý dữ liệu cá nhân được quản lý mà không có biện pháp bảo vệ; D là phán đoán y khoa chuyên môn mà công cụ chat không nên làm. Ghi nhớ: rủi ro thấp = nội bộ + không nhạy cảm + có người rà soát."
+  },
+  {
+   "id": 47,
+   "question": "Một nhân viên HR muốn nhờ Claude phân tích xu hướng nghỉ việc từ bảng tính có tên nhân viên, lương và hồ sơ nghỉ ốm. Chính sách tổ chức hạn chế chia sẻ dữ liệu cá nhân nhạy cảm. Cách làm đúng là gì?",
+   "options": [
+    "Upload nguyên trạng; phân tích nội bộ không tính là chia sẻ",
+    "Ẩn danh trước — xoá hoặc giả danh hoá định danh, chỉ giữ trường cần cho phân tích — và xác nhận tuân thủ chính sách dữ liệu",
+    "Upload nguyên trạng nhưng dặn Claude giữ bí mật tuyệt đối và hứa không chia sẻ",
+    "Chỉ phân tích cột tên vì tên không tiết lộ gì"
+   ],
+   "explanation": "Thực hành với dữ liệu nhạy cảm là tối thiểu hoá: bỏ định danh, chỉ giữ trường phân tích cần, và kiểm tra cách làm với chính sách. Insight còn nguyên; rủi ro lộ dữ liệu thì không. A hiểu sai chính sách — đưa dữ liệu vào công cụ là một sự kiện tiết lộ; C thay biện pháp kiểm soát bằng một tin nhắn chat; D ngược — giữ định danh, bỏ dữ liệu phân tích. Ghi nhớ: dữ liệu nhạy cảm → de-identify + minimize + kiểm tra chính sách."
+  },
+  {
+   "id": 48,
+   "question": "Một tư vấn viên làm cho khách hàng y tế được yêu cầu đưa hồ sơ phản hồi của bệnh nhân qua Claude để tìm chủ đề cải tiến dịch vụ. Dữ liệu y tế chịu quy định riêng. Điều gì phải xảy ra trước khi xử lý?",
+   "options": [
+    "Làm luôn — phản hồi không giống hồ sơ y tế",
+    "Làm, nhưng xoá hội thoại sau đó",
+    "Chạy thử một mẫu nhỏ trước, chờ xem khách hàng hay ai khác có phản đối không rồi mới xử lý toàn bộ",
+    "Xác nhận vị trí pháp lý và hợp đồng trước — làm việc với bộ phận quyền riêng tư/tuân thủ của khách và chỉ xử lý theo cách họ phê duyệt"
+   ],
+   "explanation": "Với loại dữ liệu được quản lý, mặc định đảo ngược: phê duyệt trước, xử lý sau. Bộ phận tuân thủ xác định quy định và hợp đồng cho phép gì — việc của tư vấn viên là hỏi trước, không xin lỗi sau. A thay phân tích pháp lý bằng cảm giác — phản hồi bệnh nhân hoàn toàn có thể chứa thông tin sức khoẻ; B xoá bằng chứng vi phạm thay vì ngăn vi phạm; C làm vi phạm nhỏ hơn chứ không hợp pháp. Ghi nhớ: dữ liệu được quản lý (y tế) → compliance phê duyệt trước khi xử lý."
+  },
+  {
+   "id": 49,
+   "question": "Nhân viên phát hiện một đồng nghiệp dán tài liệu mật của công ty vào tài khoản chatbot AI miễn phí cá nhân vì “dù sao cũng cùng một model”. Phản ứng đúng về quản trị là gì?",
+   "options": [
+    "Giải thích vấn đề, hướng đồng nghiệp sang workspace được phê duyệt, và báo cáo sự cố lộ dữ liệu theo quy trình của tổ chức",
+    "Bỏ qua — chất lượng model giống nhau nên kết quả như nhau",
+    "Làm theo vì tài khoản miễn phí tiết kiệm ngân sách",
+    "Lặng lẽ xoá lịch sử chat của đồng nghiệp và không nói gì"
+   ],
+   "explanation": "Tuân thủ chính sách AI của tổ chức nghĩa là dùng kênh được phê duyệt — workspace doanh nghiệp tồn tại chính vì các bảo vệ dữ liệu theo hợp đồng và kiểm soát quản trị — và coi dữ liệu mật trên công cụ không được phép là sự cố cần báo cáo. B và C nhầm năng lực model với quản trị — vấn đề là điều khoản tài khoản, không phải model; D xoá dấu vết nhưng sự cố lộ dữ liệu và hành vi vẫn còn. Ghi nhớ: dữ liệu mật trên công cụ cá nhân → workspace được phê duyệt + báo cáo sự cố."
+  },
+  {
+   "id": 50,
+   "question": "Trưởng marketing nhờ nhân viên dùng Claude viết khoảng chục lời chứng thực khách hàng đầy nhiệt tình, mỗi lời gắn tên khách hàng hư cấu, để đăng lên website công ty. Nhân viên nên phản hồi thế nào?",
+   "options": [
+    "Viết — công ty nào cũng đánh bóng lời chứng thực",
+    "Từ chối và giải thích rằng lời chứng thực bịa đặt nhưng trình bày như khách thật là lừa dối — rồi đề xuất phương án chính đáng",
+    "Viết nhưng chỉ ghi tên riêng để không tạo danh tính hư cấu đầy đủ, giảm rủi ro",
+    "Viết và thêm chú thích nhỏ “minh hoạ”"
+   ],
+   "explanation": "Dùng AI có đạo đức dừng lại ở ranh giới lừa dối: nội dung tạo “bằng chứng xã hội” giả đánh lừa công chúng bất kể ai gõ ra. Phản hồi chuyên nghiệp là từ chối kèm con đường chính đáng để đạt cùng mục tiêu kinh doanh. A bình thường hoá việc bịa đặt; C và D chỉ che đậy bề ngoài cùng một hành vi lừa dối. Ghi nhớ: lời chứng thực giả = lừa dối → từ chối + đề xuất thay thế."
+  },
+  {
+   "id": 51,
+   "question": "Nhân viên dùng Claude soạn báo cáo đánh giá nhà cung cấp, chỉnh sửa rồi nộp cho giám đốc. Báo cáo có lỗi gây sự cố về sau. Ai chịu trách nhiệm về lỗi?",
+   "options": [
+    "Claude, vì nó sinh ra câu chứa lỗi",
+    "Anthropic, nhà sản xuất công cụ",
+    "Nhân viên đã soạn và nộp báo cáo — AI hỗ trợ không chuyển trách nhiệm về sản phẩm công việc",
+    "Không ai — lỗi từ công việc có AI hỗ trợ là chi phí chấp nhận được, không phải lỗi của cá nhân nào"
+   ],
+   "explanation": "Trách nhiệm đi theo người đứng tên và nộp, không theo người gõ. Ai duyệt công việc có AI hỗ trợ thì sở hữu nó — chính vì vậy kiểm chứng và rà soát là bắt buộc. A và B nhầm công cụ với bên chịu trách nhiệm; D mô tả một thế giới không sản phẩm nào đáng tin. Ghi nhớ: accountability thuộc người nộp, không chuyển sang AI."
+  },
+  {
+   "id": 52,
+   "question": "Một đồng nghiệp đang ly hôn nhờ nhân viên dùng Claude xác định “tôi được quyền nuôi con theo pháp luật như thế nào” để hành động trực tiếp theo đó. Nhân viên nên nhận ra điều gì?",
+   "options": [
+    "Yêu cầu này bắt công cụ thay thế tư vấn pháp lý chuyên nghiệp cho vấn đề cá nhân hệ trọng — việc xác định thuộc về luật sư có chuyên môn",
+    "Câu trả lời của Claude có tính ràng buộc nên cần viết cẩn thận",
+    "Ổn nếu nêu chính xác khu vực tài phán",
+    "Chấp nhận được vì luật gia đình đơn giản và chuẩn hoá hơn luật doanh nghiệp"
+   ],
+   "explanation": "Nhận diện cách dùng không phù hợp gồm phép thử “thay thế”: khi yêu cầu là một phán quyết chuyên môn mà ai đó sẽ hành động theo — pháp lý, y tế, tài chính — vai trò của công cụ thu hẹp về chuẩn bị và tìm hiểu, phán quyết thuộc về chuyên gia. B gán hiệu lực pháp lý mà câu trả lời chat không có; C sửa chi tiết đầu vào trong khi vấn đề nằm ở loại yêu cầu; D vừa sai vừa không liên quan. Ghi nhớ: phán quyết pháp lý/y tế/tài chính cá nhân → chuyên gia, không phải AI."
+  },
+  {
+   "id": 53,
+   "question": "Trước khi upload một tập dữ liệu cho Claude phân tích, nhân viên nên thực hiện HAI kiểm tra nào? (Chọn HAI.)",
+   "options": [
+    "File có trình bày đẹp không",
+    "Dữ liệu có chứa thông tin cá nhân, mật hoặc được quản lý cần loại bỏ, ẩn danh hoặc xử lý đặc biệt không",
+    "File có đủ mới để phân tích thú vị và đáng công upload không",
+    "Chính sách AI và dữ liệu của tổ chức có cho phép dùng loại dữ liệu này với công cụ này, trong workspace này không",
+    "Dữ liệu có đủ lớn để trông ấn tượng không"
+   ],
+   "explanation": "Kỷ luật trước khi upload có hai cổng: kiểm tra bản thân dữ liệu có nội dung nhạy cảm không, và xác nhận cách dùng nằm trong chính sách cho loại dữ liệu và nền tảng đó. A, C, E là thuộc tính thẩm mỹ hoặc ngẫu nhiên, không liên quan việc upload có phù hợp hay không. Ghi nhớ: trước upload: dữ liệu nhạy cảm? + chính sách cho phép?."
+  },
+  {
+   "id": 54,
+   "question": "HAI thực hành nào thuộc chuẩn mực làm việc AI có trách nhiệm của một nhóm? (Chọn HAI.)",
+   "options": [
+    "Công khai việc có AI hỗ trợ khi chính sách hoặc bối cảnh yêu cầu, thay vì trình bày như tự làm hoàn toàn",
+    "Cho phép output của Claude tự gửi ra bên ngoài không qua rà soát để tối đa tốc độ",
+    "Con người chịu trách nhiệm với quyết định ảnh hưởng tới người khác — tuyển dụng, đánh giá hiệu suất, cam kết với khách — AI chỉ hỗ trợ",
+    "Coi output đã kiểm chứng khi model tự rà soát",
+    "Không khuyến khích đồng nghiệp chất vấn phân tích do AI tạo sau khi đã phát hành, để giữ hiệu quả"
+   ],
+   "explanation": "Chuẩn mực dùng AI có trách nhiệm dựa trên minh bạch và trách nhiệm của con người: trung thực về vai trò của AI khi cần, và con người — không phải model — sở hữu quyết định có hệ quả với con người. B bỏ rà soát đúng nơi rủi ro cao nhất; D là kiểm chứng vòng tròn; E đảo ngược văn hoá lành mạnh — chất vấn output AI là lớp bảo vệ. Ghi nhớ: responsible AI = minh bạch + con người chịu trách nhiệm quyết định."
+  },
+  {
+   "id": 55,
+   "question": "Câu trả lời của Claude cho các câu hỏi phân tích cạnh tranh cứ chung chung, hời hợt. Nhân viên nên xem xét điều gì trước tiên?",
+   "options": [
+    "Có phải Claude “hôm nay không ổn” — chờ và thử lại ngày mai",
+    "Chính prompt: có cung cấp ngữ cảnh công ty, đối thủ, quyết định cần phục vụ và tiêu chí quan trọng không?",
+    "Gói đăng ký, vì độ sâu phân tích có lẽ chỉ có ở gói trả phí đắt hơn",
+    "Thời điểm trong ngày gửi câu hỏi"
+   ],
+   "explanation": "Chẩn đoán bắt đầu từ đầu vào: output chung chung là dấu hiệu prompt thiếu ngữ cảnh. Model trả lời đúng câu hỏi nó thực sự nhận được — đầu vào cụ thể cho đầu ra cụ thể. A, C, D tìm nguyên nhân bên ngoài cho một vấn đề mà nguyên nhân gần như luôn nằm ngay trong prompt. Ghi nhớ: output chung chung → kiểm tra ngữ cảnh trong prompt trước."
+  },
+  {
+   "id": 56,
+   "question": "Một “siêu prompt” của nhân viên chứa 14 yêu cầu cho báo cáo. Output đáp ứng phần lớn nhưng luôn bỏ sót hai, ba yêu cầu — mỗi lần một khác. Nguyên nhân và cách sửa khả dĩ là gì?",
+   "options": [
+    "Model cố tình chọn lọc; thêm dòng yêu cầu tuân thủ tuyệt đối",
+    "Các yêu cầu không thể đáp ứng cùng lúc; xoá vĩnh viễn một nửa",
+    "14 là ổn — vấn đề là thiếu chữ “làm ơn”",
+    "Quá tải chỉ dẫn: quá nhiều yêu cầu tranh nhau trong một lần — nhóm và ưu tiên hoá, hoặc chia thành các bước tuần tự"
+   ],
+   "explanation": "Bỏ sót chỉ dẫn ở chỗ khác nhau mỗi lần là dấu hiệu kinh điển của quá tải. Cách chữa mang tính cấu trúc: giảm số yêu cầu đồng thời mỗi lượt, bằng cách nhóm có ưu tiên hoặc chia bước kèm lượt kiểm tra cuối. A chẩn đoán sai một giới hạn năng lực thành sự chống đối; B bỏ những yêu cầu có thể đều đạt được qua nhiều lượt; C là mê tín. Ghi nhớ: bỏ sót ngẫu nhiên nhiều yêu cầu → instruction overload → nhóm/ưu tiên/chia bước."
+  },
+  {
+   "id": 57,
+   "question": "Trong Project báo cáo khách hàng của nhóm, mọi hội thoại đều bắt đầu với giọng điệu sai, và mọi người dùng đều phải sửa tay giữa chừng. Cách sửa đúng là gì?",
+   "options": [
+    "Sửa tận gốc: cập nhật custom instructions của Project để quy định giọng điệu, mọi hội thoại bắt đầu đúng",
+    "Tiếp tục sửa tay từng hội thoại — chỉ mất một hai tin nhắn mỗi chat",
+    "Bảo nhóm chấp nhận giọng mặc định cho đỡ công",
+    "Mở đầu mỗi chat bằng cách chê câu trả lời trước để “thúc đẩy” cải thiện"
+   ],
+   "explanation": "Lỗi lặp lại ở mọi hội thoại là lỗi cấu hình, không phải lỗi hội thoại. Một lần cập nhật instructions sửa mọi chat về sau; sửa từng chat thì sửa mãi không hết. B thể chế hoá việc làm lại mà cấu hình sinh ra để loại bỏ; C chấp nhận chất lượng kém khi có cách sửa một dòng; D là nhiễu — giọng điệu do instructions quyết định. Ghi nhớ: lỗi lặp ở mọi chat → sửa cấu hình (instructions)."
+  },
+  {
+   "id": 58,
+   "question": "Sâu trong một hội thoại rất dài qua nhiều chủ đề, Claude bắt đầu lẫn các bản nháp trước, phản hồi chậm và bỏ sót các chỉnh sửa gần đây. Chuyện gì đang xảy ra, và nên làm gì?",
+   "options": [
+    "Model bị suy giảm vĩnh viễn, cần reset tài khoản",
+    "Không có gì sai — hội thoại dài bao nhiêu cũng hoạt động như nhau",
+    "Ngữ cảnh tích luỹ đã dài và rối. Để Claude tóm tắt trạng thái hiện tại, kiểm tra lại, rồi tiếp tục trong hội thoại mới với bản tóm tắt đó",
+    "Gõ chỉnh sửa bằng chữ in hoa để lấn át nội dung cũ"
+   ],
+   "explanation": "Hội thoại dài, nhiều chủ đề tích tụ ngữ cảnh đến mức phản tác dụng. Mẫu “bắt đầu lại kèm tóm tắt” giữ những gì quan trọng — quyết định đã kiểm chứng và trạng thái hiện tại — và bỏ phần lộn xộn làm suy giảm phản hồi. A quy một tình trạng cấp hội thoại cho tài khoản; B phủ nhận đúng triệu chứng được mô tả; D thêm nhấn mạnh vào chính ngữ cảnh đang quá tải. Ghi nhớ: hội thoại quá dài, rối → tóm tắt, kiểm tra, mở chat mới."
+  },
+  {
+   "id": 59,
+   "question": "Mỗi tuần nhân viên mất 15 phút giải thích lại cùng yêu cầu báo cáo cho Claude trước khi bắt đầu báo cáo tuần. Tối ưu đúng là gì?",
+   "options": [
+    "Chấp nhận 15 phút là cái giá của chất lượng",
+    "Làm thiết lập dùng lại được: ghi các yêu cầu cố định một lần vào instructions của Project, để mỗi tuần bắt đầu ngay vào việc",
+    "Ngừng giải thích và chấp nhận báo cáo kém hơn",
+    "Luân phiên việc trong nhóm để không ai phải chịu 15 phút đó mỗi tuần"
+   ],
+   "explanation": "Tối ưu nhắm vào chi phí lặp lại: mọi thứ được giải thích y hệt mỗi chu kỳ đều thuộc về cấu hình dùng lại được. Thiết lập một lần biến 15 phút mỗi tuần thành 0. A trả chi phí lặp lại khi đã biết cách sửa một lần; C đánh đổi chất lượng lấy thời gian trong khi không cần hy sinh cái nào; D phân phối lại lãng phí thay vì loại bỏ. Ghi nhớ: giải thích lặp lại mỗi kỳ → Project instructions."
+  },
+  {
+   "id": 60,
+   "question": "Nhân viên đang cải thiện có hệ thống một prompt hoạt động kém. HAI thực hành nào làm quá trình cải thiện đáng tin cậy? (Chọn HAI.)",
+   "options": [
+    "Viết lại toàn bộ prompt từ đầu mỗi lần để không còn câu chữ yếu",
+    "Đổi nhiều yếu tố cùng lúc để hội tụ nhanh hơn",
+    "Mỗi lần chỉ đổi một yếu tố để biết thay đổi nào gây ra hiệu ứng nào",
+    "Chuyển sang sản phẩm AI khác ngay khi gặp vấn đề",
+    "Kiểm thử mỗi bản sửa với cùng một input mẫu để so sánh công bằng"
+   ],
+   "explanation": "Lặp đáng tin là một thí nghiệm công bằng: thay một biến, giữ input kiểm thử cố định, quan sát khác biệt. Đó là cách biết thay đổi nào thực sự giúp thay vì đoán. A và B phá khả năng quy kết — khi mọi thứ đổi, không học được gì; D bỏ chẩn đoán để nhảy công cụ. Ghi nhớ: cải thiện prompt = đổi một biến/lần + cùng input kiểm thử."
+  }
+ ]
+}

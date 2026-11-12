@@ -1,0 +1,1399 @@
+{
+ "$schema": "../../schema/questions.schema.json",
+ "schema": 2,
+ "certification": "ccao-f",
+ "language": "en",
+ "note": "CCAO-F practice question bank. Question and option text, answer keys and Vietnamese translations kept as published; English explanations translated from the Vietnamese ones. Domain weights are each topic's share of this bank, not an official exam weighting.",
+ "domains": [
+  {
+   "name": "Prompting and Task Execution",
+   "weight": 13
+  },
+  {
+   "name": "Output Evaluation and Validation",
+   "weight": 22
+  },
+  {
+   "name": "Product and Model Selection",
+   "weight": 12
+  },
+  {
+   "name": "Workflow Integration and Solution Design",
+   "weight": 17
+  },
+  {
+   "name": "Configuration and Knowledge Management",
+   "weight": 12
+  },
+  {
+   "name": "Governance, Risk, and Responsible Use",
+   "weight": 15
+  },
+  {
+   "name": "Troubleshooting and Optimization",
+   "weight": 10
+  }
+ ],
+ "questions": [
+  {
+   "id": 1,
+   "type": "single",
+   "domain": "Prompting and Task Execution",
+   "question": "A marketing associate types “write something about our new product” and is disappointed with the generic result. Which revision best reflects effective prompting for a business task?",
+   "options": [
+    {
+     "text": "“Write something better about our new product.”"
+    },
+    {
+     "text": "“Write a 150-word LinkedIn post announcing our scheduling app to small-business owners; friendly, professional tone; end with a waitlist call to action.”",
+     "correct": true
+    },
+    {
+     "text": "“Write about our product” repeated three times in a row so the model understands the request is serious and takes it seriously."
+    },
+    {
+     "text": "“You are the world’s greatest copywriter, with decades of award-winning experience. Write something about our product that really captures how great it is.”"
+    }
+   ],
+   "explanation": "An effective prompt supplies what the model cannot guess: the deliverable, length, audience, tone and goal. Option B states all five, so the result can match the intent. A adds pressure but no information; C repeats exactly the context that is missing; D adds a persona but still lacks the audience, format and purpose — the details that decide the result. Remember: good prompt = deliverable + length + audience + tone + goal."
+  },
+  {
+   "id": 2,
+   "type": "single",
+   "domain": "Prompting and Task Execution",
+   "question": "An operations lead must produce a quarterly review covering budget variance, project status, staffing, and next-quarter risks. A single prompt asking for the whole document produces shallow, uneven coverage. Which technique addresses this?",
+   "options": [
+    {
+     "text": "Ask for the whole document again, but double the requested word count so every section has enough room to be covered in proper depth"
+    },
+    {
+     "text": "Ask Claude to try harder on the weak sections"
+    },
+    {
+     "text": "Switch to bullet points only, so gaps are less visible"
+    },
+    {
+     "text": "Decompose it: work through each section as its own request, review each one, then ask for a combined, consistent draft",
+     "correct": true
+    }
+   ],
+   "explanation": "Decomposing the task turns one overloaded request into a series of focused ones. Each part gets full attention, errors are caught at the step where they arise, and the final assembly starts from checked parts. A gives longer but still shallow content; B is not an actionable instruction for the model; C hides the problem instead of fixing it. Remember: shallow multi-part document → decompose, review each part, then assemble."
+  },
+  {
+   "id": 3,
+   "type": "single",
+   "domain": "Prompting and Task Execution",
+   "question": "Claude’s first draft of a client email is too formal and buries the key request in the final paragraph. What is the most effective way to iterate?",
+   "options": [
+    {
+     "text": "Give specific feedback: “Make it warmer and more conversational, and move the request to reschedule into the opening two sentences”",
+     "correct": true
+    },
+    {
+     "text": "Send the identical prompt again without any changes and hope the natural variation between responses produces a better draft"
+    },
+    {
+     "text": "Start a brand-new conversation and retype the original prompt"
+    },
+    {
+     "text": "Accept the draft as it stands and edit everything manually yourself, since iterating with the model rarely improves anything much"
+    }
+   ],
+   "explanation": "Iteration works when feedback is specific and actionable: say what is wrong and what \"better\" looks like. The model then makes a targeted fix instead of regenerating blindly. B and C rely on luck — the same input usually produces the same flaws; D abandons the fastest route when one targeted instruction is enough. Remember: iterate = specific feedback: what is wrong + what better looks like."
+  },
+  {
+   "id": 4,
+   "type": "single",
+   "domain": "Prompting and Task Execution",
+   "question": "A project manager wants to use Claude for two different tasks: brainstorming names for an internal program, and drafting the program’s formal charter. How should the prompting strategy differ between the two?",
+   "options": [
+    {
+     "text": "Both tasks should use identical prompts, since prompting principles are universal"
+    },
+    {
+     "text": "The brainstorm should specify exact formatting rules and strict limits; the charter should ask for maximum creativity and give the model complete freedom over structure"
+    },
+    {
+     "text": "For the brainstorm, ask for many varied options and defer judgment; for the charter, provide structure, required sections, tone, and constraints",
+     "correct": true
+    },
+    {
+     "text": "Brainstorming should be avoided, as models cannot generate original ideas"
+    }
+   ],
+   "explanation": "Match the strategy to the task type: divergent tasks (brainstorming) need volume, variety and loose constraints; convergent tasks (formal writing) need structure, tone and clear requirements. A ignores that the two tasks have opposite goals; B applies each strategy to the wrong task; D is wrong — idea generation is one of the model's greatest strengths. Remember: divergent (brainstorm) = many, varied, loose; convergent (formal writing) = structure, constraints."
+  },
+  {
+   "id": 5,
+   "type": "single",
+   "domain": "Prompting and Task Execution",
+   "question": "An analyst pastes a table of regional sales figures and asks Claude to “analyze this.” The response is a bland restatement of the numbers. Which revised request produces genuinely useful analysis?",
+   "options": [
+    {
+     "text": "“Take another look at this data and analyze it again, but this time go much deeper and be far more thorough about it.”"
+    },
+    {
+     "text": "“Identify the three regions with the largest quarter-over-quarter decline, suggest explanations to investigate, and flag anything unusual — we’re deciding where to focus retention next quarter.”",
+     "correct": true
+    },
+    {
+     "text": "“Analyze this table exactly the way a world-class data scientist would: bring the full weight of statistical expertise, professional intuition, and years of hard-won industry experience to bear on it.”"
+    },
+    {
+     "text": "“Summarize this table in half the length.”"
+    }
+   ],
+   "explanation": "An analysis prompt works when it states the question to answer, the criteria that matter and the decision the analysis serves — turning \"describe the data\" into \"help me decide\". A and C only reword the request without saying what the model should look for; D asks for compression, the opposite of analysis. Remember: good analysis = specific question + criteria + the decision it serves."
+  },
+  {
+   "id": 6,
+   "type": "single",
+   "domain": "Prompting and Task Execution",
+   "question": "A communications officer has a detailed technical incident report and must brief the executive team. Which prompt element matters most for getting a usable result on the first pass?",
+   "options": [
+    {
+     "text": "Asking Claude to keep every technical detail from the report in the briefing so that absolutely nothing is lost in translation"
+    },
+    {
+     "text": "Requesting the longest possible output to demonstrate thoroughness"
+    },
+    {
+     "text": "Asking for the briefing to be written in a language the executive team does not speak, so that confidentiality of the incident details is fully preserved"
+    },
+    {
+     "text": "Stating the audience and needs: “for non-technical executives — one page, lead with customer impact and cost, end with the three decisions we need”",
+     "correct": true
+    }
+   ],
+   "explanation": "The audience is the highest-leverage instruction when transforming content. Saying who reads it, what they care about and what they must do turns a technical document into a decision-ready summary. A recreates the original problem (executives buried in detail); B confuses length with value; C is an absurd measure that defeats the purpose of a summary. Remember: transforming content → state the audience + their needs + the decision."
+  },
+  {
+   "id": 7,
+   "type": "multiple",
+   "domain": "Prompting and Task Execution",
+   "question": "Which TWO elements most improve a prompt for drafting a customer-facing announcement? (Select TWO.)",
+   "options": [
+    {
+     "text": "Leaving the request deliberately vague so the model can be creative"
+    },
+    {
+     "text": "Naming the audience and the purpose the announcement must achieve",
+     "correct": true
+    },
+    {
+     "text": "Writing the entire prompt in capital letters for emphasis"
+    },
+    {
+     "text": "Specifying format, length, and tone requirements for the deliverable",
+     "correct": true
+    },
+    {
+     "text": "Asking the model to guess what the company probably wants to say"
+    }
+   ],
+   "explanation": "Audience and purpose, plus concrete constraints on the deliverable, are the two components that let the model aim at the right target and produce the right shape — the difference between generic text and a usable draft. A and E withhold exactly the information that determines quality; C only changes emphasis and does not help the model understand more. Remember: audience + purpose; format + length + tone."
+  },
+  {
+   "id": 8,
+   "type": "single",
+   "domain": "Prompting and Task Execution",
+   "question": "An operations associate must turn a 60-page vendor audit into a board-ready one-page summary, using Claude throughout. The work involves five activities:\n1. Review the extracted findings against the source report for accuracy\n2. Upload the report and have Claude extract the key findings for each audit area\n3. Define the summary’s audience, purpose, and required structure\n4. Have Claude draft the one-page summary from the verified findings\n5. Refine the draft’s tone and emphasis through targeted feedback\nIn which order should the activities be carried out?",
+   "options": [
+    {
+     "text": "2 → 3 → 1 → 4 → 5"
+    },
+    {
+     "text": "3 → 2 → 1 → 4 → 5",
+     "correct": true
+    },
+    {
+     "text": "3 → 2 → 4 → 1 → 5"
+    },
+    {
+     "text": "2 → 4 → 5 → 1 → 3"
+    }
+   ],
+   "explanation": "Requirements first, verify before you depend on it: define the purpose (3) so extraction is targeted, extract (2), check the intermediate result (1) before building on it, draft from the verified findings (4), refine last (5). A extracts before there is a purpose; C drafts from unchecked data, letting errors flow into the board document; D pushes both the accuracy check and the purpose definition to the end — backwards on both. Remember: order: purpose → extract → verify → draft → refine."
+  },
+  {
+   "id": 9,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "Claude produces a market summary that includes a precise statistic — “the sector grew 14.2% in 2025, according to the annual industry report” — which will appear in a board paper. What must happen before this is used?",
+   "options": [
+    {
+     "text": "Nothing — the precision of the number and the named source together indicate that the claim is reliable enough for the paper"
+    },
+    {
+     "text": "Ask Claude whether it is sure, and proceed if it confirms"
+    },
+    {
+     "text": "Verify the figure against the actual industry report, or another authoritative source, before it goes in the board paper",
+     "correct": true
+    },
+    {
+     "text": "Round the number to 14% so any error is smaller"
+    }
+   ],
+   "explanation": "Precise-looking figures with named citations are the classic look of hallucination. Every factual claim that goes into an important document must be checked against an authoritative original source. A mistakes specificity for reliability — fabricated details are often very specific; B lets a possibly wrong source grade itself; D shrinks the error without checking whether there is one. Remember: specific figures + citations → verify against the original source."
+  },
+  {
+   "id": 10,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "An associate asks Claude to summarize a spreadsheet. The narrative says “headcount grew in every region,” but the accompanying table Claude produced shows one region declining. What does this signal, and what should the associate do?",
+   "options": [
+    {
+     "text": "An internal inconsistency — a reliability warning. Check both claims against the source spreadsheet and correct the output before use",
+     "correct": true
+    },
+    {
+     "text": "Trust the narrative, since prose reflects the model’s more considered overall reading of the data than a mechanically produced table does"
+    },
+    {
+     "text": "Trust the table, since numbers are always more reliable than prose"
+    },
+    {
+     "text": "Average the two claims and move on"
+    }
+   ],
+   "explanation": "When output contradicts itself, at least one part is wrong — and only the source data can settle it. Internal contradiction is the most useful signal that the output needs fixing. B and C pick a winner arbitrarily when either side could be wrong; D is not a meaningful operation on two conflicting claims. Remember: self-contradicting output → check against the source data."
+  },
+  {
+   "id": 11,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "HR asks Claude to draft a job advertisement, and the result describes the ideal candidate as a “young, energetic digital native.” What is the appropriate response?",
+   "options": [
+    {
+     "text": "Publish it — AI-generated text is neutral by definition"
+    },
+    {
+     "text": "Ask Claude to make the ad more exciting"
+    },
+    {
+     "text": "Keep the wording but add a prominent disclaimer stating that the company is an equal-opportunity employer welcoming applicants of all ages, then publish otherwise unchanged"
+    },
+    {
+     "text": "Recognize the age-biased framing, revise the ad to describe skills and competencies, and review AI-drafted HR content for bias as standard practice",
+     "correct": true
+    }
+   ],
+   "explanation": "The model can reproduce bias already present in everyday language, and hiring content is where that has legal and ethical consequences. Assessing bias and fixing the wording at its root is part of the review. A is wrong — generated text inherits bias from language; B polishes the problem; C contradicts the posting's own wording instead of fixing it. Remember: HR content → review for bias, fix at the root."
+  },
+  {
+   "id": 12,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "Claude drafts a supplier contract clause covering liability caps. The draft reads well and the associate cannot see anything wrong with it. What determines the next step?",
+   "options": [
+    {
+     "text": "Send it to the supplier — if nothing looks wrong, it is fine"
+    },
+    {
+     "text": "The stakes: legally binding language requires review by qualified legal counsel before use, however polished the draft appears",
+     "correct": true
+    },
+    {
+     "text": "Ask Claude to double-check its own clause carefully against common contract pitfalls and rely on its confirmation that the wording is sound"
+    },
+    {
+     "text": "Shorten the clause so there is less that could be wrong"
+    }
+   ],
+   "explanation": "Deciding when expert review is needed depends on consequences, not confidence. Contract text creates legally binding obligations — it must go through a lawyer; \"reads smoothly\" is no substitute. A confuses fluency with legal correctness — the employee lacks the expertise to see what is missing; C lets the author grade its own work; D reduces the word count, not the risk. Remember: legal text → qualified human review, however good it looks."
+  },
+  {
+   "id": 13,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "An associate wants to fact-check the key claims in a Claude-generated research brief. Which approach constitutes genuine validation?",
+   "options": [
+    {
+     "text": "Asking Claude to confirm that its brief is accurate"
+    },
+    {
+     "text": "Regenerating the brief a second time and checking whether the new version says substantially the same thing as the first one did"
+    },
+    {
+     "text": "Checking each material claim against independent, authoritative sources — official publications or primary data",
+     "correct": true
+    },
+    {
+     "text": "Reading the brief carefully for spelling and grammar errors"
+    }
+   ],
+   "explanation": "Validation means comparing against a ground truth the model did not produce. An independent authoritative source is that ground truth; nothing generated in the same conversation can play that role. A makes the author of the claim the referee; B checks consistency, not truth — the model can repeat the same error; D checks form, which has nothing to do with accuracy. Remember: validation = compare with an independent source outside the model."
+  },
+  {
+   "id": 14,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "Claude summarizes a 30-page policy document into one page. Before circulating it, the associate wants to confirm the summary is complete, not just accurate. What is the practical check?",
+   "options": [
+    {
+     "text": "Confirm the summary is exactly one page as requested, since meeting the length requirement is what the instruction actually asked for"
+    },
+    {
+     "text": "Compare coverage against the source — check the document’s section headings and key provisions are each represented or consciously omitted",
+     "correct": true
+    },
+    {
+     "text": "Ask Claude whether it left anything out"
+    },
+    {
+     "text": "Count the words in the summary and the source document and confirm the compression ratio stays consistent from section to section throughout"
+    }
+   ],
+   "explanation": "Completeness is checked against the source's structure: go through its headings and key clauses and confirm the summary covers them. An omission cannot be seen in the summary — you have to look where it came from. A and D measure length, not coverage; C asks the summarizer to notice what it already failed to notice. Remember: completeness = check against the source document's structure."
+  },
+  {
+   "id": 15,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "Claude produces an accurate but dense, jargon-heavy analysis. It must now go to a customer advisory panel of non-specialists. What does good output adaptation look like?",
+   "options": [
+    {
+     "text": "Ask Claude to rewrite it for the panel — plain language, defined terms, lead with customer impact — then review the rewrite for accuracy",
+     "correct": true
+    },
+    {
+     "text": "Send the original — accuracy is all that matters"
+    },
+    {
+     "text": "Delete the technical sections so nothing needs explaining"
+    },
+    {
+     "text": "Keep the original dense version fully intact and add a comprehensive glossary appendix defining every technical term for the panel members to consult"
+    }
+   ],
+   "explanation": "Adapting for the audience is a core evaluation skill: keep the substance, change the form for the reader — then re-check accuracy, because rewriting can introduce new errors. B sends something the reader cannot use; C drops content instead of translating it; D makes the reader do the conversion. Remember: adapt for the audience → rewrite + re-check accuracy."
+  },
+  {
+   "id": 16,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "During one working session an associate gets three things from Claude: a quick factual answer, a comparison of four vendors across six criteria, and a polished one-page brief that colleagues will edit and reuse. Which output formats fit?",
+   "options": [
+    {
+     "text": "Everything as artifacts, since artifacts are the premium format"
+    },
+    {
+     "text": "Everything inline, to keep the conversation in one place"
+    },
+    {
+     "text": "The polished brief inline in the chat, the vendor comparison as a separate chat message, and the quick factual answer as its own artifact"
+    },
+    {
+     "text": "The quick fact inline; the vendor comparison as a structured table; the reusable brief as an artifact to refine and share from",
+     "correct": true
+    }
+   ],
+   "explanation": "Choose the format by how it will be used: quick answers stay inline, comparative data needs structure, and content that will be iterated, edited and reused belongs in an artifact. A and B force one format onto three different jobs; C assigns each output to its least suitable format. Remember: inline = quick answer; table = comparison; artifact = document to edit/reuse."
+  },
+  {
+   "id": 17,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "An associate has two Claude-drafted versions of a sensitive customer apology and must choose one. What is the soundest way to compare them?",
+   "options": [
+    {
+     "text": "Choose the longer one, since it covers more"
+    },
+    {
+     "text": "Define what the message must achieve — acknowledge the failure, take responsibility, state the remedy, match company voice — and assess both drafts against those criteria",
+     "correct": true
+    },
+    {
+     "text": "Ask Claude to weigh its own two drafts against each other, explain in detail which it considers the stronger piece of writing and why, and then send whichever draft the model selects"
+    },
+    {
+     "text": "Merge both drafts in full so nothing is lost"
+    }
+   ],
+   "explanation": "Comparing outputs is criteria-based: state what success looks like, then evaluate both candidates against it. Claude can help critique against the criteria, but the person who is accountable makes the call on sensitive text. A uses length as a quality measure; C hands the model a judgment the employee must answer for; D doubles the length and blends two voices into none. Remember: comparing outputs → criteria first, a person decides."
+  },
+  {
+   "id": 18,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "After a long research conversation, the useful findings are scattered across dozens of messages mixed with dead ends. The material is needed next week by three colleagues. What should the associate do?",
+   "options": [
+    {
+     "text": "Forward the entire conversation transcript to the three colleagues so they can read through everything and find the useful parts themselves"
+    },
+    {
+     "text": "Rely on memory and re-ask Claude next week"
+    },
+    {
+     "text": "Curate it: have Claude consolidate the validated findings into one organized document, review and correct it, and share that",
+     "correct": true
+    },
+    {
+     "text": "Copy every message into a spreadsheet row by row"
+    }
+   ],
+   "explanation": "Organizing and curating turns a conversation into a work product: gather what has been verified, arrange it for the reader, check it once, and share a single canonical version. A sends the whole mess including dead ends; B gambles on regenerating what already exists; D keeps the clutter in a different container. Remember: long conversation → consolidate into one reviewed document."
+  },
+  {
+   "id": 19,
+   "type": "single",
+   "domain": "Output Evaluation and Validation",
+   "question": "An associate asks Claude how to configure a setting in their company’s internal, custom-built expense tool. Claude confidently provides step-by-step instructions. What should the associate recognize?",
+   "options": [
+    {
+     "text": "Claude cannot know the internals of a private company tool; the confident steps are likely plausible invention and should be checked against internal documentation",
+     "correct": true
+    },
+    {
+     "text": "The confidence of the instructions indicates Claude has genuine knowledge of the tool"
+    },
+    {
+     "text": "Claude can see the associate’s screen and is describing the actual tool"
+    },
+    {
+     "text": "Internal business tools follow universal design standards and conventions, so generic step-by-step instructions of this kind are dependable for any company’s software"
+    }
+   ],
+   "explanation": "A key evaluation skill is asking \"could the model actually know this?\". Private, internal details are outside any model's knowledge — fluent guidance about them is pattern-based guesswork in a confident voice. B confuses fluency with knowledge; C attributes a capability chat does not have; D is wishful — in-house tools differ in exactly the details that matter. Remember: \"could the model know this?\" — not for internal information."
+  },
+  {
+   "id": 20,
+   "type": "multiple",
+   "domain": "Output Evaluation and Validation",
+   "question": "Which TWO characteristics of a Claude output most strongly signal that extra verification is needed before use? (Select TWO.)",
+   "options": [
+    {
+     "text": "The response is well formatted, with clear headings, bullet points, and a professional document structure throughout"
+    },
+    {
+     "text": "The response contains specific figures, quotations, or citations that will be relied upon",
+     "correct": true
+    },
+    {
+     "text": "The response runs longer than two paragraphs, suggesting the model had to work harder to produce it"
+    },
+    {
+     "text": "The response uses a warm, professional tone"
+    },
+    {
+     "text": "The response makes claims about very recent events or specialized facts the associate cannot confirm themselves",
+     "correct": true
+    }
+   ],
+   "explanation": "Risk concentrates in specific, decision-relevant claims that are beyond the reviewer's ability to check themselves: figures, citations, exact sources, and statements about recent events or specialist fields. A, C and D are surface features — they say nothing about accuracy. Remember: needs verification: specific figures/citations + recent or specialist claims."
+  },
+  {
+   "id": 21,
+   "type": "multiple",
+   "domain": "Output Evaluation and Validation",
+   "question": "A team is defining its standard validation practice for Claude-assisted work. Which TWO practices belong in it? (Select TWO.)",
+   "options": [
+    {
+     "text": "Check high-stakes factual claims against authoritative external sources before publication",
+     "correct": true
+    },
+    {
+     "text": "Ask Claude to rate its own confidence in each output and treat consistently high self-ratings as sufficient verification"
+    },
+    {
+     "text": "Regenerate each output twice and accept it if the versions agree"
+    },
+    {
+     "text": "Route specialized content (legal, medical, financial) to a qualified human reviewer before it is relied upon",
+     "correct": true
+    },
+    {
+     "text": "Treat any output that survives a spelling check as validated"
+    }
+   ],
+   "explanation": "The two pillars of validation: independent sources for factual claims, and human experts for consequential domain content. Both compare the output with something outside the model. B and C reuse the model's own signals — confidence or self-consistency is not evidence; E checks spelling, which is not the risk. Remember: proper validation = external sources + human experts."
+  },
+  {
+   "id": 22,
+   "type": "single",
+   "domain": "Product and Model Selection",
+   "question": "Every month, an operations associate produces a supplier scorecard using the same 12 reference documents, the same formatting rules, and the same evaluation rubric — currently re-uploading and re-explaining everything each time. Which feature removes this overhead?",
+   "options": [
+    {
+     "text": "Research mode, so Claude finds the documents on the web"
+    },
+    {
+     "text": "A longer first message each month containing everything"
+    },
+    {
+     "text": "A Claude Project holding the reference documents as knowledge and the rules and rubric as instructions, so every monthly chat starts equipped",
+     "correct": true
+    },
+    {
+     "text": "Asking Claude at the start of each month to remember the documents and rules from last month’s conversation and simply carry on from there"
+    }
+   ],
+   "explanation": "Projects are for recurring work on a stable foundation: knowledge and instructions are configured once and apply to every conversation in the project, eliminating repeated setup. A looks for private documents on the public web; B rebuilds the setup every month — the very problem; D relies on cross-chat memory, which should not be assumed for a controlled process. Remember: recurring work with the same documents + rules → Project (knowledge + instructions)."
+  },
+  {
+   "id": 23,
+   "type": "single",
+   "domain": "Product and Model Selection",
+   "question": "A strategy associate needs a comprehensive overview of a market: competitor moves, pricing trends, and recent regulatory changes, drawn from many current sources with citations. Which approach fits?",
+   "options": [
+    {
+     "text": "A quick chat question with no tools, relying on training knowledge"
+    },
+    {
+     "text": "Use the research capability, which searches and synthesizes multiple current sources into a cited report",
+     "correct": true
+    },
+    {
+     "text": "Ask for the answer as a haiku to force conciseness"
+    },
+    {
+     "text": "Upload last year’s market report and ask Claude to infer what has probably changed across competitors, pricing, and regulation since it was written"
+    }
+   ],
+   "explanation": "Choose the feature by the depth needed: multi-source, current, cited research is a job for research — ordinary chat cannot see recent developments or cite sources directly. A gives a possibly outdated, unsourced answer; C is a formatting gimmick; D makes the model invent the very information that needs researching. Remember: multiple sources + current + citations → research."
+  },
+  {
+   "id": 24,
+   "type": "single",
+   "domain": "Product and Model Selection",
+   "question": "An associate is developing a client proposal with Claude and expects many rounds of revision — restructuring sections, tightening language, adjusting tone — before it is shared with colleagues. Which way of working fits best?",
+   "options": [
+    {
+     "text": "Keep each revision as a new pasted block in the chat and scroll to compare"
+    },
+    {
+     "text": "Retype the full proposal into every message when requesting changes"
+    },
+    {
+     "text": "Ask for the proposal one paragraph per conversation, in separate chats"
+    },
+    {
+     "text": "Develop the proposal as an artifact, so there is one evolving document to revise, review, and ultimately share",
+     "correct": true
+    }
+   ],
+   "explanation": "An artifact is the right place for large content under iterative revision: one canonical version edited in place, easy to review as a document and easy to hand off. A buries versions in scroll history with no canonical source; B manually repeats what artifacts already do; C splits one document across disconnected contexts. Remember: document revised over many rounds → artifact."
+  },
+  {
+   "id": 25,
+   "type": "single",
+   "domain": "Product and Model Selection",
+   "question": "An associate has two tasks today: (1) a nuanced synthesis of three conflicting analyst reports into a strategy recommendation, and (2) reformatting 200 addresses into a standard layout. How should model choice differ?",
+   "options": [
+    {
+     "text": "The most capable model for the synthesis, where reasoning quality dominates; a fast, low-cost model for the mechanical reformatting",
+     "correct": true
+    },
+    {
+     "text": "Use the fastest model for both, since speed always wins"
+    },
+    {
+     "text": "Use the most capable model for both, since quality always wins"
+    },
+    {
+     "text": "The fast model for the synthesis and the most capable model for the address reformatting, so that spending balances out across the two tasks over the day"
+    }
+   ],
+   "explanation": "Model tiers exist to match the job to the need: complex judgment is worth the cost and latency of the most capable model; routine transformation is not — a smaller model does it faster and cheaper at the same quality. B is underpowered for work where the reasoning is the product; C overpays for work a lighter model does just as well; D reverses the logic on both. Remember: complex reasoning → capable model; mechanical work → fast, cheap model."
+  },
+  {
+   "id": 26,
+   "type": "single",
+   "domain": "Product and Model Selection",
+   "question": "A support team drafts hundreds of short, routine replies daily. Response speed and cost-per-reply drive the business case; the replies require no complex reasoning. Which model tier fits, and what should confirm the choice?",
+   "options": [
+    {
+     "text": "The most capable, highest-cost tier — anything customer-facing always justifies maximum capability, regardless of how simple the individual replies are"
+    },
+    {
+     "text": "Alternate tiers by day of week to spread the cost"
+    },
+    {
+     "text": "A fast, low-cost tier (such as Haiku-class) suited to high-volume work — confirmed by spot-checking a sample of drafts before standardizing",
+     "correct": true
+    },
+    {
+     "text": "Whichever tier was used most recently, for consistency"
+    }
+   ],
+   "explanation": "This is the classic \"high volume, low complexity\" profile for the fast tier. The professional part is the verification step: spot-check quality on a sample before committing. A pays a premium for unused capability, with latency the workload cannot afford; B and D are not selection logic. Remember: high volume, simple → Haiku-class + sample check."
+  },
+  {
+   "id": 27,
+   "type": "single",
+   "domain": "Product and Model Selection",
+   "question": "Midway through a long planning conversation, several key decisions have been made that will matter for future work over the coming weeks. What is the right way to make those decisions durable?",
+   "options": [
+    {
+     "text": "Trust that Claude will remember them whenever asked in future chats"
+    },
+    {
+     "text": "Persist them deliberately: have Claude produce a decision summary, verify it, and save it somewhere durable — such as the Project’s knowledge",
+     "correct": true
+    },
+    {
+     "text": "Keep the conversation permanently open in a browser tab and treat that tab as the team’s system of record whenever the decisions need to be consulted"
+    },
+    {
+     "text": "Repeat the entire conversation from scratch whenever the decisions are needed"
+    }
+   ],
+   "explanation": "Managing memory means knowing what is retained and what is not — and acting on it: important results are written down, checked and stored where later work will actually find them. A assumes a recall ability that should not be relied on for a multi-week process; C turns a browser tab into a single point of failure; D pays the full cost again every time. Remember: important decisions → summarize, check, store in Project knowledge."
+  },
+  {
+   "id": 28,
+   "type": "multiple",
+   "domain": "Product and Model Selection",
+   "question": "Which TWO situations most clearly call for setting up a Claude Project rather than using standalone chats? (Select TWO.)",
+   "options": [
+    {
+     "text": "A recurring task where every conversation should draw on the same reference documents and instructions",
+     "correct": true
+    },
+    {
+     "text": "A single, one-off question that needs a quick factual answer"
+    },
+    {
+     "text": "Making the model respond noticeably faster to every request by giving it a dedicated space of its own to work within"
+    },
+    {
+     "text": "A team wanting consistent behavior — shared context, tone, and rules — across everyone’s conversations",
+     "correct": true
+    },
+    {
+     "text": "Removing the model’s context limits altogether by giving it somewhere to store an unlimited amount of conversation history"
+    }
+   ],
+   "explanation": "Projects pay off when context is stable and reused: an individual's recurring work on a fixed foundation, and team workflows where every conversation must draw on the same knowledge and instructions. B needs no setup at all; C and E attribute capabilities Projects do not have — a Project organizes context, it does not speed up the model or remove context limits. Remember: Project = recurring or team-shared context; no speed-up, no lifting of context limits."
+  },
+  {
+   "id": 29,
+   "type": "single",
+   "domain": "Workflow Integration and Solution Design",
+   "question": "A business analyst has 40 pages of raw stakeholder interview notes for a new intranet project. How can Claude best support the requirements-analysis stage?",
+   "options": [
+    {
+     "text": "Have Claude analyze the notes and decide the project’s final requirements itself, so stakeholders do not need to be consulted or bothered for input a second time"
+    },
+    {
+     "text": "Have Claude organize the notes into themes, extract needs and pain points, and draft a structured requirements list for the analyst to validate with stakeholders",
+     "correct": true
+    },
+    {
+     "text": "Skip the notes and ask Claude what intranets usually require"
+    },
+    {
+     "text": "Use Claude only to fix the grammar in the notes"
+    }
+   ],
+   "explanation": "Claude is strong at the laborious middle of requirements analysis: structuring raw qualitative data into themes and candidate requirements. The analyst keeps the judgment steps — confirming and prioritizing with the people who own the need. A removes stakeholders from decisions about their own needs; C replaces what stakeholders actually said with generic templates; D uses a synthesis tool as a spellchecker. Remember: Claude structures + drafts; people confirm with stakeholders."
+  },
+  {
+   "id": 30,
+   "type": "single",
+   "domain": "Workflow Integration and Solution Design",
+   "question": "A project manager is kicking off an office relocation and wants help getting from a blank page to a credible plan. What is an effective use of Claude at this stage?",
+   "options": [
+    {
+     "text": "Ask Claude for the final, approved project plan and circulate it unedited"
+    },
+    {
+     "text": "Avoid using Claude, since planning requires human intuition only"
+    },
+    {
+     "text": "Avoid involving Claude until after the plan has been finished by the team, and then use it only to turn the completed plan into a polished set of presentation slides"
+    },
+    {
+     "text": "Ask Claude to draft a first-pass plan — workstreams, sequencing, risks, stakeholders — then refine it with knowledge of the actual organization and budget",
+     "correct": true
+    }
+   ],
+   "explanation": "Research and planning support means using Claude to get past the blank page: a structured draft that human context corrects and completes. The draft speeds things up; the manager's understanding decides. A publishes a plan never checked against organizational reality; B gives up hours of acceleration on principle; C uses Claude only for decoration after the hard work is done. Remember: blank page → Claude drafts first, people refine."
+  },
+  {
+   "id": 31,
+   "type": "single",
+   "domain": "Workflow Integration and Solution Design",
+   "question": "An operations team suspects their invoice-approval process is inefficient but cannot articulate where. How can Claude support process optimization here?",
+   "options": [
+    {
+     "text": "Describe the process step by step and ask Claude to identify likely bottlenecks, redundant approvals, and questions to investigate, then verify against real data",
+     "correct": true
+    },
+    {
+     "text": "Ask Claude to approve the invoices itself from now on"
+    },
+    {
+     "text": "Have Claude generate a motivational memo about efficiency"
+    },
+    {
+     "text": "Retire the current process immediately and replace it wholesale with whatever alternative process Claude describes as industry best practice for invoice approval workflows"
+    }
+   ],
+   "explanation": "Claude is a good analytical partner for process improvement: examining a described process, spotting structural warning signs and proposing hypotheses. The discipline is treating them as hypotheses to test with data, not conclusions. B jumps from analysis to unsupervised execution of a financial control; C is a formality; D replaces an undiagnosed process with a generic template without evidence. Remember: Claude proposes bottleneck hypotheses → test them with real data."
+  },
+  {
+   "id": 32,
+   "type": "single",
+   "domain": "Workflow Integration and Solution Design",
+   "question": "A content team's workflow is: research → outline → first draft → expert review → publish. The first-draft stage is the chronic bottleneck; expert review works well. How should Claude be integrated?",
+   "options": [
+    {
+     "text": "Replace the entire workflow — research, outlining, drafting, and the expert review stage included — with a single consolidated Claude step that does it all"
+    },
+    {
+     "text": "Insert Claude at the publishing stage, since that is the final step"
+    },
+    {
+     "text": "Augment the bottleneck: use Claude to produce structured first drafts from the outlines, keeping research direction and expert review where they are",
+     "correct": true
+    },
+    {
+     "text": "Use Claude to time each stage more precisely"
+    }
+   ],
+   "explanation": "Good integration is targeted surgery: aim Claude at the step that actually limits throughput and keep the steps that work well — especially the human quality gate. The process gets faster without getting riskier. A removes the very safeguard that makes the output trustworthy; B optimizes a step that is not the problem; D measures the bottleneck instead of relieving it. Remember: integration = augment the real bottleneck, keep human review."
+  },
+  {
+   "id": 33,
+   "type": "single",
+   "domain": "Workflow Integration and Solution Design",
+   "question": "A team lead wants to integrate Claude into the department’s weekly client-reporting workflow. Five activities are planned:\n1. Scale the approach across the whole team as the standard process\n2. Map the current workflow and baseline how long each stage takes today\n3. Pilot Claude on the chosen stage for several reporting cycles\n4. Select the stage where Claude can add the most value at the lowest risk\n5. Evaluate the pilot’s results against the baseline measures\nIn which order should the activities be carried out?",
+   "options": [
+    {
+     "text": "4 → 3 → 2 → 5 → 1"
+    },
+    {
+     "text": "3 → 2 → 4 → 5 → 1"
+    },
+    {
+     "text": "2 → 4 → 3 → 1 → 5"
+    },
+    {
+     "text": "2 → 4 → 3 → 5 → 1",
+     "correct": true
+    }
+   ],
+   "explanation": "Understand before changing, prove before scaling: map and measure the baseline (2), choose the step based on evidence (4), pilot (3), evaluate against the baseline (5), and only then standardize (1). The baseline in step 2 is what makes the evaluation meaningful. A picks a step before understanding the process, and a late baseline cannot measure change; B pilots before knowing where Claude should go; C rolls out to the whole team before evaluating whether the pilot succeeded. Remember: order: baseline → choose step → pilot → evaluate → scale."
+  },
+  {
+   "id": 34,
+   "type": "multiple",
+   "domain": "Workflow Integration and Solution Design",
+   "question": "A knowledge worker’s typical week includes: triaging a shared inbox into action categories, negotiating contract terms in supplier meetings, condensing project updates into a weekly status report, approving invoices for payment, and mentoring a junior colleague. Which TWO parts of this week are the strongest candidates for integrating Claude as day-to-day support? (Select TWO.)",
+   "options": [
+    {
+     "text": "Inbox triage: Claude drafts the categorisation and suggested actions, which the worker reviews and confirms",
+     "correct": true
+    },
+    {
+     "text": "Supplier negotiations: Claude attends the meetings and negotiates the contract terms"
+    },
+    {
+     "text": "The status report: Claude drafts it from the collected project updates, for the worker’s review and edit",
+     "correct": true
+    },
+    {
+     "text": "Invoice approval: Claude reviews and approves the payments autonomously each week, removing the approval bottleneck entirely"
+    },
+    {
+     "text": "Mentoring: Claude replaces the one-on-one sessions with generated career advice"
+    }
+   ],
+   "explanation": "Frequent, language-heavy work whose results a person checks is where Claude integrates well: classification drafts and report drafts are high-volume, easily checked text tasks, with the person keeping the final say. B and E are relational work — negotiation and mentoring need human presence, trust and accountability; D hands an automatic financial-control decision to a tool, wrong on both risk and oversight. Remember: good candidates = frequent text work, easy to check, human-reviewed."
+  },
+  {
+   "id": 35,
+   "type": "single",
+   "domain": "Workflow Integration and Solution Design",
+   "question": "After a successful pilot using Claude for proposal drafting, an associate must present the results to skeptical leadership. Which presentation approach is right?",
+   "options": [
+    {
+     "text": "Report concrete outcomes — drafting time cut from six hours to two, quality maintained per reviewer scores — alongside honest limitations",
+     "correct": true
+    },
+    {
+     "text": "Claim the tool is flawless to secure the budget quickly"
+    },
+    {
+     "text": "Present only the limitations to appear rigorous and cautious"
+    },
+    {
+     "text": "Keep the presentation deliberately free of specific numbers and measurements, so that leadership has nothing concrete to challenge or pick apart"
+    }
+   ],
+   "explanation": "Communicating value = evidence + honesty: measured benefits and clearly stated limitations. That combination builds lasting trust — and protects the initiative when the limitations surface. B sets expectations reality will break; C buries real results under false caution; D trades credibility for unverifiability. Remember: presenting value = specific figures + honest limitations."
+  },
+  {
+   "id": 36,
+   "type": "single",
+   "domain": "Workflow Integration and Solution Design",
+   "question": "An associate's team loves their Claude-assisted triage workflow and now wants it to run automatically: connected to the CRM via API, triggered on every new ticket, with no one initiating chats. What should the associate do?",
+   "options": [
+    {
+     "text": "Build the CRM API integration personally over the weekend, using code generated by Claude, so the team doesn’t have to wait for anyone"
+    },
+    {
+     "text": "Tell the team automation of this kind is impossible"
+    },
+    {
+     "text": "Recognize this has crossed into technical implementation — API integration and automated triggering — and escalate to a developer or Architect resource",
+     "correct": true
+    },
+    {
+     "text": "Simulate the automation by hand: personally copy every new ticket from the CRM into Claude throughout the day and paste the triage results back into the CRM"
+    }
+   ],
+   "explanation": "Knowing the boundary is an Associate competency: platform features, workflows and Projects are in scope; API integration and automated triggering are technical work for another specialization, to which the Associate contributes a proven workflow design. A takes on production technical work outside the role's scope and safety net; B is wrong — it is feasible, just not something the Associate builds alone; D turns a person into a manual API. Remember: API + automated triggering → outside the Associate's scope, hand to a developer/Architect."
+  },
+  {
+   "id": 37,
+   "type": "multiple",
+   "domain": "Workflow Integration and Solution Design",
+   "question": "An associate is designing the pilot for their department's first Claude workflow. Which TWO practices give the pilot the best chance of producing a trustworthy result? (Select TWO.)",
+   "options": [
+    {
+     "text": "Roll it out across the entire organization at once, so the pilot sample is as large as it can possibly be"
+    },
+    {
+     "text": "Choose a frequent, low-risk task where outputs are easy to check against reality",
+     "correct": true
+    },
+    {
+     "text": "Pick the department's highest-stakes process so the pilot proves maximum value"
+    },
+    {
+     "text": "Define success measures — time saved, quality maintained, adoption — before the pilot starts",
+     "correct": true
+    },
+    {
+     "text": "Avoid measuring the current process, to keep the comparison unbiased"
+    }
+   ],
+   "explanation": "A good pilot combines a suitable test environment — frequent enough to generate evidence, low-risk enough to contain mistakes — with success criteria set in advance, so the result is a measurement rather than an impression. A and C inflate the scope before anything is proven; E drops the baseline that gives the pilot's numbers meaning. Remember: good pilot = frequent, low-risk task + success criteria set in advance."
+  },
+  {
+   "id": 38,
+   "type": "multiple",
+   "domain": "Workflow Integration and Solution Design",
+   "question": "A research associate is preparing a competitive-landscape briefing. Which TWO uses of Claude add genuine value to this workflow? (Select TWO.)",
+   "options": [
+    {
+     "text": "Synthesizing a stack of collected articles and reports into organized themes and points of disagreement between sources",
+     "correct": true
+    },
+    {
+     "text": "Serving as the final authority on which competitor claims are true"
+    },
+    {
+     "text": "Producing a structured comparison of competitors across chosen dimensions as a reviewable starting draft",
+     "correct": true
+    },
+    {
+     "text": "Eliminating the need for anyone to check any of the briefing’s claims before it is circulated to the wider leadership group"
+    },
+    {
+     "text": "Deciding the company's competitive strategy autonomously from the briefing"
+    }
+   ],
+   "explanation": "Claude's contribution to a research workflow is fast structure and synthesis: turning source material into organized themes and reviewable comparison drafts, so people can verify and form judgments. B, D and E all move Claude from accelerator to owner of facts and decisions — the parts people must keep. Remember: Claude = synthesis + comparison drafts; people = verification + decisions."
+  },
+  {
+   "id": 39,
+   "type": "single",
+   "domain": "Configuration and Knowledge Management",
+   "question": "An associate begins every conversation in their reporting Project by pasting the same three paragraphs: the team's tone rules, the report structure, and formatting requirements. What is the correct configuration fix?",
+   "options": [
+    {
+     "text": "Keep pasting the paragraphs at the start of every conversation — the repetition helps the model learn the rules permanently over time"
+    },
+    {
+     "text": "Shorten the three paragraphs so pasting is faster"
+    },
+    {
+     "text": "Attach the three paragraphs as a knowledge file in the Project and hope Claude notices and applies it in every conversation"
+    },
+    {
+     "text": "Move the standing rules into the Project’s custom instructions, where they apply to every conversation automatically",
+     "correct": true
+    }
+   ],
+   "explanation": "Fixed behavioral rules — tone, structure, format — are exactly what project instructions are for: configured once, applied to every chat, impossible to forget to paste. A misunderstands the mechanism — nothing is learned between chats, and manual repetition is easy to miss; B optimizes the workaround instead of removing it; C puts behavioral rules where reference documents go, weakening them. Remember: recurring behavioral rules → custom instructions."
+  },
+  {
+   "id": 40,
+   "type": "single",
+   "domain": "Configuration and Knowledge Management",
+   "question": "Setting up a Project for contract-renewal support, an associate wonders what to upload as knowledge. The team drive holds ~2,000 files; about 15 are actually relevant: current templates, the pricing sheet, and negotiation guidelines. What should be uploaded?",
+   "options": [
+    {
+     "text": "The entire team drive of roughly 2,000 files, so that no piece of information could ever be missing when it turns out to be needed"
+    },
+    {
+     "text": "The 15 relevant, current documents — a curated knowledge base of what the work draws on, maintained as things change",
+     "correct": true
+    },
+    {
+     "text": "Nothing — knowledge uploads are unnecessary if prompts are good"
+    },
+    {
+     "text": "Only the oldest documents on the drive, since they carry the most accumulated history of how the work has been done"
+    }
+   ],
+   "explanation": "Curated knowledge beats volume: a focused, current, relevant set of sources gives accurate retrieval and grounded answers. What gets uploaded defines what the Project treats as true. A buries 15 signal documents under 1,985 noisy and outdated ones; C makes every chat re-supply what the Project should already have; D optimizes the wrong attribute. Remember: knowledge = few, relevant, current, maintained."
+  },
+  {
+   "id": 41,
+   "type": "single",
+   "domain": "Configuration and Knowledge Management",
+   "question": "A team's status-report documents live in Google Drive and are updated by several colleagues throughout the week. The associate wants Claude to work from the latest versions without manual re-uploading. What is the right approach, and what should be checked first?",
+   "options": [
+    {
+     "text": "Use the Google Drive connector so Claude accesses the current files directly — after confirming the connection complies with data and access policies",
+     "correct": true
+    },
+    {
+     "text": "Re-upload every file into the Project each morning before starting work, treating the routine as a useful discipline-building ritual for the whole team"
+    },
+    {
+     "text": "Ask colleagues to stop updating the documents so versions stay stable"
+    },
+    {
+     "text": "Have Claude guess what probably changed since the last upload"
+    }
+   ],
+   "explanation": "Connectors exist for exactly this: direct access to the working files instead of stale snapshots. The professional step is a governance check — confirm what the connector can access and that this access fits policy. B is the manual effort the feature removes; C bends the team's process around a tool gap that already has a solution; D invites the model to invent data when the real data is one connector away. Remember: constantly changing files → connector, check policy first."
+  },
+  {
+   "id": 42,
+   "type": "single",
+   "domain": "Configuration and Knowledge Management",
+   "question": "Which of the following is the most effective set of system-level instructions for a customer-communications Project?",
+   "options": [
+    {
+     "text": "“Be consistently helpful and professional, always do a good job, use sound judgment at all times, communicate clearly, and make every customer as happy as possible.”"
+    },
+    {
+     "text": "“Never make mistakes.”"
+    },
+    {
+     "text": "“You draft customer-service replies for a software company. Tone: warm, plain English, no jargon. Always: acknowledge the issue, state next steps. Never: promise refunds (escalate instead) or exceed 200 words.”",
+     "correct": true
+    },
+    {
+     "text": "The company’s complete 30-page policy and procedures manual, pasted in as the instructions in full — every policy, exception, and historical amendment since 2015 — so that no conceivable situation is left uncovered"
+    }
+   ],
+   "explanation": "Effective instructions are specific, structured and behavioral: the role Claude plays, the tone, what to always do, what never to do, and hard constraints. Every line applies to every response. A and B are wishes, not instructions — they do not change behavior; D buries operating rules in archival material that belongs in (curated) knowledge if needed at all. Remember: good instructions = role + tone + Always + Never + hard constraints."
+  },
+  {
+   "id": 43,
+   "type": "single",
+   "domain": "Configuration and Knowledge Management",
+   "question": "An associate is configuring a Project and has two assets: (1) rules about how Claude should behave — tone, structure, escalation triggers; and (2) reference material Claude should draw on — the product catalog and policy documents. Where does each belong?",
+   "options": [
+    {
+     "text": "Both pasted into the first message of every chat"
+    },
+    {
+     "text": "Behavioral rules in the Project’s custom instructions; reference material as Project knowledge",
+     "correct": true
+    },
+    {
+     "text": "Both uploaded as knowledge files, keeping instructions empty"
+    },
+    {
+     "text": "Behavioral rules uploaded as knowledge documents, with the product catalog written into the custom instructions field instead"
+    }
+   ],
+   "explanation": "The two configuration surfaces have separate roles: instructions steer behavior on every turn; knowledge is a reference library consulted when relevant. Put each in the right place and both work as designed. A abandons configuration for manual repetition; C demotes fixed rules to documents Claude may or may not consult; D swaps the two surfaces. Remember: behavior → instructions; reference → knowledge."
+  },
+  {
+   "id": 44,
+   "type": "single",
+   "domain": "Configuration and Knowledge Management",
+   "question": "Sales reps report that the quoting Project keeps citing superseded prices. Investigation shows the Project knowledge contains “pricing_2024.xlsx”, while current prices took effect in January. What does proper knowledge maintenance look like?",
+   "options": [
+    {
+     "text": "Add a chat instruction each time: “ignore the old prices you may have seen”"
+    },
+    {
+     "text": "Upload the new pricing file into the Project knowledge alongside the old one, so that both versions remain available for reference"
+    },
+    {
+     "text": "Tell the reps to mentally adjust the quoted figures"
+    },
+    {
+     "text": "Remove the outdated file, upload the current pricing document, and put knowledge sources on a review cycle",
+     "correct": true
+    }
+   ],
+   "explanation": "Maintaining configuration means knowledge reflects reality: outdated sources are removed — not just supplemented — and a review cycle keeps time-sensitive documents like price lists from silently going stale. A treats a configuration error like an incantation repeated in every chat; B leaves two conflicting sources competing at retrieval; C institutionalizes wrong figures in quotes. Remember: outdated knowledge → remove old + add new + review schedule."
+  },
+  {
+   "id": 45,
+   "type": "single",
+   "domain": "Configuration and Knowledge Management",
+   "question": "An associate is setting up a Claude Project to support the team’s proposal-writing process. Five setup activities are involved:\n1. Test the Project with a realistic sample task and review the output\n2. Write the Project’s custom instructions: tone, structure, and escalation rules\n3. Upload the curated reference documents as Project knowledge\n4. Create the Project\n5. Refine the instructions and knowledge based on what the test revealed\nIn which order should the activities be carried out?",
+   "options": [
+    {
+     "text": "4 → 1 → 2 → 3 → 5"
+    },
+    {
+     "text": "2 → 3 → 4 → 5 → 1"
+    },
+    {
+     "text": "4 → 2 → 3 → 1 → 5",
+     "correct": true
+    },
+    {
+     "text": "4 → 2 → 3 → 5 → 1"
+    }
+   ],
+   "explanation": "The Project must exist before it is configured (4); configuration — instructions and knowledge (2, 3) — comes before evaluation; refining (5) only makes sense after testing (1) has produced something to learn from. Configure → test → refine is also the loop of good prompting. A tests an unconfigured Project; B configures a Project that does not exist yet and refines before testing; D refines before running the tests. Remember: order: create → instructions → knowledge → test → refine."
+  },
+  {
+   "id": 46,
+   "type": "single",
+   "domain": "Governance, Risk, and Responsible Use",
+   "question": "Which of the following tasks is the associate right to treat as an appropriate, low-risk use of Claude without additional approvals?",
+   "options": [
+    {
+     "text": "Producing the company’s official written response to a regulator’s formal inquiry, and sending it out without any human review"
+    },
+    {
+     "text": "Analyzing an unredacted export of customer identity records from the CRM"
+    },
+    {
+     "text": "Turning the associate’s own rough notes from an internal team meeting into organized minutes, reviewed before sharing",
+     "correct": true
+    },
+    {
+     "text": "Generating a diagnosis for an employee's described medical symptoms"
+    }
+   ],
+   "explanation": "Judging appropriate use weighs data sensitivity, stakes and oversight. Internal, non-sensitive content written by the user and reviewed before sharing is in the safe zone. A is high-stakes external communication with the review step skipped; B processes regulated personal data without safeguards; D is a professional medical judgment a chat tool should not make. Remember: low risk = internal + non-sensitive + human-reviewed."
+  },
+  {
+   "id": 47,
+   "type": "single",
+   "domain": "Governance, Risk, and Responsible Use",
+   "question": "An HR associate wants Claude's help analyzing turnover patterns using a spreadsheet that includes employee names, salaries, and health-leave records. Organizational policy restricts sharing sensitive personal data. What is the correct approach?",
+   "options": [
+    {
+     "text": "Upload it as-is; internal analysis doesn't count as sharing"
+    },
+    {
+     "text": "De-identify first — remove or pseudonymize identifiers, keep only fields the analysis needs — and confirm compliance with the data policy",
+     "correct": true
+    },
+    {
+     "text": "Upload the file as it is, but instruct Claude at the start of the conversation to treat the contents as strictly confidential and promise not to share them"
+    },
+    {
+     "text": "Analyze only the names column, since names alone reveal nothing"
+    }
+   ],
+   "explanation": "The practice for sensitive data is minimization: remove identifiers, keep only the fields the analysis needs, and check the approach against policy. The insight survives; the exposure risk does not. A misreads the policy — putting data into a tool is a disclosure event; C replaces a control with a chat message; D does the opposite — keeps identifiers and drops the analytical data. Remember: sensitive data → de-identify + minimize + check policy."
+  },
+  {
+   "id": 48,
+   "type": "single",
+   "domain": "Governance, Risk, and Responsible Use",
+   "question": "A consultant working with a healthcare client is asked to run patient-feedback records through Claude to find service-improvement themes. Health data is subject to specific regulation. What must happen before any records are processed?",
+   "options": [
+    {
+     "text": "Proceed — feedback records don't feel like medical records"
+    },
+    {
+     "text": "Proceed, but delete the conversation afterwards"
+    },
+    {
+     "text": "Run a small sample of the records through first, and wait to see whether the client or anyone else raises an objection before processing the full set"
+    },
+    {
+     "text": "Confirm the regulatory and contractual position first — engage the client’s privacy or compliance function and process the data only as they approve",
+     "correct": true
+    }
+   ],
+   "explanation": "For regulated data, the default flips: approval first, processing second. Compliance determines what regulations and contracts allow — the consultant's job is to ask first, not apologize later. A replaces legal analysis with a hunch — patient feedback can certainly contain health information; B deletes evidence of a violation instead of preventing it; C makes the violation smaller, not legal. Remember: regulated (health) data → compliance approval before processing."
+  },
+  {
+   "id": 49,
+   "type": "single",
+   "domain": "Governance, Risk, and Responsible Use",
+   "question": "An associate discovers a teammate has been pasting confidential company documents into a personal, free AI chatbot account because “it's the same model anyway.” What is the governance-correct response?",
+   "options": [
+    {
+     "text": "Explain the problem, direct the teammate to the sanctioned workspace, and follow the organization’s process for reporting the data exposure",
+     "correct": true
+    },
+    {
+     "text": "Ignore it — the underlying model quality is indeed similar, so the work product is the same wherever the documents happen to be pasted in the end"
+    },
+    {
+     "text": "Join in, because the free account saves budget"
+    },
+    {
+     "text": "Quietly delete the teammate's chat history and say nothing"
+    }
+   ],
+   "explanation": "Following the organization's AI policy means using approved channels — the enterprise workspace exists precisely for its contractual data protections and admin controls — and treating confidential data on an unapproved tool as an incident to report. B and C confuse model capability with governance — the issue is the account terms, not the model; D erases the trace, but the exposure and the behavior remain. Remember: confidential data on a personal tool → approved workspace + report the incident."
+  },
+  {
+   "id": 50,
+   "type": "single",
+   "domain": "Governance, Risk, and Responsible Use",
+   "question": "A marketing lead asks an associate to have Claude write a dozen enthusiastic customer testimonials, each attributed to a fictional customer name, for the company website. How should the associate respond?",
+   "options": [
+    {
+     "text": "Write them — every company polishes its testimonials"
+    },
+    {
+     "text": "Decline and explain that fabricated testimonials presented as real customers are deceptive — then offer legitimate alternatives",
+     "correct": true
+    },
+    {
+     "text": "Write them, but attribute each testimonial to a first name only, so that no complete fictional identity is created and the risk is reduced"
+    },
+    {
+     "text": "Write them and add a tiny footnote reading “illustrative”"
+    }
+   ],
+   "explanation": "Ethical AI use stops at deception: content that manufactures fake \"social proof\" misleads the public no matter who types it. The professional response is to decline and offer a legitimate path to the same business goal. A normalizes fabrication; C and D only disguise the same deceptive act. Remember: fake testimonials = deception → decline + propose an alternative."
+  },
+  {
+   "id": 51,
+   "type": "single",
+   "domain": "Governance, Risk, and Responsible Use",
+   "question": "An associate uses Claude to draft a vendor-evaluation report, edits it, and submits it to their director. The report contains an error that later causes a problem. Who is accountable for the error?",
+   "options": [
+    {
+     "text": "Claude, since it generated the sentence containing the error"
+    },
+    {
+     "text": "Anthropic, as the maker of the tool"
+    },
+    {
+     "text": "The associate who authored and submitted the report — AI assistance does not transfer accountability for one’s work product",
+     "correct": true
+    },
+    {
+     "text": "No one — errors that originate from AI-assisted work are an accepted cost of the technology and are nobody’s individual fault in particular"
+    }
+   ],
+   "explanation": "Accountability follows the person who signs and submits, not whoever typed. Whoever approves AI-assisted work owns it — which is exactly why verification and review are mandatory. A and B confuse the tool with the accountable party; D describes a world where no work product could be trusted. Remember: accountability stays with the submitter, it does not pass to the AI."
+  },
+  {
+   "id": 52,
+   "type": "single",
+   "domain": "Governance, Risk, and Responsible Use",
+   "question": "A colleague going through a divorce asks an associate to have Claude determine “what custody arrangement I'm legally entitled to” so they can act on it directly. What should the associate recognize?",
+   "options": [
+    {
+     "text": "This asks the tool to substitute for professional legal advice on a high-stakes personal matter — the determination belongs with a qualified lawyer",
+     "correct": true
+    },
+    {
+     "text": "Claude's answer will be binding, so it should be worded carefully"
+    },
+    {
+     "text": "It's fine as long as the jurisdiction is specified precisely"
+    },
+    {
+     "text": "The request is acceptable, because family law matters are considerably simpler and more standardized than corporate law and well within the tool’s reach"
+    }
+   ],
+   "explanation": "Recognizing inappropriate use includes the \"substitution\" test: when the request is a professional judgment someone will act on — legal, medical, financial — the tool's role narrows to preparation and exploration, and the judgment belongs to a professional. B attributes legal force a chat answer does not have; C tweaks input details when the problem is the type of request; D is both wrong and irrelevant. Remember: personal legal/medical/financial judgments → a professional, not AI."
+  },
+  {
+   "id": 53,
+   "type": "multiple",
+   "domain": "Governance, Risk, and Responsible Use",
+   "question": "Before uploading a dataset to Claude for analysis, which TWO checks should an associate perform? (Select TWO.)",
+   "options": [
+    {
+     "text": "Whether the file's formatting is attractive"
+    },
+    {
+     "text": "Whether the dataset contains personal, confidential, or regulated information requiring removal, de-identification, or special handling",
+     "correct": true
+    },
+    {
+     "text": "Whether the file was created recently enough for the analysis to be interesting and worth the effort of uploading and running in the first place"
+    },
+    {
+     "text": "Whether the organization's AI and data policies permit this category of data to be used with this tool, in this workspace",
+     "correct": true
+    },
+    {
+     "text": "Whether the dataset is large enough to look impressive"
+    }
+   ],
+   "explanation": "The pre-upload discipline has two gates: check whether the data itself contains sensitive content, and confirm the use is within policy for that data type and platform. A, C and E are cosmetic or incidental properties unrelated to whether the upload is appropriate. Remember: before uploading: sensitive data? + does policy allow it?."
+  },
+  {
+   "id": 54,
+   "type": "multiple",
+   "domain": "Governance, Risk, and Responsible Use",
+   "question": "Which TWO practices belong in a team's responsible-AI working norms? (Select TWO.)",
+   "options": [
+    {
+     "text": "Disclose AI assistance where organizational policy or the context requires it, rather than presenting AI-drafted work as unaided",
+     "correct": true
+    },
+    {
+     "text": "Allow Claude outputs to be sent onward to external parties automatically, without a review step, so that speed of delivery is maximized for the team"
+    },
+    {
+     "text": "Keep humans accountable for decisions that affect people — hiring, performance, customer commitments — with AI limited to support",
+     "correct": true
+    },
+    {
+     "text": "Treat an output as verified once the model has reviewed its own work"
+    },
+    {
+     "text": "Discourage colleagues from questioning or second-guessing AI-produced analysis once it has been circulated, so that team efficiency is maintained"
+    }
+   ],
+   "explanation": "Responsible AI norms rest on transparency and human accountability: be honest about AI's role where it matters, and people — not the model — own decisions that affect people. B removes review exactly where risk is highest; D is circular verification; E inverts a healthy culture — questioning AI output is a safeguard. Remember: responsible AI = transparency + humans accountable for decisions."
+  },
+  {
+   "id": 55,
+   "type": "single",
+   "domain": "Troubleshooting and Optimization",
+   "question": "Claude's answers to an associate's competitive-analysis questions keep coming back generic and surface-level. What should the associate examine first?",
+   "options": [
+    {
+     "text": "Whether Claude is having a bad day, by waiting and retrying tomorrow"
+    },
+    {
+     "text": "The prompt itself: does it supply the company’s context, the competitors, the decision it feeds, and the criteria that matter?",
+     "correct": true
+    },
+    {
+     "text": "The subscription tier, since analytical depth of this kind is presumably a feature reserved for the more expensive paid subscription plans"
+    },
+    {
+     "text": "The time of day the questions are sent"
+    }
+   ],
+   "explanation": "Diagnosis starts with the input: generic output signals a prompt missing context. The model answers the question it actually received — specific input gives specific output. A, C and D look for external causes for a problem whose cause is almost always in the prompt itself. Remember: generic output → check the prompt's context first."
+  },
+  {
+   "id": 56,
+   "type": "single",
+   "domain": "Troubleshooting and Optimization",
+   "question": "An associate's mega-prompt contains fourteen requirements for a report. The output consistently satisfies most of them but drops two or three — different ones each time. What is the likely cause and fix?",
+   "options": [
+    {
+     "text": "The model is being deliberately selective; add a line demanding total obedience"
+    },
+    {
+     "text": "The requirements are fundamentally impossible to satisfy together in any single document; permanently delete half of them so that the remaining half can actually be met"
+    },
+    {
+     "text": "Fourteen is fine — the real problem is not saying ‘please’"
+    },
+    {
+     "text": "Instruction overload: too many requirements competing in one request — group and prioritize them, or decompose into sequential steps",
+     "correct": true
+    }
+   ],
+   "explanation": "Instructions missed in different places each time is the classic sign of overload. The cure is structural: fewer simultaneous requirements per turn, by grouping with priorities or splitting into steps with a final check pass. A misdiagnoses a capability limit as defiance; B drops requirements that could all be met over several turns; C is superstition. Remember: randomly missed requirements → instruction overload → group/prioritize/split."
+  },
+  {
+   "id": 57,
+   "type": "single",
+   "domain": "Troubleshooting and Optimization",
+   "question": "In a team's client-reporting Project, every conversation starts with Claude using the wrong tone, and every user manually corrects it mid-chat. What is the right fix?",
+   "options": [
+    {
+     "text": "Fix it at the source: update the Project’s custom instructions to specify the required tone, so every conversation starts correct",
+     "correct": true
+    },
+    {
+     "text": "Keep correcting each conversation manually as the team already does — it only takes a message or two at the start of every chat to put right"
+    },
+    {
+     "text": "Ask the team to accept the default tone to save effort"
+    },
+    {
+     "text": "Start every chat by insulting the previous answer to motivate improvement"
+    }
+   ],
+   "explanation": "An error repeated in every conversation is a configuration error, not a conversation error. One instructions update fixes every future chat; fixing chats one by one never ends. B institutionalizes the rework configuration exists to remove; C accepts poor quality when a one-line fix exists; D is noise — tone is set by the instructions. Remember: error in every chat → fix the configuration (instructions)."
+  },
+  {
+   "id": 58,
+   "type": "single",
+   "domain": "Troubleshooting and Optimization",
+   "question": "Deep into a marathon conversation that has covered several topics, Claude begins conflating earlier drafts, responding slowly, and missing recent corrections. What is happening, and what is the practical response?",
+   "options": [
+    {
+     "text": "The model is permanently degraded and the account should be reset"
+    },
+    {
+     "text": "Nothing is wrong — conversations behave identically at any length, so the drafts and corrections are all being tracked exactly as they were at the start"
+    },
+    {
+     "text": "Accumulated context has grown long and muddled. Have Claude summarize the current state, verify it, and continue in a fresh conversation seeded with it",
+     "correct": true
+    },
+    {
+     "text": "Type the corrections in capital letters so they outweigh the older content"
+    }
+   ],
+   "explanation": "Long, multi-topic conversations accumulate context to the point of hurting results. The \"restart with a summary\" pattern keeps what matters — verified decisions and current state — and drops the clutter that degrades responses. A blames the account for a conversation-level condition; B denies exactly the symptom described; D adds emphasis to the very context that is overloaded. Remember: conversation too long and messy → summarize, check, open a new chat."
+  },
+  {
+   "id": 59,
+   "type": "single",
+   "domain": "Troubleshooting and Optimization",
+   "question": "Every week an associate spends fifteen minutes re-explaining the same report requirements to Claude before starting the actual weekly report. What is the right optimization?",
+   "options": [
+    {
+     "text": "Accept the fifteen minutes as the cost of quality"
+    },
+    {
+     "text": "Make the setup reusable: capture the standing requirements once in a Project’s instructions, so each week starts at the work",
+     "correct": true
+    },
+    {
+     "text": "Stop explaining the requirements and accept lower-quality reports"
+    },
+    {
+     "text": "Rotate the weekly task among the whole team, so that no single person has to bear the same fifteen minutes of re-explaining every single week"
+    }
+   ],
+   "explanation": "Optimization targets recurring cost: anything explained identically every cycle belongs in reusable configuration. A one-time setup turns 15 minutes a week into zero. A keeps paying the recurring cost after the one-time fix is known; C trades quality for time when neither has to be sacrificed; D redistributes the waste instead of removing it. Remember: explained again every cycle → Project instructions."
+  },
+  {
+   "id": 60,
+   "type": "multiple",
+   "domain": "Troubleshooting and Optimization",
+   "question": "An associate is systematically improving an underperforming prompt. Which TWO practices make the improvement process reliable? (Select TWO.)",
+   "options": [
+    {
+     "text": "Rewrite the entire prompt completely from scratch on every attempt, so no weak wording survives"
+    },
+    {
+     "text": "Change several elements at once to converge faster"
+    },
+    {
+     "text": "Change one element at a time, so each change's effect can be attributed",
+     "correct": true
+    },
+    {
+     "text": "Switch to a different AI product at the first sign of trouble"
+    },
+    {
+     "text": "Test each revision against the same example input, so results are compared like-for-like",
+     "correct": true
+    }
+   ],
+   "explanation": "Reliable iteration is a fair experiment: change one variable, keep the test inputs fixed, observe the difference. That is how you know which change actually helps instead of guessing. A and B destroy attribution — when everything changes, nothing is learned; D skips diagnosis to jump tools. Remember: improving a prompt = one variable at a time + the same test inputs."
+  }
+ ]
+}
