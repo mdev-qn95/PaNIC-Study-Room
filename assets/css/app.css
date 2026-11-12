@@ -415,7 +415,7 @@ dialog h2:focus{outline:none}
 .flag-button[aria-pressed=true]{color:var(--brass);background:var(--brass-soft)}
 .question-number{display:flex;align-items:baseline;gap:12px;font:600 15px var(--display);color:var(--brand);margin:26px 0 10px;font-variant-numeric:lining-nums}
 .question-number span{font:400 13px var(--sans);color:var(--faint)}
-.question-text{font-size:18px;line-height:1.65;font-weight:500;overflow-wrap:anywhere;max-width:44em}
+.question-text{font-size:18px;line-height:1.65;font-weight:500;overflow-wrap:anywhere;max-width:44em;white-space:pre-line}
 .vi{display:block;color:var(--muted);font-size:15px;line-height:1.7;margin:10px 0 0;padding-left:12px;border-left:2px solid var(--brass);font-weight:400;overflow-wrap:anywhere}
 .answer-instruction{margin:22px 0 12px;color:var(--muted);font-size:13px;display:flex;align-items:center;gap:8px}
 .answer-instruction:before{content:'';width:6px;height:6px;background:var(--brass);border-radius:50%;flex:none}

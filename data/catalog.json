@@ -101,8 +101,22 @@
    "title": "Claude Certified Associate",
    "spine": "Associate",
    "level": "Foundations",
-   "status": "soon",
-   "summary": "Your starting point for foundational Claude knowledge."
+   "status": "live",
+   "summary": "Your starting point for foundational Claude knowledge.",
+   "updated": "2026-11-12",
+   "questions": 60,
+   "bank": {
+    "source": "questions.en.json",
+    "translations": {
+     "vi": "questions.vi.json"
+    }
+   },
+   "exam": {
+    "questions": 60,
+    "minutes": 120,
+    "note": "Practice preset: all 60 questions in 120 minutes. This is not an official exam specification."
+   },
+   "storageKey": "panic-ccaof-v1"
   },
   {
    "id": "ccdv-f",
