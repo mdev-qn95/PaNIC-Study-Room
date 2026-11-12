@@ -7,6 +7,7 @@ for(const c of cat.certifications){
   assert.ok(!ids.has(c.id),`duplicate id ${c.id}`);ids.add(c.id);assert.match(c.id,/^[a-z0-9-]+$/,`${c.id}: id must be lowercase-dash`);
   assert.ok(pids.has(c.provider),`${c.id}: unknown provider`);assert.ok(['live','soon','planned'].includes(c.status),`${c.id}: status`);
   if('code' in c)assert.ok(typeof c.code==='string'&&c.code.trim(),`${c.id}: code must be the official exam code or be left out`);
+  if('credit' in c){assert.ok(typeof c.credit.name==='string'&&c.credit.name.trim(),`${c.id}: credit.name`);assert.match(c.credit.url,/^https:\/\//,`${c.id}: credit.url must be https`);}
   assert.ok(cat.levels.includes(c.level),`${c.id}: level "${c.level}" is not in "levels"`);
   if(c.status!=='live')continue;
   assert.ok(c.storageKey&&!keys.has(c.storageKey),`${c.id}: storageKey missing or reused`);keys.add(c.storageKey);

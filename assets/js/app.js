@@ -170,6 +170,7 @@ async function renderCert(id, token) {
       <div class="cert-intro">
         <h1>${hasLevel(c) ? `${esc(c.title)}${verified(c)}` : `${esc(c.title)} <span class="h1-level">${esc(c.level)}${verified(c)}</span>`}</h1>
         <p>${esc(c.summary)}</p>
+        ${c.credit ? `<p class="credit">Questions shared by <a href="${esc(c.credit.url)}" target="_blank" rel="noopener noreferrer">${esc(c.credit.name)}</a></p>` : ''}
         <dl class="facts"><div><dt>Questions</dt><dd>${total}</dd></div><div><dt>Mock exam</dt><dd>${c.exam.questions} in ${c.exam.minutes} min</dd></div><div><dt>Languages</dt><dd>${languages(c).join(' + ')}</dd></div><div><dt>Bank updated</dt><dd>${c.updated ? fmtDate(c.updated) : '—'}</dd></div></dl>
         <div class="actions">
           <a class="primary" href="#/study/${c.id}">${icon('play')} ${started ? `Continue practice` : 'Start practice'}</a>

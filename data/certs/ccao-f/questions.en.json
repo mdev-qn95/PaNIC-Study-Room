@@ -3,7 +3,7 @@
  "schema": 2,
  "certification": "ccao-f",
  "language": "en",
- "note": "CCAO-F practice question bank. Question and option text, answer keys and Vietnamese translations kept as published; English explanations translated from the Vietnamese ones. Domain weights are each topic's share of this bank, not an official exam weighting.",
+ "note": "CCAO-F Practice Question Set by Matthew Purcell (https://www.linkedin.com/in/purcellmatthew), shared by the author. Question and option text, answer keys and Vietnamese translations kept as published; English explanations translated from the Vietnamese ones. Domain weights are each topic's share of this bank, not an official exam weighting.",
  "domains": [
   {
    "name": "Prompting and Task Execution",

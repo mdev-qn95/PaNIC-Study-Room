@@ -103,6 +103,10 @@
    "level": "Foundations",
    "status": "live",
    "summary": "Your starting point for foundational Claude knowledge.",
+   "credit": {
+    "name": "Matthew Purcell",
+    "url": "https://www.linkedin.com/in/purcellmatthew"
+   },
    "updated": "2026-11-12",
    "questions": 60,
    "bank": {
