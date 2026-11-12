@@ -37,9 +37,9 @@ Checks: `node tests/catalog.cjs && node tests/banks.cjs && node tests/keywords.c
 ## Earlier notes (v1–v3)
 ## Experience
 
-- Home: four Claude certification cards. Architect — Professional (CCAR-P) and Architect — Foundations (CCAR-F) are available; Associate Foundations and Developer Foundations remain disabled.
-- Practice: questions stay in source order: 1–161 for CCAR-P, 1–147 for CCAR-F. Answer choices shuffle when entering/revisiting a question, reloading, or clearing its answer. They remain stable while selecting answers, flagging, or toggling translation.
-- Timed mock exam: CCAR-P uses 63 questions/120 minutes; CCAR-F uses a practice preset of 60 questions/120 minutes (not an official exam specification). Questions and choices are shuffled.
+- Home: four Claude certification cards. Architect — Professional (CCAR-P), Architect — Foundations (CCAR-F) and Developer — Foundations (CCDV-F) are available; Associate Foundations remains disabled.
+- Practice: questions stay in source order: 1–161 for CCAR-P, 1–147 for CCAR-F, 1–97 for CCDV-F. Answer choices shuffle when entering/revisiting a question, reloading, or clearing its answer. They remain stable while selecting answers, flagging, or toggling translation.
+- Timed mock exam: CCAR-P uses 63 questions/120 minutes; CCAR-F and CCDV-F use a practice preset of 60 questions/120 minutes (not an official exam specification). Questions and choices are shuffled.
 - Untimed range: inclusive start/end question IDs, from 1 through the selected bank size. Example: 5–11 includes exactly seven questions, presented in random order. Invalid or reversed ranges cannot start.
 - Practice gives immediate results; multi-answer questions are graded once the required selection count is reached. Classification rows give individual results. Mock exams hide all results until submission.
 - One point per completely correct question; no partial credit or inferred official passing score.
@@ -105,6 +105,16 @@ In Practice, Show answers enables read-only answer preview for every visited que
 - CCAR-F timed mock uses 60 random questions (matching the uploaded quiz's random preset) and 120 minutes as a practice setting, clearly disclosed in setup. Untimed ranges use study positions, so 58–60 always includes three questions despite the missing source number.
 
 Validation for CCAR-F: `node tests/banks.cjs`; source equality against the uploaded bank; Chromium UI checks at 320, 390 and 1024px; no horizontal overflow, bilingual display, empty-feedback suppression, type filtering, separate progress, 58–60 three-question range, results dialog, 60-question/120-minute mock and reload persistence. Physical iPhone/Safari not tested.
+
+## CCDV-F — added 12 November 2026
+
+- 97 single-answer questions from a licensed CCDV-F question bank.
+- EN question/option text, option order, answer keys and VI translations are kept as published. The source has Vietnamese explanations only, so the EN explanations are translations of them; each explanation ends with the source's takeaway line ("Remember:" / "Ghi nhớ:").
+- 11 domains from the source topics. Domain weights are each topic's share of this bank, not an official exam weighting.
+- Q21/Q22 and Q45/Q95 are duplicate pairs with swapped answer letters, kept as in the source.
+- Storage key `panic-ccdvf-v1`; mock exam uses the 60-question/120-minute practice preset.
+
+Validation for CCDV-F: `node tests/banks.cjs`; local browser check of the certificate page, practice question 1, EN/VI explanation and no horizontal overflow at desktop width. Mobile widths not re-checked.
 
 ## Keyword highlighting
 
