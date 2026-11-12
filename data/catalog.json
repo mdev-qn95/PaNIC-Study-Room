@@ -110,8 +110,22 @@
    "title": "Claude Certified Developer",
    "spine": "Developer",
    "level": "Foundations",
-   "status": "soon",
-   "summary": "A foundation for building applications with Claude."
+   "status": "live",
+   "summary": "A foundation for building applications with Claude.",
+   "updated": "2026-11-12",
+   "questions": 97,
+   "bank": {
+    "source": "questions.en.json",
+    "translations": {
+     "vi": "questions.vi.json"
+    }
+   },
+   "exam": {
+    "questions": 60,
+    "minutes": 120,
+    "note": "Practice preset: 60 questions in 120 minutes. This is not an official exam specification."
+   },
+   "storageKey": "panic-ccdvf-v1"
   },
   {
    "id": "aws-sap",
