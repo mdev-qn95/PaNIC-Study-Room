@@ -16,6 +16,8 @@ book:'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zm0 16a2 2 0 0 1 2-2h13v2',target:
 mistake:'M12 3 2 20h20zM12 9v5m0 3v.5',play:'M7 5v14l12-7z',bookmark:'M6 3h12v18l-6-4-6 4z'
 };
 const icon = name => `<svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name] || paths.layers}"/></svg>`;
+// Seal with a check, shown next to certifications marked "verified" in catalog.json.
+const verified = c => c.verified ? `<span class="verified" role="img" aria-label="Verified" title="Verified"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>` : '';
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
@@ -76,7 +78,7 @@ function catalogRows() {
   return certs.map(c => { const p = providerOf(c), s = STORE.summary(c), done = s ? pct(s.answered, s.total) : 0;
     return `<a class="row ${c.status}" href="#/cert/${c.id}" style="--c:${p.color}">
       <span class="row-tab" aria-hidden="true"></span>
-      <span class="row-main ${c.code ? '' : 'no-code'}">${c.code ? `<span class="row-code">${esc(c.code)}</span>` : ''}<span class="row-title">${titleHtml(c)}</span><span class="row-sum">${esc(c.summary)}</span></span>
+      <span class="row-main ${c.code ? '' : 'no-code'}">${c.code ? `<span class="row-code">${esc(c.code)}${verified(c)}</span>` : ''}<span class="row-title">${titleHtml(c)}${c.code ? '' : verified(c)}</span><span class="row-sum">${esc(c.summary)}</span></span>
       <span class="row-provider">${esc(p.short)}</span>
       <span class="row-meta">${c.status === 'live' ? `${c.questions} questions${languages(c).length > 1 ? `<small>${languages(c).join(' + ')}</small>` : ''}` : `<span class="pill ${c.status}">${statusLabel[c.status]}</span>`}</span>
       <span class="row-progress">${c.status === 'live' ? (s?.answered ? `<span class="bar"><i style="width:${done}%"></i></span><small>${done}% answered</small>` : '<small>Not started</small>') : ''}</span>
@@ -143,7 +145,7 @@ function renderPlannedCert(c) {
     <nav class="breadcrumb" aria-label="Breadcrumb"><a href="#/">Library</a>${icon('right')}<span>${esc(p.short)}</span>${icon('right')}<span aria-current="page">${esc(label(c))}</span></nav>
     <section class="cert-hero" style="--c:${p.color};--on:${p.ink}">
       <div class="cover ghosted"><span>${esc(p.short)}</span>${c.code ? `<strong>${esc(c.code)}</strong><em>${esc(c.title)}</em>` : `<strong class="name">${esc(c.title)}</strong>`}${hasLevel(c) ? '' : `<small>${esc(c.level)}</small>`}</div>
-      <div class="cert-intro"><span class="pill ${c.status}">${statusLabel[c.status]}</span><h1>${hasLevel(c) ? esc(c.title) : `${esc(c.title)} <span>${esc(c.level)}</span>`}</h1><p>${esc(c.summary)}</p>
+      <div class="cert-intro"><span class="pill ${c.status}">${statusLabel[c.status]}</span><h1>${hasLevel(c) ? `${esc(c.title)}${verified(c)}` : `${esc(c.title)} <span class="h1-level">${esc(c.level)}${verified(c)}</span>`}</h1><p>${esc(c.summary)}</p>
         <p class="muted">${c.status === 'soon' ? 'This question bank is being prepared. It will appear on the shelf as soon as it is ready.' : `${esc(p.name)} certifications are on the roadmap. The study room will open once a verified question bank is available.`}</p>
         <div class="actions">${siblings.map(s => `<a class="ghost" href="#/cert/${s.id}">Study ${esc(label(s))} meanwhile</a>`).join('')}</div>
       </div>
@@ -164,7 +166,7 @@ async function renderCert(id, token) {
     <section class="cert-hero" style="--c:${p.color};--on:${p.ink}">
       <div class="cover"><span>${esc(p.short)}</span>${c.code ? `<strong>${esc(c.code)}</strong><em>${esc(c.title)}</em>` : `<strong class="name">${esc(c.title)}</strong>`}${hasLevel(c) ? '' : `<small>${esc(c.level)}</small>`}${started ? `<i class="cover-fill" style="--p:${pct(x.answered, total)}%"></i>` : ''}</div>
       <div class="cert-intro">
-        <h1>${hasLevel(c) ? esc(c.title) : `${esc(c.title)} <span>${esc(c.level)}</span>`}</h1>
+        <h1>${hasLevel(c) ? `${esc(c.title)}${verified(c)}` : `${esc(c.title)} <span class="h1-level">${esc(c.level)}${verified(c)}</span>`}</h1>
         <p>${esc(c.summary)}</p>
         <dl class="facts"><div><dt>Questions</dt><dd>${total}</dd></div><div><dt>Mock exam</dt><dd>${c.exam.questions} in ${c.exam.minutes} min</dd></div><div><dt>Languages</dt><dd>${languages(c).join(' + ')}</dd></div><div><dt>Bank updated</dt><dd>${c.updated ? fmtDate(c.updated) : '—'}</dd></div></dl>
         <div class="actions">
@@ -210,7 +212,7 @@ function renderProgress() {
     </section>
     <section class="panel"><h2>Activity</h2><div class="heat-wrap"><div class="heat" style="--pad:${pad}" aria-label="Answers per day, last 18 weeks">${days.map((d, i) => `<i class="lvl-${!d.n ? 0 : d.n >= goal ? 3 : d.n >= goal / 2 ? 2 : 1}" ${i === 0 ? `style="grid-row-start:${pad + 1}"` : ''} title="${fmtDate(d.key)}: ${d.n} answers"></i>`).join('')}</div></div>
       <div class="heat-legend"><span>Less</span><i class="lvl-0"></i><i class="lvl-1"></i><i class="lvl-2"></i><i class="lvl-3"></i><span>Goal met</span></div></section>
-    <section class="panel"><h2>Certifications</h2><div class="rows compact">${certs.map(({c, s}) => { const p = providerOf(c), done = s ? pct(s.answered, s.total) : 0, last = s?.exams?.at(-1); return `<a class="row live" href="#/cert/${c.id}" style="--c:${p.color}"><span class="row-tab"></span><span class="row-main ${c.code ? '' : 'no-code'}">${c.code ? `<span class="row-code">${esc(c.code)}</span>` : ''}<span class="row-title">${titleHtml(c)}</span></span><span class="row-meta">${s?.answered ? `${s.answered}/${s.total}` : 'Not started'}${last ? `<small>Last exam ${pct(last.score, last.total)}%</small>` : ''}</span><span class="row-progress"><span class="bar"><i style="width:${done}%"></i></span><small>${done}%</small></span><span class="row-go">${icon('right')}</span></a>`; }).join('')}</div></section>
+    <section class="panel"><h2>Certifications</h2><div class="rows compact">${certs.map(({c, s}) => { const p = providerOf(c), done = s ? pct(s.answered, s.total) : 0, last = s?.exams?.at(-1); return `<a class="row live" href="#/cert/${c.id}" style="--c:${p.color}"><span class="row-tab"></span><span class="row-main ${c.code ? '' : 'no-code'}">${c.code ? `<span class="row-code">${esc(c.code)}${verified(c)}</span>` : ''}<span class="row-title">${titleHtml(c)}${c.code ? '' : verified(c)}</span></span><span class="row-meta">${s?.answered ? `${s.answered}/${s.total}` : 'Not started'}${last ? `<small>Last exam ${pct(last.score, last.total)}%</small>` : ''}</span><span class="row-progress"><span class="bar"><i style="width:${done}%"></i></span><small>${done}%</small></span><span class="row-go">${icon('right')}</span></a>`; }).join('')}</div></section>
     ${footer()}</div>`;
   $('viewProgress').querySelectorAll('[data-goal]').forEach(b => b.onclick = () => { STORE.setPref('goal', +b.dataset.goal); renderProgress(); toast(`Daily goal set to ${b.dataset.goal} answers.`); });
 }
@@ -220,7 +222,7 @@ let searchSel = 0;
 function searchItems(q) { q = q.trim().toLowerCase(); return CAT.CERTS.filter(c => { const p = providerOf(c); return !q || [c.code, c.title, c.level, p.name, p.short, c.summary].join(' ').toLowerCase().includes(q); }).sort((a, b) => (a.status !== 'live') - (b.status !== 'live')); }
 function renderSearch() {
   const items = searchItems($('searchInput').value); searchSel = Math.min(searchSel, Math.max(0, items.length - 1));
-  $('searchResults').innerHTML = items.length ? items.map((c, i) => { const p = providerOf(c); return `<a role="option" aria-selected="${i === searchSel}" href="#/cert/${c.id}" style="--c:${p.color}" data-i="${i}"><span class="s-tab"></span><span>${c.code ? `<b>${esc(c.code)}</b> ` : ''}${titleHtml(c)}<small>${esc(p.name)}</small></span><span class="pill ${c.status}">${statusLabel[c.status]}</span></a>`; }).join('') : '<p class="empty">No certification matches that search. Try a code such as “AZ-900” or a provider name.</p>';
+  $('searchResults').innerHTML = items.length ? items.map((c, i) => { const p = providerOf(c); return `<a role="option" aria-selected="${i === searchSel}" href="#/cert/${c.id}" style="--c:${p.color}" data-i="${i}"><span class="s-tab"></span><span>${c.code ? `<b>${esc(c.code)}</b>${verified(c)} ` : ''}${titleHtml(c)}${c.code ? '' : verified(c)}<small>${esc(p.name)}</small></span><span class="pill ${c.status}">${statusLabel[c.status]}</span></a>`; }).join('') : '<p class="empty">No certification matches that search. Try a code such as “AZ-900” or a provider name.</p>';
   $('searchResults').querySelectorAll('a').forEach(a => a.onclick = () => $('searchDialog').close());
 }
 function openSearch() { $('searchInput').value = ''; searchSel = 0; renderSearch(); $('searchDialog').showModal(); $('searchInput').focus(); }
@@ -248,7 +250,7 @@ function selectCertification(cert, data) {
   $('examPresetNote').hidden = !cert.exam.note; $('examPresetNote').textContent = cert.exam.note || '';
   const p = providerOf(cert);
   $('sideCover').style.cssText = `--c:${p.color};--on:${p.ink}`;
-  $('sideCover').innerHTML = cert.code ? `<span>${esc(p.short)}</span><strong>${esc(cert.code)}</strong><em>${esc(cert.title)} · ${esc(cert.level)}</em>` : `<span>${esc(p.short)}</span><strong class="name">${esc(cert.title)}</strong>`;
+  $('sideCover').innerHTML = cert.code ? `<span>${esc(p.short)}</span><strong>${esc(cert.code)}${verified(cert)}</strong><em>${esc(cert.title)} · ${esc(cert.level)}</em>` : `<span>${esc(p.short)}</span><strong class="name">${esc(cert.title)}</strong>`;
   $('sideBack').href = `#/cert/${cert.id}`;
   resetFilters();
 }
