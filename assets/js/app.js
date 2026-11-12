@@ -17,7 +17,8 @@ mistake:'M12 3 2 20h20zM12 9v5m0 3v.5',play:'M7 5v14l12-7z',bookmark:'M6 3h12v18
 };
 const icon = name => `<svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name] || paths.layers}"/></svg>`;
 // Seal with a check, shown next to certifications marked "verified" in catalog.json.
-const verified = c => c.verified ? `<span class="verified" role="img" aria-label="Verified" title="Verified"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>` : '';
+const SEAL = 'M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z';
+const verified = c => c.verified ? `<span class="verified" role="img" aria-label="Verified" title="Verified"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="${SEAL}"/><path d="m9 12 2 2 4-4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>` : '';
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
@@ -48,9 +49,10 @@ const titleHtml = c => hasLevel(c) ? esc(c.title) : `${esc(c.title)} <em>${esc(c
 const fullName = c => c.code ? `${c.code} · ${c.title}` : hasLevel(c) ? c.title : `${c.title} ${c.level}`;
 function spine(c, i) {
   const p = providerOf(c), s = STORE.summary(c), done = s ? pct(s.answered, s.total) : 0, last = STORE.activity().last === c.id;
-    return `<a class="spine ${c.status}" href="#/cert/${c.id}" style="--c:${p.color};--on:${p.ink};--h:${CAT.levelRank(c.level)};--tilt:${c.status === 'planned' && i % 3 === 2 ? -4 : 0}deg" aria-label="${esc(`${c.code ? c.code + ', ' : ''}${c.title} ${c.level}, ${statusLabel[c.status]}${s ? `, ${done}% answered` : ''}`)}">
+    return `<a class="spine ${c.status}${c.verified ? ' verified' : ''}" href="#/cert/${c.id}" style="--c:${p.color};--on:${p.ink};--h:${CAT.levelRank(c.level)};--tilt:${c.status === 'planned' && i % 3 === 2 ? -4 : 0}deg" aria-label="${esc(`${c.code ? c.code + ', ' : ''}${c.title} ${c.level}, ${c.verified ? 'verified, ' : ''}${statusLabel[c.status]}${s ? `, ${done}% answered` : ''}`)}">
     ${c.status === 'live' && done ? `<span class="spine-fill" style="--p:${done}%"></span>` : ''}
     ${last ? '<span class="ribbon" aria-hidden="true"></span>' : ''}
+    ${c.verified ? `<svg class="spine-seal" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="${SEAL}"/><path d="m9 12 2 2 4-4" fill="none" stroke="var(--c)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>` : ''}
     <span class="spine-text">${c.code ? `<b>${esc(c.code)}</b><span>${esc(c.spine || c.title)}</span>` : `<b class="name">${esc(c.spine || c.title)}</b>`}</span>
     <span class="spine-foot">${c.status === 'live' ? (done ? `${done}%` : icon('book')) : c.status === 'soon' ? icon('clock') : ''}</span>
   </a>`;

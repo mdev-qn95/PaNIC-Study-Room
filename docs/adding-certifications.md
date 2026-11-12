@@ -35,7 +35,7 @@ Add a provider (once) and the certification:
 - `color`/`ink`: binding colour and lettering of the provider's books (keep contrast ≥ 4.5:1).
 - Languages shown on the site come from `bank.translations` (EN + each key).
 - **`storageKey` is where learners' progress lives. Never reuse or rename it.**
-- Optional `"verified": true` shows a blue check badge next to the certification (library rows, search, certification page, study sidebar).
+- Optional `"verified": true` shows a blue check badge next to the certification (library rows, search, certification page, study sidebar) and a brass seal on its shelf spine.
 
 ## 2. Source bank — `data/certs/<id>/questions.en.json`
 
