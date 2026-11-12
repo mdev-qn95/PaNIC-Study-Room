@@ -159,6 +159,9 @@ kbd{font:500 11px var(--sans);border:1px solid var(--line-2);border-bottom-width
 .spine-foot{flex:none;height:30px;display:grid;place-items:center;font:600 11px var(--sans);opacity:.9}
 .spine-foot .svg-icon{width:15px;height:15px}
 .spine-fill{position:absolute;left:0;right:0;bottom:0;height:var(--p);background:linear-gradient(#ffffff26,#ffffff14);border-top:2px solid var(--brass);z-index:-1}
+/* foil-stamped seal for verified banks, under the top rules; text padding keeps long titles clear of it */
+.spine-seal{position:absolute;top:44px;left:50%;width:15px;height:15px;margin-left:-7.5px;color:var(--brass);filter:drop-shadow(0 1px 0 #0004)}
+.spine.verified .spine-text{padding-bottom:66px}
 .ribbon{position:absolute;top:0;right:9px;width:10px;height:24px;background:var(--brass);clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%)}
 .spine.soon{filter:saturate(.45);opacity:.78}
 .spine.planned{background:repeating-linear-gradient(135deg,transparent 0 7px,color-mix(in srgb,var(--line-2) 45%,transparent) 7px 8px);border:1.5px dashed var(--line-2);box-shadow:none;color:var(--faint)}
