@@ -118,7 +118,7 @@ Validation for CCDV-F: `node tests/banks.cjs`; local browser check of the certif
 
 ## CCAO-F — added 12 November 2026
 
-- 60 questions (50 single-answer, 10 "Select TWO") from a CCAO-F practice bank. EN question/option text, option order, answer keys and VI translations are kept as published; EN explanations are translations of the Vietnamese ones and end with the source's takeaway line.
+- 60 questions (50 single-answer, 10 "Select TWO") from the CCAO-F Practice Question Set by Matthew Purcell, credited on the certification page via `credit` in catalog.json. EN question/option text, option order, answer keys and VI translations are kept as published; EN explanations are translations of the Vietnamese ones and end with the source's takeaway line.
 - 7 domains from the source topics; weights are each topic's share of this bank, not an official exam weighting.
 - Three stems (Q8, Q33, Q45) list numbered steps on separate lines, so `.question-text` uses `white-space:pre-line`. No other bank has line breaks in question text.
 - Not marked `verified`. Storage key `panic-ccaof-v1`; mock exam is a practice preset of all 60 questions in 120 minutes.
