@@ -47,6 +47,7 @@
  "certifications": [
   {
    "id": "ccar-p",
+   "verified": true,
    "provider": "anthropic",
    "code": "CCAR-P",
    "title": "Claude Certified Architect",
@@ -105,6 +106,7 @@
   },
   {
    "id": "ccdv-f",
+   "verified": true,
    "provider": "anthropic",
    "code": "CCDV-F",
    "title": "Claude Certified Developer",
