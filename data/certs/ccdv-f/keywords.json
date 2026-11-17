@@ -1,0 +1,86 @@
+{
+ "schema": 2,
+ "certification": "ccdv-f",
+ "language": "en",
+ "about": "Optional reading cues reviewed against this 97-question bank, not universal answer rules or answer keys. Specific positive phrases precede negative cues and ambiguous words so longer, meaningful phrases retain their colour. Runtime matching uses text only. Keep this list separate from CCAR-P.",
+ "kinds": [
+  {
+   "id": "pick",
+   "label": "LỤM",
+   "color": "green",
+   "phrases": [
+    "recognized error path",
+    "schema before",
+    "context isolation",
+    "only what the step needs",
+    "separate Claude calls",
+    "compaction",
+    "orchestrator",
+    "tool output pruning",
+    "fallback",
+    "exponential backoff",
+    "headless",
+    "few-shot",
+    "multi-shot",
+    "checkpointing",
+    "async client",
+    "secrets manager",
+    "defensive parsing",
+    "extended thinking",
+    "graph-based pattern",
+    "explicit handoff contracts",
+    "per-subagent tool budgets",
+    "Examine production traces",
+    "Capture full traces",
+    "Examine traces",
+    "static portions",
+    "quality, latency, and cost requirements together"
+   ],
+   "patterns": []
+  },
+  {
+   "id": "avoid",
+   "label": "NÉ",
+   "color": "red",
+   "phrases": [
+    "all",
+    "on the grounds that",
+    "across all",
+    "context window",
+    "without",
+    "manually",
+    "in parallel",
+    "increase the",
+    "and rely on",
+    "a separate"
+   ],
+   "patterns": []
+  },
+  {
+   "id": "check",
+   "label": "CHECK",
+   "color": "amber",
+   "phrases": [
+    "only",
+    "single",
+    "every",
+    "explicit",
+    "temperature",
+    "prompt caching",
+    "system prompt",
+    "settings.json",
+    "source of truth",
+    "cost",
+    "pruning",
+    "traces",
+    "version-control",
+    "code review"
+   ],
+   "patterns": [
+    {"regex": "retr(?:y|ies)"},
+    {"regex": "validat(?:e|es|ed|ing|ion)"},
+    {"regex": "schemas?"}
+   ]
+  }
+ ]
+}

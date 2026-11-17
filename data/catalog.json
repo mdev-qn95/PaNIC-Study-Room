@@ -132,13 +132,14 @@
    "level": "Foundations",
    "status": "live",
    "summary": "A foundation for building applications with Claude.",
-   "updated": "2026-11-12",
+   "updated": "2026-11-17",
    "questions": 97,
    "bank": {
     "source": "questions.en.json",
     "translations": {
      "vi": "questions.vi.json"
-    }
+    },
+    "keywords": "keywords.json"
    },
    "exam": {
     "questions": 60,
