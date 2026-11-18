@@ -90,13 +90,12 @@ Arrays match the source by position. `null` means "show the source text alone" (
 ```json
 {"schema": 2, "certification": "ccar-p", "language": "en",
  "kinds": [
-  {"id": "check", "label": "CHECK", "color": "amber", "phrases": ["…"], "patterns": [{"regex": "cannot\\b[^.]*?\\bwithout\\b", "highlight": ["cannot", "without"]}]},
   {"id": "avoid", "label": "NÉ", "color": "red", "phrases": ["without"]},
   {"id": "pick", "label": "LỤM", "color": "green", "phrases": ["cache"]}
  ]}
 ```
 
-Earlier kinds win when matches overlap. `phrases` are literal (case-insensitive, whole words; spaces match any whitespace, hyphens any dash); `patterns` are regular expressions; `highlight` colours only those words inside a pattern match. `color` is `green`, `red` or `amber`. Add `"keywords": "keywords.json"` to the catalog entry's `bank` to show the **Highlight keywords** switch.
+Earlier kinds win when matches overlap. `phrases` are literal (case-insensitive, whole words; spaces match any whitespace, hyphens any dash); `patterns` are regular expressions; `highlight` colours only those words inside a pattern match. `color` is `green` or `red`. Optional `exclusions` uses the same `phrases` / `patterns` shape and takes precedence to keep ambiguous matches uncoloured. Add `"keywords": "keywords.json"` to the catalog entry's `bank` to show the **Highlight keywords** switch.
 
 ## 5. Check before publishing
 

@@ -76,9 +76,9 @@ Bật **Tiếng Việt** để xem bản dịch ngay bên dưới câu hỏi, t�
 
 ## Gợi ý từ khoá
 
-Với CCAR-P và CCDV-F, công tắc **Highlight keywords** tô màu những cụm từ đáng chú ý trong các đáp án: **xanh** là dấu hiệu của hướng đúng, **đỏ** là dấu hiệu nên tránh, **vàng** là chỗ cần đọc kỹ. Mặc định công tắc tắt; chỉ phần tiếng Anh trong lựa chọn được tô màu. Mỗi chứng chỉ dùng bộ từ khoá riêng. Đây là gợi ý cách đọc đề, không phải đáp án.
+Với CCAR-P và CCDV-F, công tắc **Highlight keywords** tô màu những cụm từ đáng chú ý trong các đáp án: **xanh** là dấu hiệu của hướng đúng, **đỏ** là dấu hiệu nên tránh. Mặc định công tắc tắt; chỉ phần tiếng Anh trong lựa chọn được tô màu. Mỗi chứng chỉ dùng bộ từ khoá riêng. Đây là gợi ý cách đọc đề, không phải đáp án.
 
-Bộ CCDV-F được đối chiếu với 97 câu hiện tại: các cụm như `recognized error path`, `compaction`, `tool output pruning` được tô xanh; `all`, `on the grounds that`, `without` được tô đỏ. Các từ có cả trường hợp đúng và sai như `only`, `single`, `retry`, `schema`, `temperature`, `prompt caching` được tô vàng. Cụm cụ thể được ưu tiên trước từ mơ hồ, ví dụ `schema before` xanh còn `schema` đứng riêng vàng. Kết quả trong bộ này không bảo đảm đúng/sai cho câu hỏi mới; thêm câu hỏi cần rà lại bộ từ khoá.
+Bộ CCDV-F được đối chiếu với 97 câu hiện tại: các cụm như `recognized error path`, `compaction`, `tool output pruning` được tô xanh; `all`, `on the grounds that`, `without` được tô đỏ. Các từ có cả trường hợp đúng và sai như `only`, `single`, `retry`, `schema`, `temperature`, `prompt caching` không được tô màu. Cụm cụ thể vẫn được giữ, ví dụ `schema before` xanh còn `schema` đứng riêng hiển thị bình thường. Kết quả trong bộ này không bảo đảm đúng/sai cho câu hỏi mới; thêm câu hỏi cần rà lại bộ từ khoá.
 
 <p align="center"><img src="docs/screenshots/keywords.png" alt="Các cụm từ khoá được tô màu trong đáp án" width="78%"></p>
 

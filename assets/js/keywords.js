@@ -4,9 +4,11 @@ window.PanicKeywords = (() => {
   const escape = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const literal = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s+').replace(/-/g, '[-‐‑–]');
 
-  /* config: {kinds:[{id,label,color,phrases:[...],patterns:[{regex,highlight?:[words]}]}]} — earlier kinds take precedence. */
+  /* config: {exclusions?:{phrases,patterns}, kinds:[{id,label,color,phrases,patterns}]}.
+     Exclusions stay plain and prevent fallback colouring; earlier kinds take precedence. */
   function create(config) {
-    const kinds = config?.kinds || [];
+    const excluded = '__excluded';
+    const kinds = [{...config?.exclusions, id:excluded}, ...(config?.kinds || [])];
     const rules = kinds.flatMap(k => [
       ...(k.phrases || []).map(p => ({kind:k.id, re:new RegExp(`\\b(?:${literal(p)})\\b`, 'gi')})),
       ...(k.patterns || []).map(p => ({kind:k.id, re:new RegExp(`\\b(?:${p.regex})\\b`, 'gi'), only:(p.highlight || []).map(w => new RegExp(`\\b${literal(w)}\\b`, 'i'))}))
@@ -30,7 +32,7 @@ window.PanicKeywords = (() => {
         candidates.sort((a, b) => (b.end - b.start) - (a.end - a.start) || a.start - b.start);
         for (const m of candidates) if (!accepted.some(a => m.start < a.end && m.end > a.start)) accepted.push(m);
       }
-      return accepted.sort((a, b) => a.start - b.start);
+      return accepted.filter(m => m.kind !== excluded).sort((a, b) => a.start - b.start);
     }
     function render(text) {
       text = String(text ?? ''); let pos = 0, out = '';

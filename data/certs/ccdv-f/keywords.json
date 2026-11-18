@@ -2,7 +2,7 @@
  "schema": 2,
  "certification": "ccdv-f",
  "language": "en",
- "about": "Optional reading cues reviewed against this 97-question bank, not universal answer rules or answer keys. Specific positive phrases precede negative cues and ambiguous words so longer, meaningful phrases retain their colour. Runtime matching uses text only. Keep this list separate from CCAR-P.",
+ "about": "Optional green/red reading cues reviewed against this 97-question bank, not universal answer rules or answer keys. Specific positive phrases precede negative cues. Ambiguous standalone keywords are not highlighted. Runtime matching uses text only. Keep this list separate from CCAR-P.",
  "kinds": [
   {
    "id": "pick",
@@ -55,32 +55,6 @@
     "a separate"
    ],
    "patterns": []
-  },
-  {
-   "id": "check",
-   "label": "CHECK",
-   "color": "amber",
-   "phrases": [
-    "only",
-    "single",
-    "every",
-    "explicit",
-    "temperature",
-    "prompt caching",
-    "system prompt",
-    "settings.json",
-    "source of truth",
-    "cost",
-    "pruning",
-    "traces",
-    "version-control",
-    "code review"
-   ],
-   "patterns": [
-    {"regex": "retr(?:y|ies)"},
-    {"regex": "validat(?:e|es|ed|ing|ion)"},
-    {"regex": "schemas?"}
-   ]
   }
  ]
 }

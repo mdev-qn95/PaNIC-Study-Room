@@ -2,33 +2,8 @@
  "schema": 2,
  "certification": "ccar-p",
  "language": "en",
- "about": "Optional reading cues for answer choices. Not answer keys. Earlier kinds win when matches overlap. 'phrases' are literal (spaces match any whitespace, hyphens match any dash); 'patterns' are regular expressions; 'highlight' limits colouring to those words inside the match.",
+ "about": "Optional green/red reading cues for answer choices, not answer keys. Exclusions keep ambiguous phrases uncoloured even if they contain a positive or negative keyword. Earlier kinds win when matches overlap.",
  "kinds": [
-  {
-   "id": "check",
-   "label": "CHECK",
-   "color": "amber",
-   "phrases": [
-    "Disable prompt caching",
-    "Clear the prompt cache",
-    "identify any",
-    "Move credentials out",
-    "cannot be measured",
-    "without a BAA",
-    "without requiring a separate tool",
-    "Replace unrestricted",
-    "regardless of fine-tuning"
-   ],
-   "patterns": [
-    {
-     "regex": "cannot\\b[^.!?;\\n]*?\\bwithout\\b[^.!?;\\n]*",
-     "highlight": [
-      "cannot",
-      "without"
-     ]
-    }
-   ]
-  },
   {
    "id": "avoid",
    "label": "NÉ",
@@ -82,5 +57,27 @@
     }
    ]
   }
- ]
+ ],
+ "exclusions": {
+  "phrases": [
+   "Disable prompt caching",
+   "Clear the prompt cache",
+   "identify any",
+   "Move credentials out",
+   "cannot be measured",
+   "without a BAA",
+   "without requiring a separate tool",
+   "Replace unrestricted",
+   "regardless of fine-tuning"
+  ],
+  "patterns": [
+   {
+    "regex": "cannot\\b[^.!?;\\n]*?\\bwithout\\b[^.!?;\\n]*",
+    "highlight": [
+     "cannot",
+     "without"
+    ]
+   }
+  ]
+ }
 }
