@@ -468,6 +468,7 @@ dialog h2:focus{outline:none}
 .keyword{color:inherit;border-radius:4px;padding:0 .18em;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:650;overflow-wrap:anywhere}
 .keyword-green{background:#d9eddd;color:#24553b;box-shadow:inset 0 -1px #78aa85}
 .keyword-red{background:#f5d9da;color:#842c36;box-shadow:inset 0 -1px #ca8e95}
+.keyword-amber{background:#f5e5b5;color:#705014;box-shadow:inset 0 -1px #c7a34e}
 
 /* =================== Responsive =================== */
 @media(max-width:1100px){

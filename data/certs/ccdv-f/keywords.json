@@ -2,7 +2,7 @@
  "schema": 2,
  "certification": "ccdv-f",
  "language": "en",
- "about": "User-selected CCDV-F reading cues. This list replaces the previous cues in full; colours follow the supplied keyword lists, not answer correctness. Match whole words/phrases case-insensitively. Red cues take precedence on overlap. Apply corrects the supplied typo Aplly. No CHECK cues or exclusions. Independent from CCAR-P.",
+ "about": "User-selected CCDV-F reading cues. This list replaces the previous cues in full; colours follow the supplied keyword lists, not answer correctness. Match whole words/phrases case-insensitively. Red cues take precedence on overlap. Apply corrects the supplied typo Aplly. Apply and Keep are amber CHECK cues. No exclusions. Independent from CCAR-P.",
  "kinds": [
   {
    "id": "avoid",
@@ -23,9 +23,6 @@
    "label": "LỤM",
    "color": "green",
    "phrases": [
-    "Context",
-    "separate",
-    "Apply",
     "Explain",
     "Adapt",
     "Identify",
@@ -37,7 +34,6 @@
     "headless",
     "context per subagent",
     "Audit",
-    "separately",
     "Decide",
     "engineering shapes",
     "Skill or MCP",
@@ -67,7 +63,6 @@
     "recognizing",
     "recognized",
     "version-control",
-    "workflows",
     "configuration",
     "hierarchy",
     "configure",
@@ -91,14 +86,24 @@
     "does not leak",
     "tradeoffs best fit",
     "standard",
-    "keep",
     "distinct keys",
     "operating and maintaining",
     "match the desired",
     "Skill in a Skills",
     "examine traces",
     "awaitable",
-    "benefits"
+    "benefits",
+    "Examine traces of"
+   ],
+   "patterns": []
+  },
+  {
+   "id": "check",
+   "label": "CHECK",
+   "color": "amber",
+   "phrases": [
+    "Apply",
+    "Keep"
    ],
    "patterns": []
   }
