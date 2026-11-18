@@ -78,7 +78,7 @@ Bật **Tiếng Việt** để xem bản dịch ngay bên dưới câu hỏi, t�
 
 Với CCAR-P và CCDV-F, công tắc **Highlight keywords** tô màu những cụm từ đáng chú ý trong các đáp án: **xanh** là dấu hiệu của hướng đúng, **đỏ** là dấu hiệu nên tránh. Mặc định công tắc tắt; chỉ phần tiếng Anh trong lựa chọn được tô màu. Mỗi chứng chỉ dùng bộ từ khoá riêng. Đây là gợi ý cách đọc đề, không phải đáp án.
 
-Bộ CCDV-F được đối chiếu với 97 câu hiện tại: các cụm như `recognized error path`, `compaction`, `tool output pruning` được tô xanh; `all`, `on the grounds that`, `without` được tô đỏ. Các từ có cả trường hợp đúng và sai như `only`, `single`, `retry`, `schema`, `temperature`, `prompt caching` không được tô màu. Cụm cụ thể vẫn được giữ, ví dụ `schema before` xanh còn `schema` đứng riêng hiển thị bình thường. Kết quả trong bộ này không bảo đảm đúng/sai cho câu hỏi mới; thêm câu hỏi cần rà lại bộ từ khoá.
+Bộ CCDV-F dùng danh sách người dùng cung cấp ngày 19/11/2026, gồm 6 keyword/cụm đỏ và 76 keyword/cụm xanh; thay toàn bộ danh sách trước đó. Ví dụ `all`, `on the grounds that`, `bypass`, `in parallel`, `rely on`, `without` tô đỏ; `Context`, `Apply`, `Identify`, `separate`, `explicit`, `benefits` tô xanh. `Aplly` được sửa thành `Apply` để khớp đề. Khớp nguyên từ/cụm từ, không phân biệt hoa thường; cụm dài được ưu tiên trong cùng màu. Màu theo danh sách đã chọn, không suy ra từ đáp án đúng/sai. Không có nhóm CHECK; bộ CCAR-P được quản lý độc lập.
 
 <p align="center"><img src="docs/screenshots/keywords.png" alt="Các cụm từ khoá được tô màu trong đáp án" width="78%"></p>
 
