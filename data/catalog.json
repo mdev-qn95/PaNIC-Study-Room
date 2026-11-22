@@ -46,55 +46,6 @@
  ],
  "certifications": [
   {
-   "id": "ccar-p",
-   "verified": true,
-   "provider": "anthropic",
-   "code": "CCAR-P",
-   "title": "Claude Certified Architect",
-   "spine": "Architect",
-   "level": "Professional",
-   "status": "live",
-   "summary": "Design, integrate, evaluate and operate Claude solutions with confidence.",
-   "updated": "2026-11-11",
-   "questions": 161,
-   "bank": {
-    "source": "questions.en.json",
-    "translations": {
-     "vi": "questions.vi.json"
-    },
-    "keywords": "keywords.json"
-   },
-   "exam": {
-    "questions": 63,
-    "minutes": 120
-   },
-   "storageKey": "panic-ccarp-v1"
-  },
-  {
-   "id": "ccar-f",
-   "provider": "anthropic",
-   "code": "CCAR-F",
-   "title": "Claude Certified Architect",
-   "spine": "Architect",
-   "level": "Foundations",
-   "status": "live",
-   "summary": "Core architectural thinking, agent workflows and tool integration.",
-   "updated": "2026-10-30",
-   "questions": 147,
-   "bank": {
-    "source": "questions.en.json",
-    "translations": {
-     "vi": "questions.vi.json"
-    }
-   },
-   "exam": {
-    "questions": 60,
-    "minutes": 120,
-    "note": "Practice preset: 60 questions in 120 minutes. This is not an official exam specification."
-   },
-   "storageKey": "panic-ccarf-v1"
-  },
-  {
    "id": "ccao-f",
    "verified": true,
    "provider": "anthropic",
@@ -144,6 +95,65 @@
     "note": "Practice preset: 60 questions in 120 minutes. This is not an official exam specification."
    },
    "storageKey": "panic-ccdvf-v1"
+  },
+  {
+   "id": "ccdv-p",
+   "provider": "anthropic",
+   "code": "CCDV-P",
+   "title": "Claude Certified Developer",
+   "spine": "Developer",
+   "level": "Professional",
+   "status": "soon",
+   "summary": "Advanced application development with Claude, from design to production."
+  },
+  {
+   "id": "ccar-f",
+   "provider": "anthropic",
+   "code": "CCAR-F",
+   "title": "Claude Certified Architect",
+   "spine": "Architect",
+   "level": "Foundations",
+   "status": "live",
+   "summary": "Core architectural thinking, agent workflows and tool integration.",
+   "updated": "2026-10-30",
+   "questions": 147,
+   "bank": {
+    "source": "questions.en.json",
+    "translations": {
+     "vi": "questions.vi.json"
+    }
+   },
+   "exam": {
+    "questions": 60,
+    "minutes": 120,
+    "note": "Practice preset: 60 questions in 120 minutes. This is not an official exam specification."
+   },
+   "storageKey": "panic-ccarf-v1"
+  },
+  {
+   "id": "ccar-p",
+   "verified": true,
+   "provider": "anthropic",
+   "code": "CCAR-P",
+   "title": "Claude Certified Architect",
+   "spine": "Architect",
+   "level": "Professional",
+   "status": "live",
+   "summary": "Design, integrate, evaluate and operate Claude solutions with confidence.",
+   "updated": "2026-11-11",
+   "questions": 161,
+   "bank": {
+    "source": "questions.en.json",
+    "translations": {
+     "vi": "questions.vi.json"
+    },
+    "keywords": "keywords.json"
+   },
+   "exam": {
+    "questions": 63,
+    "minutes": 120
+   },
+   "storageKey": "panic-ccarp-v1"
   },
   {
    "id": "aws-sap",

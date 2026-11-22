@@ -76,7 +76,7 @@ function updateStreakChip() { const n = STORE.streak(); $('streakCount').textCon
 /* ---------- Library (home) ---------- */
 let libraryFilter = 'all';
 function catalogRows() {
-  const certs = CAT.CERTS.filter(c => libraryFilter === 'all' || c.provider === libraryFilter).sort((a, b) => ['live','soon','planned'].indexOf(a.status) - ['live','soon','planned'].indexOf(b.status));
+  const certs = CAT.CERTS.filter(c => libraryFilter === 'all' || c.provider === libraryFilter).sort((a, b) => CAT.PROVIDERS.findIndex(p => p.id === a.provider) - CAT.PROVIDERS.findIndex(p => p.id === b.provider)); // catalog.json order within each provider
   return certs.map(c => { const p = providerOf(c), s = STORE.summary(c), done = s ? pct(s.answered, s.total) : 0;
     return `<a class="row ${c.status}" href="#/cert/${c.id}" style="--c:${p.color}">
       <span class="row-tab" aria-hidden="true"></span>

@@ -37,7 +37,7 @@ Checks: `node tests/catalog.cjs && node tests/banks.cjs && node tests/keywords.c
 ## Earlier notes (v1–v3)
 ## Experience
 
-- Home: four Claude certification cards. all four are available: Architect — Professional (CCAR-P), Architect — Foundations (CCAR-F), Developer — Foundations (CCDV-F) and Associate — Foundations (CCAO-F).
+- Home: Claude certifications are shown in catalog.json order — CCAO-F, CCDV-F, CCDV-P (in preparation), CCAR-F, CCAR-P — on the shelf and in "All certifications" (rows are grouped by provider, not by status).
 - Practice: questions stay in source order: 1–161 for CCAR-P, 1–147 for CCAR-F, 1–97 for CCDV-F, 1–193 for CCAO-F. Answer choices shuffle when entering/revisiting a question, reloading, or clearing its answer. They remain stable while selecting answers, flagging, or toggling translation.
 - Timed mock exam: CCAR-P uses 63 questions/120 minutes; CCAR-F and CCDV-F use a practice preset of 60 questions/120 minutes (not an official exam specification). Questions and choices are shuffled.
 - Untimed range: inclusive start/end question IDs, from 1 through the selected bank size. Example: 5–11 includes exactly seven questions, presented in random order. Invalid or reversed ranges cannot start.
