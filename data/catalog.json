@@ -96,6 +96,7 @@
   },
   {
    "id": "ccao-f",
+   "verified": true,
    "provider": "anthropic",
    "code": "CCAO-F",
    "title": "Claude Certified Associate",

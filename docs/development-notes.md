@@ -122,7 +122,7 @@ Validation for CCDV-F: `node tests/banks.cjs`; local browser check of the certif
 - EN question/option text, option order, answer keys and VI translations are kept as published, except for OCR repairs: the dropped "ab" in "about"/"above"/"abbreviation" (e.g. `isout` → `is about`), stray `*`/`+` bullet marks (Q40, Q127, Q167, Q185) and a few typos (Q11, Q27, Q32, Q37, Q39, Q66, Q152). Numbered steps in ordering questions are put on their own lines (`.question-text` uses `white-space:pre-line`). The source's OCR'd `src` field is not imported.
 - The source has Vietnamese keyword cues and "Ghi nhớ" takeaways only; each explanation is the cue followed by the takeaway, and the EN explanations are translations of them. Notes such as "Same as question 48" refer to this bank's numbering.
 - No domains were supplied. Each question is assigned by topic to one of the seven CCAO-F domains; weights are each domain's share of this bank, not an official exam weighting.
-- Storage key moved to `panic-ccaof-v2` because progress is stored by question id and the old ids pointed at removed questions. Not marked `verified`. Mock exam: 60 random questions in 120 minutes (practice preset).
+- Storage key moved to `panic-ccaof-v2` because progress is stored by question id and the old ids pointed at removed questions. Marked `verified` (blue check) on 22 November 2026 at the owner's request. Mock exam: 60 random questions in 120 minutes (practice preset).
 
 ## Keyword highlighting
 
