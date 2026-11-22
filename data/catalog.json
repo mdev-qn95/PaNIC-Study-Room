@@ -104,7 +104,10 @@
    "spine": "Developer",
    "level": "Professional",
    "status": "soon",
-   "summary": "Advanced application development with Claude, from design to production."
+   "summary": "Operating Claude applications, agents and coding-agent fleets in production.",
+   "guide": {
+    "source": "guide/index.json"
+   }
   },
   {
    "id": "ccar-f",

@@ -37,12 +37,13 @@
 <script>try{var t=JSON.parse(localStorage.getItem('panic-prefs-v1')||'{}').theme;if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/app.css?v=15">
 <link rel="stylesheet" href="/assets/css/answer-fx.css?v=4">
+<link rel="stylesheet" href="/assets/css/guide.css?v=1">
 <script defer src="/assets/js/catalog.js?v=5"></script>
-<script defer src="/assets/js/store.js?v=5"></script>
+<script defer src="/assets/js/store.js?v=6"></script>
 <script defer src="/assets/js/core.js?v=5"></script>
 <script defer src="/assets/js/keywords.js?v=5"></script>
 <script defer src="/assets/js/answer-fx.js?v=5"></script>
-<script defer src="/assets/js/app.js?v=14"></script>
+<script defer src="/assets/js/app.js?v=16"></script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -73,6 +74,8 @@
   <section class="view" id="viewCert" hidden></section>
   <!-- My progress -->
   <section class="view" id="viewProgress" hidden></section>
+  <!-- Study guide -->
+  <section class="view" id="viewGuide" hidden></section>
 
   <!-- Study room -->
   <div class="app-shell" id="studyApp" hidden>
@@ -121,6 +124,7 @@
 <dialog id="examDialog"><form id="examForm"><h2 tabindex="-1" id="examTitle">Start a mock exam</h2><p>Questions and answer choices are shuffled. Results appear after you submit.</p><fieldset class="exam-types"><legend class="sr">Exam type</legend><label class="exam-type"><input type="radio" name="examType" value="timed" checked><span><strong>Timed mock exam</strong><small id="timedExamDescription"></small></span><span data-icon="clock"></span></label><label class="exam-type"><input type="radio" name="examType" value="range"><span><strong>Untimed range</strong><small>Pick a range of questions and go at your own pace.</small></span><span data-icon="layers"></span></label></fieldset><div id="rangeFields" hidden><div class="range-inputs"><label>From question<input id="rangeFrom" type="number" min="1" step="1" value="1" inputmode="numeric"></label><label>To question<input id="rangeTo" type="number" min="1" step="1" value="1" inputmode="numeric"></label></div><p id="rangeSummary" aria-live="polite"></p></div><p id="examPresetNote" hidden></p><p id="examWarning"></p><div class="dialog-actions"><button type="button" class="ghost" id="cancelExam">Cancel</button><button class="primary" type="submit">Start exam <span data-icon="arrow"></span></button></div></form></dialog>
 <dialog id="confirmDialog"><h2 id="confirmTitle"></h2><p id="confirmText"></p><div class="dialog-actions"><button class="ghost" id="cancelConfirm" type="button">Keep working</button><button class="primary" id="acceptConfirm" type="button">Submit exam</button></div></dialog>
 <dialog id="resultDialog"><h2>Exam complete</h2><div id="results"></div><div class="dialog-actions"><button class="ghost" id="resultStudy" type="button">Back to practice</button><button class="primary" id="reviewExam" type="button">Review answers</button></div></dialog>
+<dialog id="citeDialog" class="cite-dialog" aria-label="Source"><div id="citeBody" class="g-source"></div><div class="dialog-actions"><button class="ghost" id="closeCite" type="button">Close</button></div></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <div class="sr" aria-live="polite" id="announcement"></div>
 </body>

@@ -1,0 +1,341 @@
+<aside class="g-keypoints" aria-label="Key points"><p class="g-keypoints__title">Key points</p><ul>
+<li>Classify a design by who chooses each next step: predefined code paths make a workflow, model-chosen steps make an agent.<sup class="cite-group"><button type="button" class="cite" data-cite="F1" aria-label="Source 1">1</button><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></li>
+<li>Compare candidates on cost per successful task across all eligible attempts, and report absolute spend and p95 beside it.</li>
+<li>The 4x and 15x token figures are relative to chat, not an agent-to-agent multiplier or a pricing rule.<sup class="cite-group"><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button></sup></li>
+<li>Equal per-call tool failure rates do not prove equal reliability: count tasks hit by at least one failed call.</li>
+<li>A self-hosted sandbox still sends tool results to the Managed Agents service; self-hosting the whole service is a separate option.<sup class="cite-group"><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></li>
+</ul>
+</aside>
+<p>A <strong>workflow</strong> orchestrates LLMs and tools through predefined code paths; an <strong>agent</strong> lets the model dynamically direct its own process and tool use.<sup class="cite-group"><button type="button" class="cite" data-cite="F1" aria-label="Source 1">1</button><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup> Use production data to decide whether changing control flow pays and which execution layer and shared patterns to adopt. Anthropic's starting point is the simplest solution that meets the need, which can mean no agentic system at all.<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button></sup></p>
+<h2 id="g-workflow-agent-and-multi-agent-are-control-flow-choices">Workflow, agent, and multi-agent are control-flow choices</h2>
+<p>The patterns differ in who picks the next step: your code or the model. A chain that classifies, retrieves, then drafts is a workflow even if the product is marketed as an agent, because the path is fixed in code; an agent can decide which action to take next and when to finish.<sup class="cite-group"><button type="button" class="cite" data-cite="F1" aria-label="Source 1">1</button><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></p>
+<p>Where more complexity is warranted, workflows offer predictability and consistency for well-defined tasks, while agents are the better option where flexibility and model-driven decision-making are needed at scale.<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button></sup> Autonomy costs: agentic systems often trade latency and cost for better task performance.<sup class="cite-group"><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup> Frameworks simplify integration, but their extra abstraction can obscure the underlying prompts and responses and make debugging harder.<sup class="cite-group"><button type="button" class="cite" data-cite="F6" aria-label="Source 6">6</button></sup></p>
+<p>A <strong>multi-agent system</strong> delegates work among multiple agents. Anthropic found that such systems excel at valuable tasks with heavy parallelization, information exceeding a single context window, and numerous complex tools.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button></sup> Domains needing all agents to share context, or with many inter-agent dependencies, were a poor fit in that research.<sup class="cite-group"><button type="button" class="cite" data-cite="F9" aria-label="Source 9">9</button></sup></p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Who chooses each next step</th>
+<th>Cost behavior to expect</th>
+<th>Evidence that it fits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One augmented call</td>
+<td>Nobody — fixed prompt</td>
+<td>One model call; measure its cost</td>
+<td>Simplest solution meets the quality bar.<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button></sup></td>
+</tr>
+<tr>
+<td>Workflow</td>
+<td>Your code, in predefined paths</td>
+<td>Calls depend on the predefined path</td>
+<td>Well-defined task needing predictability.<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button></sup></td>
+</tr>
+<tr>
+<td>Single agent</td>
+<td>The model, each turn</td>
+<td>More iterations can increase cost and latency</td>
+<td>Needs model-directed flexibility.<sup class="cite-group"><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button></sup></td>
+</tr>
+<tr>
+<td>Multi-agent</td>
+<td>Orchestrator plus model-directed subtasks</td>
+<td>Research data: agents about 4× the tokens of chat, multi-agent about 15× chat.<sup class="cite-group"><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button></sup></td>
+<td>Parallelizable work, volume beyond one context window, many complex tools.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button><button type="button" class="cite" data-cite="F9" aria-label="Source 9">9</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p>Both multipliers are relative to <strong>chat</strong>, not to a single agent, so 15× is neither an agent-to-multi-agent rule nor a pricing rule.<sup class="cite-group"><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button></sup> Choose the harness separately from the control-flow pattern; evaluate whether it supports the workflow or agent loop you need.</p>
+<h2 id="g-measure-the-running-system-before-you-change-it">Measure the running system before you change it</h2>
+<p>Fix the unit first. Recommended practice: define it as one accepted user task, carry a stable task ID across retries, tool calls, and handoffs, and freeze the rubric and observation window before comparing options. Record every attempt, including abandoned, timed-out, escalated, and failed ones. Official guidance agrees: define success criteria clearly, then evaluate against them across several criteria, since most use cases need multidimensional evaluation.<sup class="cite-group"><button type="button" class="cite" data-cite="F24" aria-label="Source 24">24</button><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup> Validate a sample with independent human labels and measure grader agreement; a plausible answer can still be wrong.</p>
+<p><strong>Cost per successful task</strong> is the ratio to report: total fully loaded cost of all eligible attempts divided by successful tasks. Load the numerator with model input and output, cache reads and writes, tool and infrastructure charges, retries, parallel subagents, grading, and human intervention where material. Also report cost per attempted task and absolute spend, because a lower cost per success can hide unacceptable error rates or higher total spend. With zero successes the ratio is undefined: report zero successes and the total cost.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Compute it as</th>
+<th>What it catches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cost per successful task</td>
+<td>Fully loaded cost of all eligible attempts / successful tasks</td>
+<td>True unit economics of a working feature</td>
+</tr>
+<tr>
+<td>Cost per attempted task</td>
+<td>Same cost / eligible tasks</td>
+<td>Waste spent on tasks that never succeeded</td>
+</tr>
+<tr>
+<td>Absolute spend</td>
+<td>Sum over the window, all arms</td>
+<td>A &quot;cheaper&quot; option that costs more in total</td>
+</tr>
+<tr>
+<td>End-to-end p50 / p95</td>
+<td>50th / 95th percentile of time from task acceptance to final output</td>
+<td>Deadline fit, and tail pain average latency hides</td>
+</tr>
+<tr>
+<td>Time to first output</td>
+<td>Request → first token or step</td>
+<td>Responsiveness for interactive clients</td>
+</tr>
+<tr>
+<td>Timeout / deadline-miss rate</td>
+<td>Timed-out tasks / eligible tasks</td>
+<td>Work that failed slowly rather than not at all</td>
+</tr>
+<tr>
+<td>Tool-call failure rate</td>
+<td>Failed calls / total calls</td>
+<td>Dependency health per tool, model, tenant</td>
+</tr>
+<tr>
+<td>Task-level impact</td>
+<td>Tasks with ≥1 failed call / eligible tasks</td>
+<td>Exposure created by making more calls</td>
+</tr>
+</tbody>
+</table></div>
+<p>Instrument each tool separately for attempts, error type, retry count, timeouts, and latency, and keep the last two rows apart: a per-call rate alone does not determine how many tasks were exposed. Correlate loop length and tokens with failures, and fix or isolate an outage-prone dependency before blaming the architecture.</p>
+<p>Compare options on matched or randomized traffic under the same rubric, risk controls, tool access, deadline, and budget, accounting for confidence intervals, rare high-severity failures, and selection bias. Use holdouts and canaries, monitor cohort-level guardrails, and keep a rapid rollback path. Shadow runs with side effects disabled can estimate quality but do not demonstrate real execution reliability. The most accurate option is not automatically best when reliability, budget, safety, or deadline requirements fail.</p>
+<h2 id="g-a-hypothetical-workflow-versus-bounded-agent">A hypothetical: workflow versus bounded agent</h2>
+<p>These figures are a hypothetical, not a benchmark: an OAuth-protected ticket-triage service, 10,000 eligible tasks per arm in a randomized trial, identical tool permissions, evaluator, and escalation policy. Costs cover every attempt, tool execution, retry, and human review; success means correct resolution within 90 seconds without a policy breach.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align:right">Fixed workflow</th>
+<th style="text-align:right">Bounded single agent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eligible tasks</td>
+<td style="text-align:right">10,000</td>
+<td style="text-align:right">10,000</td>
+</tr>
+<tr>
+<td>Successful tasks</td>
+<td style="text-align:right">8,000 (80%)</td>
+<td style="text-align:right">9,200 (92%)</td>
+</tr>
+<tr>
+<td>Total cost</td>
+<td style="text-align:right">$4,000</td>
+<td style="text-align:right">$5,060</td>
+</tr>
+<tr>
+<td>Cost / attempted task</td>
+<td style="text-align:right">$0.40</td>
+<td style="text-align:right">$0.506</td>
+</tr>
+<tr>
+<td>Cost / successful task</td>
+<td style="text-align:right">$0.50</td>
+<td style="text-align:right">$0.55</td>
+</tr>
+<tr>
+<td>End-to-end p95</td>
+<td style="text-align:right">35 s</td>
+<td style="text-align:right">70 s</td>
+</tr>
+<tr>
+<td>Failed tool calls / total calls</td>
+<td style="text-align:right">400 / 20,000 = 2%</td>
+<td style="text-align:right">1,200 / 60,000 = 2%</td>
+</tr>
+<tr>
+<td>Tasks with at least one failed tool call</td>
+<td style="text-align:right">380 (3.8%)</td>
+<td style="text-align:right">1,050 (10.5%)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Read the deltas. The agent adds 1,200 successful tasks for $1,060 extra per 10,000 attempts — <strong>$0.883 per incremental success</strong> — while cost per success rises from $0.50 to $0.55. The per-call tool failure rate is identical, but the agent made three times as many calls and more tasks hit at least one failed call: 3.8% versus 10.5%. These totals alone do not establish the cause of the difference. That neither means the dependency got worse nor that the agent is safe; it is a separate measurement.</p>
+<p>Suppose the business requires at least 90% success, p95 under 80 seconds, no severe policy regression, and values an incremental success at $2.00: the bounded agent is then a candidate despite the higher cost per success. A human-reviewed quality sample, statistical uncertainty, separate severity rates, and a successful canary are still required before broad rollout. If the 2,000 difficult tasks carry most of the gain, test a router and its missed-exception rate first. The example is arithmetic only; no SDK code is implied.</p>
+<h2 id="g-choose-the-execution-layer">Choose the execution layer</h2>
+<p>Four distinct products sit between &quot;we call the API&quot; and &quot;we run an agent.&quot; For each, name who operates the loop, who runs the tools, and who stores session state.</p>
+<p>The <strong>Messages SDK tool runner</strong> handles the agentic loop, error wrapping, and type safety so you do not have to.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup> By default it manages conversation state, appending the assistant message and any tool results to its own history each turn.<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup> Use the manual loop for human-in-the-loop approval, custom logging, or conditional execution.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup> In the Python beta runner, <code>@beta_tool</code> defines tools with type hints and docstrings,<sup class="cite-group"><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup> <code>client.beta.messages.tool_runner(...)</code> builds the loop.<sup class="cite-group"><button type="button" class="cite" data-cite="F31" aria-label="Source 31">31</button></sup> Pass <code>max_iterations</code> to bound it.<sup class="cite-group"><button type="button" class="cite" data-cite="F27" aria-label="Source 27">27</button></sup> Plan to store any durable state your application needs; the default runner history alone does not establish a durable-session guarantee.</p>
+<p>The <strong>Claude Agent SDK</strong> embeds Claude Code's agent in your own Python or TypeScript application, in a process you operate.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup> <strong>Claude Code headless</strong> runs non-interactively: add <code>-p</code>, or its equivalent <code>--print</code>, to any <code>claude</code> command,<sup class="cite-group"><button type="button" class="cite" data-cite="F18" aria-label="Source 18">18</button></sup> and <code>claude -p &quot;...&quot; --output-format json</code> returns structured JSON with the result, the session ID, and metadata.<sup class="cite-group"><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup></p>
+<p><strong>Claude Managed Agents</strong> provides the harness and infrastructure for running Claude as an autonomous agent,<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button></sup> and keeps event history you can fetch in full.<sup class="cite-group"><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button></sup> A cloud environment runs an isolated container per session with languages and tools preinstalled, so you host nothing.<sup class="cite-group"><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button></sup> In a self-hosted sandbox, a program you run, called a worker, carries out the agent's bash and file tool calls on your machines and sends each result back,<sup class="cite-group"><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button></sup> and what a tool returns to the model still reaches the Managed Agents service.<sup class="cite-group"><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button></sup> Self-hosted service is a separate option: the whole service on your own infrastructure.<sup class="cite-group"><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></p>
+<aside class="g-callout g-callout--version"><p class="g-callout__head"><span class="g-callout__kind">Version check · 2026-11-19</span></p><p>Managed Agents is in beta, and beta requests require the <code>managed-agents-2026-04-01</code> header on all requests.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup> Agent SDK versions, a specific framework's persistence and isolation guarantees, and Skill frontmatter portability were not pinned here; verify the release you deploy.</p>
+</aside>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Who operates execution</th>
+<th>Loop state</th>
+<th>What to verify</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tool runner / manual loop</td>
+<td>Your process</td>
+<td>Runner-managed message history by default.<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup></td>
+<td>Runner error handling vs. manual approval, conditional execution, bespoke logging.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup></td>
+</tr>
+<tr>
+<td>Agent SDK</td>
+<td>Your process embedding Claude Code's agent.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup></td>
+<td>Yours to provision</td>
+<td>Hosting, storage, isolation, and policy are explicit work</td>
+</tr>
+<tr>
+<td>Headless CLI (<code>-p</code>)</td>
+<td>Your script or CI runner</td>
+<td>Session metadata in JSON output.<sup class="cite-group"><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup></td>
+<td>Controlled execution environment and machine-readable result.<sup class="cite-group"><button type="button" class="cite" data-cite="F18" aria-label="Source 18">18</button><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup></td>
+</tr>
+<tr>
+<td>Managed Agents, cloud environment</td>
+<td>Anthropic runs a per-session isolated container.<sup class="cite-group"><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button></sup></td>
+<td>Managed service keeps event history.<sup class="cite-group"><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button></sup></td>
+<td>Beta availability, data handling, network policy, session economics.<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></td>
+</tr>
+<tr>
+<td>Managed Agents, self-hosted sandbox</td>
+<td>Your worker runs bash and file calls on your machines.<sup class="cite-group"><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button></sup></td>
+<td>Managed service; tool results still reach it.<sup class="cite-group"><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button></sup></td>
+<td>Whether retention rules allow tool output to leave your infrastructure.<sup class="cite-group"><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button></sup></td>
+</tr>
+<tr>
+<td>Third-party framework</td>
+<td>Your process</td>
+<td>Whatever that release actually does</td>
+<td>Request visibility, tool semantics, permission boundaries, observability, session durability, supported models, hosting, upgrade and exit costs.<sup class="cite-group"><button type="button" class="cite" data-cite="F6" aria-label="Source 6">6</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="g-migrate-in-both-directions">Migrate in both directions</h2>
+<p>Both directions need traced evidence, not a preference for autonomy. Recommended practice: move workflow → agent when the known decision tree fails on a material cohort and a controlled trial shows enough incremental successful tasks within your cost, tail-latency, and tool-safety limits. Route only that cohort to a bounded agent when the regular cases already work. Move agent → workflow when traces show a stable repeated tool sequence, or when quality and latency targets need fewer calls: prove the simpler path on the exceptions, keep the escalation route, and compare real outcomes. Revert or constrain autonomy if loop churn, tool failures, unsafe side effects, or tail latency rise, even if average answer quality improves.</p>
+<figure class="g-figure"><div class="g-figure__body"><ol class="g-flow g-flow--horizontal" aria-label="Flow with 7 steps"><li class="g-flow__step"><span class="g-flow__label">Eligible task</span></li><li class="g-flow__step"><span class="g-flow__label">Cohort / router</span></li><li class="g-flow__step"><span class="g-flow__label">Fixed workflow or bounded agent</span><span class="g-flow__note">same rubric, tools, deadline, budget</span></li><li class="g-flow__step"><span class="g-flow__label">Tools</span></li><li class="g-flow__step"><span class="g-flow__label">Outcome + cost telemetry</span><span class="g-flow__note">success, cost, latency, errors</span></li><li class="g-flow__step"><span class="g-flow__label">Evaluate vs thresholds</span></li><li class="g-flow__step"><span class="g-flow__label">Canary or rollback</span><span class="g-flow__note">feeds both migration directions</span></li></ol>
+</div><figcaption>Use comparable production outcomes to decide where dynamic control earns its cost.</figcaption></figure>
+<p>Assume equivalent authorized tools and data, representative traffic under one completion definition, and safety and privacy compliance for every candidate.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Observed condition or constraint</th>
+<th>Candidate</th>
+<th>Why, and what must be checked</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stable paths, known steps, low variance, tight deadline</td>
+<td>Fixed workflow or one augmented call</td>
+<td>Deterministic orchestration limits calls and branching; verify the quality threshold and explicit failure handling</td>
+</tr>
+<tr>
+<td>Unknown steps, repeated workflow exceptions, recoverable tool choices</td>
+<td>Bounded single agent</td>
+<td>Dynamic selection can recover diverse cases; compare incremental successful outcomes against cost, tool errors, tail latency</td>
+</tr>
+<tr>
+<td>Independent, high-value research branches exceeding one context window</td>
+<td>Multi-agent</td>
+<td>Parallel exploration may improve coverage; measure duplicate work, aggregation failures, full token cost; avoid strongly dependent shared-state work.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button><button type="button" class="cite" data-cite="F9" aria-label="Source 9">9</button></sup></td>
+</tr>
+<tr>
+<td>Precise application control, limited tool catalog</td>
+<td>Messages API manual loop or tool runner</td>
+<td>Runner handles the normal loop; manual control suits approval, conditional execution, bespoke logging; plan application storage for durable state; runner history is managed by default.<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup></td>
+</tr>
+<tr>
+<td>Custom product needs Claude Code tools, permissions, hooks, sessions</td>
+<td>Agent SDK</td>
+<td>Embed the harness in a process the team operates; provision hosting, storage, isolation, policy.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup></td>
+</tr>
+<tr>
+<td>Unattended repository or CI task</td>
+<td>Claude Code headless <code>-p</code></td>
+<td>CLI integrates with scripts and returns session metadata; supply a controlled execution environment.<sup class="cite-group"><button type="button" class="cite" data-cite="F18" aria-label="Source 18">18</button><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup></td>
+</tr>
+<tr>
+<td>Long-running async work, reduced infrastructure burden</td>
+<td>Managed Agents</td>
+<td>Hosted harness and cloud sandbox reduce runtime ownership; self-hosted sandbox and self-hosted service are distinct.<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></td>
+</tr>
+<tr>
+<td>An existing framework already solves the orchestration</td>
+<td>Evaluate that framework</td>
+<td>Test the actual release for request visibility, permissions, observability, session durability, exit costs.<sup class="cite-group"><button type="button" class="cite" data-cite="F6" aria-label="Source 6">6</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="g-set-reusable-pattern-standards">Set reusable-pattern standards</h2>
+<p>Treat shared patterns as versioned engineering assets, each with an owner, purpose, supported runtimes, input/output contract, allowed tools, risk classification, example use, evaluation cases, change log, and rollback. Put reusable instructions in Skills, isolated roles in subagents, authenticated integration code and typed schemas in reviewed shared tool libraries, and lifecycle checks in hooks.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Asset</th>
+<th>Location and shape</th>
+<th>Standard to enforce</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Project Skill</td>
+<td><code>.claude/skills/&lt;skill-name&gt;/SKILL.md</code>; commit it for repository sessions. Project cloud threads do not load it.<sup class="cite-group"><button type="button" class="cite" data-cite="F20" aria-label="Source 20">20</button></sup></td>
+<td>One purpose, versioned, with evaluation cases</td>
+</tr>
+<tr>
+<td>Project subagent</td>
+<td><code>.claude/agents/</code>; YAML frontmatter followed by a Markdown system prompt; check into version control so the team can improve it collaboratively.<sup class="cite-group"><button type="button" class="cite" data-cite="F21" aria-label="Source 21">21</button><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button></sup></td>
+<td>Explicit scope, permitted tools, return format, handoff requirements</td>
+</tr>
+<tr>
+<td>Shared tool library</td>
+<td>Your reviewed code</td>
+<td>Timeout and retry semantics, idempotency, least privilege; never duplicate OAuth secrets into prompts</td>
+</tr>
+<tr>
+<td>Hook</td>
+<td><code>PreToolUse</code> runs after Claude creates tool parameters and before processing the call, and can allow, deny, ask, or defer it under supported conditions.<sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button></sup> <code>defer</code> requires non-interactive <code>-p</code> mode and a single tool call in the turn.<sup class="cite-group"><button type="button" class="cite" data-cite="F32" aria-label="Source 32">32</button></sup></td>
+<td>Lifecycle policy, not a credential boundary</td>
+</tr>
+</tbody>
+</table></div>
+<p>Keep authorization for irreversible actions in a trusted service as well as in any hook. Validate Skill and subagent discovery and precedence in each runtime before claiming portability.</p>
+<h2 id="g-decision-criteria">Decision criteria</h2>
+<p>Compare candidates in this order:</p>
+<ol>
+<li>Confirm the quality bar and risk controls hold on representative traffic, then compare cost per successful task, cost per attempted task, and absolute spend.<sup class="cite-group"><button type="button" class="cite" data-cite="F24" aria-label="Source 24">24</button><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup></li>
+<li>Check deadline fit: p95 and time to first output against the product requirement, since agents trade latency and cost for performance.<sup class="cite-group"><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></li>
+<li>Check task-level reliability: tasks affected by tool failures, recovery behavior, and severity rates, not per-call error percentages.</li>
+<li>Check ownership boundaries: who runs the loop, who runs the tools, where event history lives, what leaves your infrastructure.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button></sup></li>
+<li>Check the exit: upgrade path, portability of Skill and subagent definitions, cost of returning to the simpler pattern.</li>
+</ol>
+<p>Evidence worth demanding: production traces grouped by task cohort, a router's missed-exception rate if you plan to route, incremental cost per additional success against the value of one success, and a canary using appropriately authorized real side effects where relevant.</p>
+<h2 id="g-failure-modes-and-recovery">Failure modes and recovery</h2>
+<aside class="g-callout g-callout--mistake"><p class="g-callout__head"><span class="g-callout__kind">Common mistake</span> <span class="g-callout__name">Using 15× as a multi-agent-versus-agent multiplier</span></p><p>The reported figures are agents at about 4× and multi-agent systems at about 15× the tokens of <strong>chat</strong> in Anthropic's research system.<sup class="cite-group"><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button></sup> Using them as a universal 15×-versus-single-agent rule, or as a pricing rule, misprices every option. Measure tokens per successful task on your own traffic.</p>
+</aside>
+<aside class="g-callout g-callout--mistake"><p class="g-callout__head"><span class="g-callout__kind">Common mistake</span> <span class="g-callout__name">Assuming a self-hosted sandbox keeps data on your infrastructure</span></p><p>Your worker executes the agent's bash and file tool calls locally, but what a tool returns to the model still reaches the Managed Agents service, and self-hosting the whole service is a separate option.<sup class="cite-group"><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup> Draw that data-flow boundary in the design review and check it against retention and network policy.</p>
+</aside>
+<aside class="g-callout g-callout--mistake"><p class="g-callout__head"><span class="g-callout__kind">Common mistake</span> <span class="g-callout__name">Treating instructions or a hook as the permission system</span></p><p><code>PreToolUse</code> can allow, deny, ask, or defer a call after parameters are generated; deferral requires non-interactive <code>-p</code> mode and one tool call in the turn.<sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button><button type="button" class="cite" data-cite="F32" aria-label="Source 32">32</button></sup> Prompt text alone does not enforce permissions, and a local hook does not intercept every data path. Enforce authorization for consequential actions in the service that holds the credential.</p>
+</aside>
+<p>Two more recurring mistakes. Calling a fixed orchestration an autonomous agent because it uses tools, or assuming a framework choice sets the control-flow pattern: classify by who decides each next step.<sup class="cite-group"><button type="button" class="cite" data-cite="F1" aria-label="Source 1">1</button><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup> Comparing only successful-run cost, or reading equal per-call rates as equal task-level reliability: recompute cost over all eligible attempts and reliability at task level.</p>
+<h2 id="g-exam-lens">Exam lens</h2>
+<p>These decision patterns are editorial inference, not exam questions.</p>
+<aside class="g-lens" aria-label="Exam lens — editorial inference, not official exam content"><p class="g-lens__head"><span class="g-lens__name">Exam lens</span><span class="g-lens__note">editorial inference</span></p><ul>
+<li>Weigh verified completion and cost per successful task against latency and tool failures; the answer is rarely the lowest per-request price.</li>
+<li>Decide from traces whether variable paths require model decisions, or stable repeated paths justify replacing an agent with a workflow.</li>
+<li>Distinguish an embedded harness, an in-process tool loop, a headless CLI, and a hosted managed service; check who operates execution and session state.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button><button type="button" class="cite" data-cite="F18" aria-label="Source 18">18</button></sup></li>
+<li>Choose independently testable shared Skills, subagents, tools, and hooks, with deterministic enforcement for consequential actions outside the prompt.<sup class="cite-group"><button type="button" class="cite" data-cite="F21" aria-label="Source 21">21</button><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button></sup></li>
+</ul>
+</aside>
+<h2 id="g-self-check">Self-check</h2>
+<details class="g-check"><summary><span class="g-check__badge" aria-hidden="true">Q</span><span class="g-check__q">A workflow succeeds 8,000 times for $4,000; an agent succeeds 9,200 times for $5,060, both on 10,000 attempts. Which has lower cost per success?</span><span class="g-check__show">Show answer</span></summary><div class="g-check__a"><span class="g-check__badge a" aria-hidden="true">A</span><div><p>The workflow: $0.50 versus $0.55. The agent adds 1,200 successes at $0.883 each; compare incremental cost per extra success to the value of one.</p>
+</div></div></details>
+<details class="g-check"><summary><span class="g-check__badge" aria-hidden="true">Q</span><span class="g-check__q">A tool fails on 2% of calls in both arms, but the agent makes three times as many calls. Are task-level failure rates equal?</span><span class="g-check__show">Show answer</span></summary><div class="g-check__a"><span class="g-check__badge a" aria-hidden="true">A</span><div><p>No. Equal per-call rates do not imply equal task exposure; measure tasks affected and recovery separately.</p>
+</div></div></details>
+<details class="g-check"><summary><span class="g-check__badge" aria-hidden="true">Q</span><span class="g-check__q">Does a self-hosted sandbox mean the whole Managed Agents service runs on your infrastructure?</span><span class="g-check__show">Show answer</span></summary><div class="g-check__a"><span class="g-check__badge a" aria-hidden="true">A</span><div><p>No. A worker can execute tools locally while the managed service receives the tool results; self-hosting the service is a separate option.<sup class="cite-group"><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></p>
+</div></div></details>
+<section class="g-sources" aria-labelledby="g-sources"><details><summary><h2 id="g-sources">Sources</h2><span class="g-sources__count">32</span></summary><p class="muted small">Quotes are copied verbatim from each source on the access date shown. Tap a source title to open it.</p><ol><li class="g-source" data-src="F1" value="1"><div class="g-source__head"><span class="g-source__n">1</span><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a><span class="g-source__tag fact">Documented</span></div><blockquote>Workflows are systems where LLMs and tools are orchestrated through predefined code paths.</blockquote><p class="g-source__meta">anthropic.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Workflows follow predefined code paths.</p></li><li class="g-source" data-src="F2" value="2"><div class="g-source__head"><span class="g-source__n">2</span><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a><span class="g-source__tag fact">Documented</span></div><blockquote>Agents, on the other hand, are systems where LLMs dynamically direct their own processes and tool usage, maintaining control over how they accomplish tasks.</blockquote><p class="g-source__meta">anthropic.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Agents dynamically control their processes and tools.</p></li><li class="g-source" data-src="F3" value="3"><div class="g-source__head"><span class="g-source__n">3</span><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a><span class="g-source__tag rec">Recommended practice</span></div><blockquote>When building applications with LLMs, we recommend finding the simplest solution possible, and only increasing complexity when needed. This might mean not building agentic systems at all.</blockquote><p class="g-source__meta">anthropic.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Start with the simplest solution, which may not be agentic.</p></li><li class="g-source" data-src="F4" value="4"><div class="g-source__head"><span class="g-source__n">4</span><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a><span class="g-source__tag fact">Documented</span></div><blockquote>Agentic systems often trade latency and cost for better task performance, and you should consider when this tradeoff makes sense.</blockquote><p class="g-source__meta">anthropic.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Agents often trade cost and latency for task performance.</p></li><li class="g-source" data-src="F5" value="5"><div class="g-source__head"><span class="g-source__n">5</span><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a><span class="g-source__tag rec">Recommended practice</span></div><blockquote>When more complexity is warranted, workflows offer predictability and consistency for well-defined tasks, whereas agents are the better option when flexibility and model-driven decision-making are needed at scale.</blockquote><p class="g-source__meta">anthropic.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Workflows suit well-defined tasks, agents flexible decisions.</p></li><li class="g-source" data-src="F6" value="6"><div class="g-source__head"><span class="g-source__n">6</span><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a><span class="g-source__tag fact">Documented</span></div><blockquote>However, they often create extra layers of abstraction that can obscure the underlying prompts ​​and responses, making them harder to debug.</blockquote><p class="g-source__meta">anthropic.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Framework abstractions may obscure prompts and responses.</p></li><li class="g-source" data-src="F7" value="7"><div class="g-source__head"><span class="g-source__n">7</span><a href="https://www.anthropic.com/research/multi-agent-research-system" target="_blank" rel="noopener">How we built our multi-agent research system</a><span class="g-source__tag rec">Recommended practice</span></div><blockquote>We’ve found that multi-agent systems excel at valuable tasks that involve heavy parallelization, information that exceeds single context windows, and interfacing with numerous complex tools.</blockquote><p class="g-source__meta">anthropic.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Multi-agent suitability includes parallelism and context volume.</p></li><li class="g-source" data-src="F8" value="8"><div class="g-source__head"><span class="g-source__n">8</span><a href="https://www.anthropic.com/research/multi-agent-research-system" target="_blank" rel="noopener">How we built our multi-agent research system</a><span class="g-source__tag fact">Documented</span></div><blockquote>In our data, agents typically use about 4× more tokens than chat interactions, and multi-agent systems use about 15× more tokens than chats.</blockquote><p class="g-source__meta">anthropic.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The observed token multipliers were relative to chat.</p></li><li class="g-source" data-src="F9" value="9"><div class="g-source__head"><span class="g-source__n">9</span><a href="https://www.anthropic.com/research/multi-agent-research-system" target="_blank" rel="noopener">How we built our multi-agent research system</a><span class="g-source__tag fact">Documented</span></div><blockquote>Further, some domains that require all agents to share the same context or involve many dependencies between agents are not a good fit for multi-agent systems today.</blockquote><p class="g-source__meta">anthropic.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Shared-context or dependent work may not suit multi-agent.</p></li><li class="g-source" data-src="F10" value="10"><div class="g-source__head"><span class="g-source__n">10</span><a href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank" rel="noopener">Agent SDK overview</a><span class="g-source__tag fact">Documented</span></div><blockquote>Embed Claude Code’s agent in your own Python or TypeScript application, in a process you operate</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The Agent SDK runs Claude Code in a process the developer operates.</p></li><li class="g-source" data-src="F11" value="11"><div class="g-source__head"><span class="g-source__n">11</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-runner" target="_blank" rel="noopener">Tool runner (SDK)</a><span class="g-source__tag rec">Recommended practice</span></div><blockquote>The tool runner handles the agentic loop, error wrapping, and type safety so you don’t have to. When you need human-in-the-loop approval, custom logging, or conditional execution, use the manual loop instead.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The tool runner handles loop, errors, and types; use a manual loop for specified control needs.</p></li><li class="g-source" data-src="F12" value="12"><div class="g-source__head"><span class="g-source__n">12</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-runner" target="_blank" rel="noopener">Tool runner (SDK)</a><span class="g-source__tag fact">Documented</span></div><blockquote>By default, the runner manages conversation state for you: after each tool-call turn, it appends the assistant message and any tool results to its own message history.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The runner manages conversation state by default.</p></li><li class="g-source" data-src="F13" value="13"><div class="g-source__head"><span class="g-source__n">13</span><a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank" rel="noopener">Claude Managed Agents overview</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Claude Managed Agents provides the harness and infrastructure for running Claude as an autonomous agent.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Managed Agents beta, documentation accessed 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>Hosted Managed Agents provides an agent harness and infrastructure.</p></li><li class="g-source" data-src="F14" value="14"><div class="g-source__head"><span class="g-source__n">14</span><a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank" rel="noopener">Claude Managed Agents overview</a><span class="g-source__tag fact">Documented</span></div><blockquote>The Managed Agents service keeps the event history, and you can fetch it in full.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Managed service event history can be fetched.</p></li><li class="g-source" data-src="F15" value="15"><div class="g-source__head"><span class="g-source__n">15</span><a href="https://platform.claude.com/docs/en/managed-agents/choosing-an-environment" target="_blank" rel="noopener">Choosing an agent environment</a><span class="g-source__tag fact">Documented</span></div><blockquote>Anthropic runs an isolated container for each session, with common languages and tools already installed, so there is nothing for you to host.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Cloud environments give each session an isolated container.</p></li><li class="g-source" data-src="F16" value="16"><div class="g-source__head"><span class="g-source__n">16</span><a href="https://platform.claude.com/docs/en/managed-agents/choosing-an-environment" target="_blank" rel="noopener">Choosing an agent environment</a><span class="g-source__tag fact">Documented</span></div><blockquote>A program that you run, called a worker, carries out the agent’s bash and file tool calls on your machines and sends each result back.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Self-hosted sandbox workers execute bash and file calls.</p></li><li class="g-source" data-src="F17" value="17"><div class="g-source__head"><span class="g-source__n">17</span><a href="https://platform.claude.com/docs/en/managed-agents/choosing-an-environment" target="_blank" rel="noopener">Choosing an agent environment</a><span class="g-source__tag fact">Documented</span></div><blockquote>What a tool returns to the model still reaches the Managed Agents service.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Self-hosted tool results still reach the managed service.</p></li><li class="g-source" data-src="F18" value="18"><div class="g-source__head"><span class="g-source__n">18</span><a href="https://code.claude.com/docs/en/headless" target="_blank" rel="noopener">Run Claude Code programmatically</a><span class="g-source__tag fact">Documented</span></div><blockquote>Add the -p (or --print) flag to any claude command to run it non-interactively.</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Headless CLI uses -p or --print.</p></li><li class="g-source" data-src="F19" value="19"><div class="g-source__head"><span class="g-source__n">19</span><a href="https://code.claude.com/docs/en/headless" target="_blank" rel="noopener">Run Claude Code programmatically</a><span class="g-source__tag fact">Documented</span></div><blockquote>json: structured JSON with result, session ID, and metadata</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Headless JSON output has result, session ID, and metadata.</p></li><li class="g-source" data-src="F20" value="20"><div class="g-source__head"><span class="g-source__n">20</span><a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Extend Claude with skills</a><span class="g-source__tag fact">Documented</span></div><blockquote>Project | .claude/skills/&lt;skill-name&gt;/SKILL.md | Sessions in this repository, but not cloud threads in a project. Commit it so your team gets it too</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Project skills can be committed to share.</p></li><li class="g-source" data-src="F21" value="21"><div class="g-source__head"><span class="g-source__n">21</span><a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Create custom subagents</a><span class="g-source__tag rec">Recommended practice</span></div><blockquote>Project subagents (.claude/agents/) are ideal for subagents specific to a codebase. Check them into version control so your team can use and improve them collaboratively.</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Project subagents belong in .claude/agents and can be version controlled.</p></li><li class="g-source" data-src="F22" value="22"><div class="g-source__head"><span class="g-source__n">22</span><a href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">Hooks reference</a><span class="g-source__tag fact">Documented</span></div><blockquote>Runs after Claude creates tool parameters and before processing the tool call.</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>PreToolUse runs after tool parameters and before tool execution.</p></li><li class="g-source" data-src="F23" value="23"><div class="g-source__head"><span class="g-source__n">23</span><a href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">Hooks reference</a><span class="g-source__tag fact">Documented</span></div><blockquote>Use PreToolUse decision control to allow, deny, ask, or defer the tool call.</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>PreToolUse can allow, deny, ask, or defer.</p></li><li class="g-source" data-src="F24" value="24"><div class="g-source__head"><span class="g-source__n">24</span><a href="https://platform.claude.com/docs/en/test-and-evaluate/develop-tests" target="_blank" rel="noopener">Define success criteria and build evaluations</a><span class="g-source__tag rec">Recommended practice</span></div><blockquote>Building a successful LLM-based application starts with clearly defining your success criteria and then designing evaluations to measure performance against them.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Define measurable success criteria and evaluations.</p></li><li class="g-source" data-src="F25" value="25"><div class="g-source__head"><span class="g-source__n">25</span><a href="https://platform.claude.com/docs/en/test-and-evaluate/develop-tests" target="_blank" rel="noopener">Define success criteria and build evaluations</a><span class="g-source__tag fact">Documented</span></div><blockquote>Most use cases need multidimensional evaluation along several success criteria.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Most applications need multiple success criteria.</p></li><li class="g-source" data-src="F26" value="26"><div class="g-source__head"><span class="g-source__n">26</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-runner" target="_blank" rel="noopener">Tool runner (SDK)</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Use the @beta_tool decorator to define tools with type hints and docstrings.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Python SDK beta tool runner, documentation accessed 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>Python tool runner uses beta_tool with type hints and docstrings.</p></li><li class="g-source" data-src="F27" value="27"><div class="g-source__head"><span class="g-source__n">27</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-runner" target="_blank" rel="noopener">Tool runner (SDK)</a><span class="g-source__tag fact">Documented</span></div><blockquote>To bound the loop, pass max_iterations.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Bound tool runner iterations with max_iterations.</p></li><li class="g-source" data-src="F28" value="28"><div class="g-source__head"><span class="g-source__n">28</span><a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank" rel="noopener">Claude Managed Agents overview</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>The managed-agents-2026-04-01 beta header on all requests.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Managed Agents beta, documentation accessed 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>Managed Agents beta requires its beta header.</p></li><li class="g-source" data-src="F29" value="29"><div class="g-source__head"><span class="g-source__n">29</span><a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Create custom subagents</a><span class="g-source__tag fact">Documented</span></div><blockquote>Subagent files use YAML frontmatter for configuration, followed by the system prompt in Markdown:</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Subagent files have YAML frontmatter and Markdown system prompt.</p></li><li class="g-source" data-src="F30" value="30"><div class="g-source__head"><span class="g-source__n">30</span><a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank" rel="noopener">Claude Managed Agents overview</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Self-hosted service: The whole Managed Agents service on your own infrastructure, with self-hosted Claude Managed Agents</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Managed Agents beta, documentation accessed 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>The full Managed Agents service can also be self-hosted.</p></li><li class="g-source" data-src="F31" value="31"><div class="g-source__head"><span class="g-source__n">31</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-runner" target="_blank" rel="noopener">Tool runner (SDK)</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>runner = client.beta.messages.tool_runner(</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Python SDK beta tool runner, documentation accessed 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>The Python SDK tool runner is constructed with client.beta.messages.tool_runner.</p></li><li class="g-source" data-src="F32" value="32"><div class="g-source__head"><span class="g-source__n">32</span><a href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">Hooks reference</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Claude Code honors &quot;defer&quot; only in non-interactive mode with the -p flag, and only when Claude makes a single tool call in the turn:</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19 · Claude Code hooks documentation accessed 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>PreToolUse deferral requires non-interactive mode and a single tool call.</p></li></ol></details></section>

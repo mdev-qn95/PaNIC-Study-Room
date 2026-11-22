@@ -124,7 +124,15 @@ Validation for CCDV-F: `node tests/banks.cjs`; local browser check of the certif
 - No domains were supplied. Each question is assigned by topic to one of the seven CCAO-F domains; weights are each domain's share of this bank, not an official exam weighting.
 - Storage key moved to `panic-ccaof-v2` because progress is stored by question id and the old ids pointed at removed questions. Marked `verified` (blue check) on 22 November 2026 at the owner's request. Mock exam: 60 random questions in 120 minutes (practice preset).
 
-## Keyword highlighting
+## CCDV-P study guide — added 22 November 2026
+
+- CCDV-P stays "In preparation" (no question bank yet) but opens the *CCDV-P Study Guide* by dbirks (github.com/dbirks/claude-certified-developer-professional-study-guide), republished with the author's permission and credited on every guide page with a link to the original site.
+- Content: introduction, 25 skill chapters in 8 blueprint domains (Exam Guide v1.0, November 2026) and 4 reference pages (`exam-day-review` is marked Draft, as in the source). The unpublished practice pages and the component demo are not imported.
+- `scripts/import-guide.py` converts the source MDX and citation YAML to static HTML without running the source repo's build. Components are re-rendered in PaNIC style: key points, callouts, exam lens, self-checks (answer behind "Show answer"), figures, flows, sequence diagrams (as an ordered message list instead of SVG), the signal table, and each chapter's sources. Citation markers open a source dialog. Shiki highlighting and Pagefind search are not carried over.
+- Routes `#/guide/ccdv-p` and `#/guide/ccdv-p/<slug>`; chapters load on demand. Reading progress (`panic-guide-ccdv-p-v1`) marks chapters read when opened and offers "Continue".
+- Validation: `node tests/guide.cjs`; headless Chrome at 1280 and 390px visiting every chapter: no console errors, no horizontal overflow; citation dialog checked; dark theme spot-checked.
+
+
 
 The optional **Highlight keywords** switch marks English answer choices and classification statements with user-supplied reading cues: green LỤM, red NÉ, and amber CHECK. These cues are not answer keys. The question prompt and feedback are not highlighted. There is no on-screen color legend. CHECK exceptions take priority over overlapping red or green matches. Matching ignores case and respects whole words; `per-role … allow-list` and `cannot … without …` allow intervening text within the same sentence. For `cannot … without …`, only `cannot` and `without` receive amber highlighting; intervening text is left uncolored by that rule. Generic `without …` highlights the word `without`. Vietnamese text and original question data remain unchanged. The preference is saved per certification and does not change answers, answer order or progress.
 

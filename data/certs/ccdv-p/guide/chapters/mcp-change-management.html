@@ -1,0 +1,370 @@
+<aside class="g-keypoints" aria-label="Key points"><p class="g-keypoints__title">Key points</p><ul>
+<li>Release protocol revision, transport, endpoint, credentials, tool catalog, model, prompt, and route as one tested bundle, and roll back the whole bundle.</li>
+<li><code>2025-11-25</code> negotiated version and capabilities in <code>initialize</code>; under <code>2026-07-28</code> each request carries them in <code>_meta</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></li>
+<li>A tool list that changes between requests counts as a prefix edit and can return <code>400</code> on Claude Fable 5.2.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup></li>
+<li>Under the 2025 authorization profile, invalid or expired tokens return <code>401</code>, and the server must not pass the client's token downstream.<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup></li>
+<li>The Messages API connector needs a public HTTPS endpoint, cannot reach a local stdio server, supports tool calls only, and is not ZDR-eligible.<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button></sup></li>
+</ul>
+</aside>
+<p><strong>Model Context Protocol (MCP)</strong> connects clients to tools and other context supplied by servers. Its <code>2026-07-28</code> revision uses a stateless request/response core.<sup class="cite-group"><button type="button" class="cite" data-cite="F40" aria-label="Source 40">40</button></sup> Production change management tracks the dependencies a request uses: protocol revision, transport, endpoint, credentials, tool catalog, model, prompt, and route. These layers can change independently. For example, on Claude Fable 5.2, changing a tool list between requests counts as an edit to the conversation prefix and can cause a <code>400</code> when earlier thinking blocks are sent back.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup> Name the changed layer, test the new combination before routing traffic to it, and keep a tested release bundle for rollback.</p>
+<h2 id="g-the-deployable-contract">The deployable contract</h2>
+<p>The <strong>deployable contract</strong> is the set of artifacts a running request depends on. Inventory it, version each part separately, and record the combination in a <strong>release manifest</strong>: protocol revision does not version your business tools, and a schema version does not version your route.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Version it as</th>
+<th>Typical break on upgrade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP protocol revision</td>
+<td>Revision date (<code>2025-11-25</code>, <code>2026-07-28</code>)</td>
+<td>List-change delivery differs by revision.<sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup></td>
+</tr>
+<tr>
+<td>Transport</td>
+<td>Per endpoint (stdio, Streamable HTTP)</td>
+<td>The Messages API connector cannot reach a local stdio server.<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button></sup></td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Canonical resource, issuer, scopes</td>
+<td>Under the 2025 authorization profile, invalid or expired tokens return <code>401</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td>Tool catalog</td>
+<td>Names, descriptions, input schemas</td>
+<td>Tool selection may change after a catalog update.</td>
+</tr>
+<tr>
+<td>Model snapshot</td>
+<td>Model ID plus platform deployment</td>
+<td>Requests to retired models fail.<sup class="cite-group"><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button></sup></td>
+</tr>
+<tr>
+<td>Prompt and route</td>
+<td>Release ID or content hash, gateway route</td>
+<td>Some mid-conversation edits trigger prefix checks and <code>400</code> errors under model-specific defaults.<sup class="cite-group"><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="g-remote-mcp-deployment-and-authentication">Remote MCP deployment and authentication</h2>
+<p>The protocol revision decides how versions and capabilities are agreed, which decides what a client must do on an upgrade. The published MCP revision is <code>2026-07-28</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F1" aria-label="Source 1">1</button></sup> Keep <code>2025-11-25</code> in view as a handshake-era compatibility target, not an alias for the new wire behavior.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th><code>2025-11-25</code></th>
+<th><code>2026-07-28</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Version agreement</td>
+<td>Client MUST send a supported protocol version in <code>initialize</code>. The server MUST respond with the same version if it supports it. The client SHOULD disconnect if it cannot support the returned version.<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></td>
+<td>Each request travels on its own and carries protocol version, client identity, and client capabilities in <code>_meta</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p>The standard transports are stdio and Streamable HTTP. Streamable HTTP replaced the HTTP+SSE transport from protocol version <code>2024-11-05</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button></sup> Claude Code deprecates the legacy SSE transport and recommends HTTP servers where available.<sup class="cite-group"><button type="button" class="cite" data-cite="F6" aria-label="Source 6">6</button></sup> Streamable HTTP can still use SSE to stream server messages.<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button></sup></p>
+<p>Authorization is optional in MCP. For HTTP implementations that support authorization, the 2025 specification recommends this profile; its requirements apply when the profile is used.<sup class="cite-group"><button type="button" class="cite" data-cite="F43" aria-label="Source 43">43</button></sup></p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authorization server</td>
+<td>MUST implement OAuth 2.1 with appropriate security measures for confidential and public clients.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button></sup></td>
+</tr>
+<tr>
+<td>Resource metadata</td>
+<td>Servers MUST publish OAuth 2.0 Protected Resource Metadata (RFC 9728), and clients MUST use it for authorization-server discovery.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button></sup></td>
+</tr>
+<tr>
+<td>Token audience</td>
+<td>Clients MUST implement Resource Indicators (RFC 8707) to specify the target resource of each token request.<sup class="cite-group"><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button></sup></td>
+</tr>
+<tr>
+<td>Server validation</td>
+<td>Servers MUST accept only tokens valid for their own resources and MUST NOT accept or transit other tokens.<sup class="cite-group"><button type="button" class="cite" data-cite="F9" aria-label="Source 9">9</button></sup></td>
+</tr>
+<tr>
+<td>Downstream calls</td>
+<td>The MCP server MUST NOT pass through the client's token; obtain a separate appropriate downstream credential.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup></td>
+</tr>
+<tr>
+<td>Rejection</td>
+<td>Invalid or expired tokens MUST receive HTTP <code>401</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td>Stdio</td>
+<td>Implementations SHOULD NOT follow this profile and instead retrieve credentials from the environment.<sup class="cite-group"><button type="button" class="cite" data-cite="F33" aria-label="Source 33">33</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p>The <strong>canonical resource</strong> identifies the target resource for a token.<sup class="cite-group"><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button></sup> When a hostname or path change also changes that identity, treat it as an authentication migration: publish correct metadata, obtain a token for the new resource, validate issuer and audience at each replica, and test expired, wrong-audience, and insufficient-scope cases. Do not clear a <code>401</code> by forwarding a token meant for another backend.</p>
+<p>Claude Code scope is deployed configuration: the effective server can differ between developers, or between a laptop and CI, on an identical repository. Keep bearer secrets out of the committed <code>.mcp.json</code>.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Where it lives</th>
+<th>Who sees it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>local</code> (default)</td>
+<td>Only the project where you added the server</td>
+<td>Private to you.<sup class="cite-group"><button type="button" class="cite" data-cite="F18" aria-label="Source 18">18</button></sup></td>
+</tr>
+<tr>
+<td><code>project</code></td>
+<td><code>.mcp.json</code> at the project root</td>
+<td>Shared with the team.<sup class="cite-group"><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup></td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td><code>~/.claude.json</code></td>
+<td>Every project on your machine, private to your account.<sup class="cite-group"><button type="button" class="cite" data-cite="F37" aria-label="Source 37">37</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p>Use <code>--scope project</code> to store this server in project scope. Claude Code documents the <code>claude mcp add</code> command and <code>--scope project</code> option.<sup class="cite-group"><button type="button" class="cite" data-cite="F41" aria-label="Source 41">41</button></sup></p>
+<pre><code class="language-bash"># --scope user selects user scope; omitting scope selects local.
+claude mcp add --transport http shared-server --scope project https://example.com/mcp
+</code></pre>
+<h2 id="g-tool-and-schema-versioning">Tool and schema versioning</h2>
+<p>An MCP tool has a name and schema metadata; a description can explain its purpose.<sup class="cite-group"><button type="button" class="cite" data-cite="F42" aria-label="Source 42">42</button></sup> A <strong>tool catalog change</strong> alters the definitions available to the client. Delivery depends on the protocol revision. A server using the handshake-era protocol that declared <code>listChanged</code> SHOULD send <code>notifications/tools/list_changed</code> when its tool list changes.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup> Under <code>2026-07-28</code>, list-change and resource-update notifications arrive only on a <code>subscriptions/listen</code> stream the client opened.<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup> Re-list after change events, invalidate dependent caches, and test missed events, reconnects, and catalog reconciliation.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Change</th>
+<th>Breaking?</th>
+<th>Migration move</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Remove or rename a tool</td>
+<td>Yes</td>
+<td>Publish v2, keep v1, drain traffic, then retire v1</td>
+</tr>
+<tr>
+<td>Require a formerly optional argument</td>
+<td>Yes</td>
+<td>Accept both signatures during the overlap</td>
+</tr>
+<tr>
+<td>Narrow an enum or change units</td>
+<td>Yes</td>
+<td>New tool name or explicit schema version</td>
+</tr>
+<tr>
+<td>Change what a result means</td>
+<td>Yes</td>
+<td>New tool; the old description now misleads the model</td>
+</tr>
+<tr>
+<td>Add a tool or an optional input</td>
+<td>Possibly</td>
+<td>Re-evaluate selection and behavior before rollout</td>
+</tr>
+</tbody>
+</table></div>
+<p>Retain v1 alongside v2, compare real calls and results, migrate client allowlists, and retire v1 only after traffic drains. A notification is a cache invalidation signal, not a compatibility promise.</p>
+<h2 id="g-the-messages-api-connector">The Messages API connector</h2>
+<p>The Messages API MCP connector reaches remote MCP servers through a public HTTP endpoint. It supports Streamable HTTP and SSE, but it cannot connect directly to a local stdio server.<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button></sup> The connector currently supports only MCP tool calls.<sup class="cite-group"><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button></sup> It is not eligible for zero-data-retention (ZDR) arrangements; exchanged data follows the feature's standard retention policy.<sup class="cite-group"><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button></sup></p>
+<p>Connector migration changes request configuration. The <code>mcp-client-2025-11-20</code> beta header replaces deprecated <code>mcp-client-2025-04-04</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button></sup> Tool configuration now lives in <code>MCPToolset</code> objects in the <code>tools</code> array.<sup class="cite-group"><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button></sup> Each <code>mcp_servers</code> entry uses <code>type: &quot;url&quot;</code>, <code>url</code>, and <code>name</code>, with optional <code>authorization_token</code>. Its URL must start with <code>https://</code>. An <code>mcp_toolset</code> entry refers to the server through <code>mcp_server_name</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button><button type="button" class="cite" data-cite="F39" aria-label="Source 39">39</button></sup> For an allowlist, set <code>default_config.enabled</code> to <code>false</code> and enable approved tool names under <code>configs</code>. This controls exposure through the application and does not replace server-side authorization.<sup class="cite-group"><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button></sup> Keep tool definitions stable within a conversation, and test catalog changes against the target model before routing production traffic to them.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup> On platforms that support <code>mcp-client-2026-09-15</code>, the connector can record and pin a server’s tool list.<sup class="cite-group"><button type="button" class="cite" data-cite="F44" aria-label="Source 44">44</button></sup> Return the assistant message unchanged, including <code>mcp_tool_listing</code> blocks, and keep the beta header on requests carrying those blocks; later requests reuse the recorded list.<sup class="cite-group"><button type="button" class="cite" data-cite="F45" aria-label="Source 45">45</button></sup> Pinning the list does not freeze the server’s implementation, so retain compatible server behavior as well.</p>
+<aside class="g-callout g-callout--version"><p class="g-callout__head"><span class="g-callout__kind">Version check · 2026-11-19</span></p><p>Connector availability can vary by platform and deployment type. Check the current platform matrix before enabling this feature.</p>
+</aside>
+<p>The following is illustrative Python pseudocode for the documented Anthropic Python SDK beta interface.<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button><button type="button" class="cite" data-cite="F39" aria-label="Source 39">39</button></sup> It needs an SDK release carrying that beta, a model entitlement, a resource-bound token, and a deployed server, so it does not run as written.</p>
+<pre><code class="language-python">import anthropic
+
+client = anthropic.Anthropic()
+response = client.beta.messages.create(
+    model=&quot;claude-fable-5-2&quot;,
+    max_tokens=1024,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Find order 123.&quot;}],
+    mcp_servers=[{
+        &quot;type&quot;: &quot;url&quot;, &quot;name&quot;: &quot;orders&quot;,
+        &quot;url&quot;: &quot;https://orders.example.com/mcp&quot;,
+        &quot;authorization_token&quot;: &quot;RESOURCE_BOUND_ACCESS_TOKEN&quot;,
+    }],
+    tools=[{
+        &quot;type&quot;: &quot;mcp_toolset&quot;, &quot;mcp_server_name&quot;: &quot;orders&quot;,
+        &quot;default_config&quot;: {&quot;enabled&quot;: False},
+        &quot;configs&quot;: {&quot;lookup_order&quot;: {&quot;enabled&quot;: True}},
+    }],
+    betas=[&quot;mcp-client-2025-11-20&quot;],
+)
+</code></pre>
+<h2 id="g-model-and-prompt-versioning">Model and prompt versioning</h2>
+<p>Model IDs have a lifecycle, and alias behavior depends on the generation. On the Claude API, shorter aliases for pre-4.6 models such as <code>claude-sonnet-4-5</code> point to the latest dated snapshot for that minor version.<sup class="cite-group"><button type="button" class="cite" data-cite="F21" aria-label="Source 21">21</button></sup> From the 4.6 generation, a dateless ID maps to one fixed snapshot.<sup class="cite-group"><button type="button" class="cite" data-cite="F20" aria-label="Source 20">20</button></sup> Pinning a model ID does not freeze observable behavior: infrastructure updates can produce minor differences even when the ID and weights stay the same.<sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button></sup> Requests to retired models fail, so migrate before retirement.<sup class="cite-group"><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button></sup> Google managed Claude and Amazon Bedrock set their own retirement schedules.<sup class="cite-group"><button type="button" class="cite" data-cite="F24" aria-label="Source 24">24</button></sup></p>
+<p>Prefix rules can turn tool changes into model errors. For Claude Fable 5.2 thinking blocks, a tool list that changes between requests counts as an edit.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup> For Claude Fable 5.2, editing <code>system</code>, <code>tools</code>, or earlier messages and then returning affected thinking blocks fails the prefix check; by default, the request returns HTTP <code>400</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup> A beta setting can instead drop affected blocks, losing that reasoning; treat it as a temporary recovery and measure its effects.<sup class="cite-group"><button type="button" class="cite" data-cite="F47" aria-label="Source 47">47</button></sup> Claude Fable 5.1 cannot read Claude Fable 5.2 thinking blocks.<sup class="cite-group"><button type="button" class="cite" data-cite="F31" aria-label="Source 31">31</button></sup> On the Claude API and Google-managed Claude on Google Cloud, a switch drops incompatible blocks and continues without that reasoning.<sup class="cite-group"><button type="button" class="cite" data-cite="F46" aria-label="Source 46">46</button></sup> Parameter support also varies by model: Claude Opus 5 accepts <code>tool_choice</code> values <code>any</code> and <code>tool</code>, and Claude Fable 5.2 rejects both.<sup class="cite-group"><button type="button" class="cite" data-cite="F27" aria-label="Source 27">27</button></sup></p>
+<p><strong>Prompt versioning</strong> follows the same discipline as code. Keep templates, variables, system text, and example sets in version control with a content hash or release ID, logged alongside model ID, tool schema digest, platform, gateway route, and eval dataset revision, and keep secrets out of telemetry. A prompt edit is a release that can invalidate preserved thinking-prefix assumptions: start new conversations on the new manifest or follow the documented migration procedure. Anthropic's updates to the Claude consumer app system prompt do not apply to the Claude API.<sup class="cite-group"><button type="button" class="cite" data-cite="F34" aria-label="Source 34">34</button></sup></p>
+<h2 id="g-platform-parity-and-gateway-routing">Platform parity and gateway routing</h2>
+<p>The same model can require different request identifiers or deployment configuration by platform; a gateway can hide those differences from callers, but the adapter still has to handle them.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button><button type="button" class="cite" data-cite="F32" aria-label="Source 32">32</button></sup></p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Identifier in requests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude API</td>
+<td><code>claude-fable-5-2</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></td>
+</tr>
+<tr>
+<td>Amazon Bedrock</td>
+<td><code>global.anthropic.claude-fable-5-2</code> or <code>us.anthropic.claude-fable-5-2</code>, served only by the <code>bedrock-runtime</code> endpoint.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></td>
+</tr>
+<tr>
+<td>Microsoft Foundry</td>
+<td>The deployment name, which is not necessarily the model ID.<sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button></sup></td>
+</tr>
+<tr>
+<td>Foundry Anthropic-hosted fast mode</td>
+<td>A <code>claude-fable-5-2-fast</code> deployment, with <code>speed</code> omitted.<sup class="cite-group"><button type="button" class="cite" data-cite="F32" aria-label="Source 32">32</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p>Claude Code points at a gateway with <code>ANTHROPIC_BASE_URL</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup> Configure gateway authentication and its upstream provider separately. Changing the base URL alone does not establish identical model names, capabilities, or entitlements.</p>
+<figure class="g-figure"><div class="g-figure__body"><ol class="g-flow g-flow--vertical" aria-label="Flow with 4 steps"><li class="g-flow__step"><span class="g-flow__label">Developer or CI</span><span class="g-flow__note">model route</span></li><li class="g-flow__step"><span class="g-flow__label">Claude Code or application</span></li><li class="g-flow__step"><span class="g-flow__label">Authenticated LLM gateway</span></li><li class="g-flow__step"><span class="g-flow__label">Platform adapter and model deployment</span><span class="g-flow__note">deployment ID, region, entitlement</span></li></ol>
+<ol class="g-flow g-flow--vertical" aria-label="Flow with 3 steps"><li class="g-flow__step"><span class="g-flow__label">Application or Messages connector</span><span class="g-flow__note">MCP route</span></li><li class="g-flow__step"><span class="g-flow__label">Authenticated remote MCP endpoint</span><span class="g-flow__note">resource-bound token</span></li><li class="g-flow__step"><span class="g-flow__label">Independent downstream API</span><span class="g-flow__note">separate credential</span></li></ol>
+</div><figcaption>A model gateway and an MCP server are distinct routing and authorization boundaries. The MCP edge carries a resource-bound token and the downstream call uses its own credential; a feedback path returns cohort quality and errors to the rollout controller, which changes routing or restores the previous manifest.</figcaption></figure>
+<p>When using a gateway, inventory its authentication, quotas, logging, model mapping, and routing behavior. Test semantic translations because the gateway becomes another dependency. Keep a tested matrix per upstream (deployment ID, region, identity, quota, beta headers, tool and streaming support, data handling, retirement date, request and response shape, SDK adapter), then run the same contract and behavioral suite per path. Route only where the full combination is supported.</p>
+<h2 id="g-migration-testing-against-breaking-changes">Migration testing against breaking changes</h2>
+<p>Migration testing compares the complete old and new request configurations on replayable, privacy-appropriate <strong>golden cases</strong> and multi-turn trajectories; model replacement is not an ID substitution. Measure task success, tool selection and argument validity, groundedness, refusal and stop outcomes, schema parsing, retries, p95 latency, and cost; include adversarial, boundary, and long-context cases; validate actual side effects in an isolated or simulated system rather than trusting response text; and set regression thresholds before you inspect results.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Test lane</th>
+<th>Proves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request acceptance</td>
+<td>Parameter parity holds on the target model and platform</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Metadata discovery, audience validation, expiry, and scope failures behave correctly</td>
+</tr>
+<tr>
+<td>Event delivery</td>
+<td>List-change and stream events reach the client after reconnect</td>
+</tr>
+<tr>
+<td>Multi-turn continuation</td>
+<td>Prefix and thinking-block assumptions survive the new turn shape</td>
+</tr>
+<tr>
+<td>Session rollback</td>
+<td>The prior manifest can still serve conversations already in flight</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="g-progressive-rollout-with-rollback">Progressive rollout with rollback</h2>
+<p>Roll out one change at a time where practical, assigning whole conversations rather than individual turns to a cohort. Keep a known-good bundle of model, prompt, tool schema, endpoint, and routing, and rehearse restoring it, including credentials and data compatibility.</p>
+<p>Worked example (illustrative; these targets are not Anthropic requirements): a support agent runs 10,000 daily conversations on model A, prompt <code>p17</code>, and server <code>orders-v1</code> with the old schema. A candidate adds an optional <code>region</code> and a separate <code>refund_quote_v2</code> with different currency units. The manifest records exact versions, the tool-list hash, the OAuth resource, and the deployment; the server keeps v1 live and the toolset enables only approved tools.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>What runs</th>
+<th>Gate to advance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Offline replay</td>
+<td>500 representative cases in a sandbox, since real and candidate calls would otherwise duplicate actions: malformed inputs, multi-turn tool use, bad audience, expired token, no-result behavior</td>
+<td>No unauthorized side effects, no contract failures, at most 1 percentage point decline in labeled task success</td>
+</tr>
+<tr>
+<td>Canary</td>
+<td>1% of <strong>new conversations</strong>, then 10%, 50%, 100%</td>
+<td>Quality, correctness, latency, errors, and spend pass; each cohort compared by customer and task type, because a low global error rate can hide a failing tenant</td>
+</tr>
+<tr>
+<td>Rollback</td>
+<td>New conversations return to the prior manifest</td>
+<td>Existing candidate conversations stay on their compatible route or restart explicitly</td>
+</tr>
+</tbody>
+</table></div>
+<p>Restore server, allowlist, and prompt together when any depends on the changed schema, and test the Fable 5.2-to-5.1 path because the older model cannot read newer thinking blocks.<sup class="cite-group"><button type="button" class="cite" data-cite="F31" aria-label="Source 31">31</button><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup></p>
+<h2 id="g-decision-criteria">Decision criteria</h2>
+<p>Choose the migration unit by asking what a running conversation depends on.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Choose</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Do both ends speak the target revision?</td>
+<td>Protocol or transport change only when client and server support it, since version and capability handling differ between the handshake era and the per-request era.<sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button></sup></td>
+<td>Contract test on the real pair</td>
+</tr>
+<tr>
+<td>Did the resource identity move?</td>
+<td>Auth migration with metadata and token-audience work, because the canonical resource is part of the credential.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button><button type="button" class="cite" data-cite="F9" aria-label="Source 9">9</button></sup></td>
+<td>Expired, wrong-audience, low-scope cases</td>
+</tr>
+<tr>
+<td>Did tool meaning change?</td>
+<td>New tool name for changed meaning; reconcile notifications and test even additions.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup></td>
+<td>Side-by-side v1/v2 call diff</td>
+</tr>
+<tr>
+<td>Did the model ID change?</td>
+<td>Full bundle swap after checking platform matrix, prefix rules, and parameter parity, since a fixed snapshot still can differ from the previous route.<sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button><button type="button" class="cite" data-cite="F27" aria-label="Source 27">27</button><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></td>
+<td>Golden-case replay per route</td>
+</tr>
+<tr>
+<td>Is the canary good?</td>
+<td>Expand only on per-cohort results, not aggregate averages</td>
+<td>Per-tenant quality and error rates</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="g-failure-modes-and-recovery">Failure modes and recovery</h2>
+<p>Treat any change to one layer as part of the full release.</p>
+<aside class="g-callout g-callout--mistake"><p class="g-callout__head"><span class="g-callout__kind">Common mistake</span> <span class="g-callout__name">Reverting only the model name</span></p><p>Rolling back the model ID while leaving the new prompt, tool schema, thinking history, or provider deployment in place keeps the mismatch that caused the failure. Restore the whole bundle.</p>
+</aside>
+<aside class="g-callout g-callout--mistake"><p class="g-callout__head"><span class="g-callout__kind">Common mistake</span> <span class="g-callout__name">Reading a <code>401</code> as a broken tool</span></p><p>An invalid or expired MCP token returns HTTP <code>401</code> under the 2025 authorization profile.<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup> A Claude Fable 5.2 prefix violation returns HTTP <code>400</code> by default.<sup class="cite-group"><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup> These codes have other possible causes, so inspect the error details before deciding whether to fix identity, history, or the request. Avoid retrying an unchanged invalid request.</p>
+</aside>
+<aside class="g-callout g-callout--mistake"><p class="g-callout__head"><span class="g-callout__kind">Common mistake</span> <span class="g-callout__name">Assuming the connector behaves like a client</span></p><p>The connector needs a public HTTP endpoint, cannot connect to local stdio directly, supports tool calls only, and is not eligible for ZDR arrangements.<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button></sup> Check these constraints during design and deployment review.</p>
+</aside>
+<p>Three assumptions fail quietly. A dateless model ID is not always a moving alias, and pinning an ID does not freeze serving behavior.<sup class="cite-group"><button type="button" class="cite" data-cite="F20" aria-label="Source 20">20</button><button type="button" class="cite" data-cite="F21" aria-label="Source 21">21</button><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button></sup> The 2025 <code>initialize</code> negotiation and notification behavior do not apply unchanged to the 2026 revision.<sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup> Deprecating legacy HTTP+SSE does not prohibit SSE streaming inside Streamable HTTP.<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button><button type="button" class="cite" data-cite="F6" aria-label="Source 6">6</button></sup> Gateway routing does not make vendor APIs or retention guarantees interchangeable. A secondary route may also be retired or lack a required capability.<sup class="cite-group"><button type="button" class="cite" data-cite="F24" aria-label="Source 24">24</button></sup></p>
+<h2 id="g-exam-lens">Exam lens</h2>
+<aside class="g-lens" aria-label="Exam lens — editorial inference, not official exam content"><p class="g-lens__head"><span class="g-lens__name">Exam lens</span><span class="g-lens__note">editorial inference</span></p><p>These are editorial decision patterns, not exam questions.</p>
+<ul>
+<li>A server upgrade changes its tool list and a long conversation starts failing with <code>400</code>: inspect model-specific prefix rules and the current tool definitions before changing OAuth settings.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup></li>
+<li>A fallback route on Foundry or Bedrock rejects the same request: inspect deployment IDs, provider-specific parameters, capabilities, beta headers, and lifecycle before retrying.<sup class="cite-group"><button type="button" class="cite" data-cite="F24" aria-label="Source 24">24</button><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button><button type="button" class="cite" data-cite="F32" aria-label="Source 32">32</button></sup></li>
+<li>A migration changes the MCP URL and the old token stops working: verify resource metadata and token audience instead of forwarding a downstream token.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button><button type="button" class="cite" data-cite="F9" aria-label="Source 9">9</button><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup></li>
+<li>A canary improves average quality but breaks one schema or customer cohort: stop expansion and roll back the compatible release bundle; aggregate performance alone is insufficient.</li>
+</ul>
+</aside>
+<h2 id="g-self-check">Self-check</h2>
+<details class="g-check"><summary><span class="g-check__badge" aria-hidden="true">Q</span><span class="g-check__q">Why can a model-pinned conversation still fail after an MCP deploy?</span><span class="g-check__show">Show answer</span></summary><div class="g-check__a"><span class="g-check__badge a" aria-hidden="true">A</span><div><p>A changed tool list can violate Claude Fable 5.2 prefix checks when affected thinking blocks are returned; by default the request returns HTTP <code>400</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup> Test the live connector’s tool-list behavior and investigate the server contract before changing the model ID.</p>
+</div></div></details>
+<details class="g-check"><summary><span class="g-check__badge" aria-hidden="true">Q</span><span class="g-check__q">Does <code>claude-sonnet-4-6</code> act like the older <code>claude-sonnet-4-5</code> alias?</span><span class="g-check__show">Show answer</span></summary><div class="g-check__a"><span class="g-check__badge a" aria-hidden="true">A</span><div><p>No. From the 4.6 generation, a dateless ID maps to one fixed snapshot.<sup class="cite-group"><button type="button" class="cite" data-cite="F20" aria-label="Source 20">20</button></sup> Shorter aliases for earlier models point to the latest dated snapshot for that minor version.<sup class="cite-group"><button type="button" class="cite" data-cite="F21" aria-label="Source 21">21</button></sup> Pinning still does not guarantee identical observable behavior across infrastructure updates.<sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button></sup></p>
+</div></div></details>
+<details class="g-check"><summary><span class="g-check__badge" aria-hidden="true">Q</span><span class="g-check__q">What has to change together when an MCP server moves to a new canonical resource?</span><span class="g-check__show">Show answer</span></summary><div class="g-check__a"><span class="g-check__badge a" aria-hidden="true">A</span><div><p>Treat it as an auth migration: publish correct protected-resource metadata, issue tokens for the new resource, validate the audience, and never pass the client token through to a downstream API. Then roll out client configuration and monitor <code>401</code> responses as one release.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button><button type="button" class="cite" data-cite="F9" aria-label="Source 9">9</button><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></p>
+</div></div></details>
+<section class="g-sources" aria-labelledby="g-sources"><details><summary><h2 id="g-sources">Sources</h2><span class="g-sources__count">46</span></summary><p class="muted small">Quotes are copied verbatim from each source on the access date shown. Tap a source title to open it.</p><ol><li class="g-source" data-src="F1" value="1"><div class="g-source__head"><span class="g-source__n">1</span><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/" target="_blank" rel="noopener">The 2026-07-28 Specification</a><span class="g-source__tag std">Standard</span></div><blockquote>Today, we’re officially pushing the release button on the next version of the MCP specification, 2026-07-28, along with the SDKs that will allow you to start building clients and servers right away.</blockquote><p class="g-source__meta">blog.modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>MCP 2026-07-28 is a published release.</p></li><li class="g-source" data-src="F2" value="2"><div class="g-source__head"><span class="g-source__n">2</span><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/" target="_blank" rel="noopener">The 2026-07-28 Specification</a><span class="g-source__tag std">Standard</span></div><blockquote>Each request now travels on its own, carrying its protocol version, client identity, and client capabilities in _meta.</blockquote><p class="g-source__meta">blog.modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The 2026 revision uses per-request versions, not initialization negotiation.</p></li><li class="g-source" data-src="F3" value="3"><div class="g-source__head"><span class="g-source__n">3</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle" target="_blank" rel="noopener">Lifecycle</a><span class="g-source__tag std">Standard</span></div><blockquote>In the initialize request, the client MUST send a protocol version it supports. This SHOULD be the latest version supported by the client. If the server supports the requested protocol version, it MUST respond with the same version.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The 2025 revision negotiates the client version in initialize.</p></li><li class="g-source" data-src="F4" value="4"><div class="g-source__head"><span class="g-source__n">4</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle" target="_blank" rel="noopener">Lifecycle</a><span class="g-source__tag std">Standard</span></div><blockquote>If the client does not support the version in the server’s response, it SHOULD disconnect.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The client should disconnect if it cannot support the server counteroffer.</p></li><li class="g-source" data-src="F5" value="5"><div class="g-source__head"><span class="g-source__n">5</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/transports" target="_blank" rel="noopener">Transports</a><span class="g-source__tag std">Standard</span></div><blockquote>This replaces the HTTP+SSE transport from protocol version 2024-11-05.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Streamable HTTP replaced the earlier HTTP+SSE transport.</p></li><li class="g-source" data-src="F6" value="6"><div class="g-source__head"><span class="g-source__n">6</span><a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a><span class="g-source__tag rec">Recommended practice</span></div><blockquote>The SSE (Server-Sent Events) transport is deprecated. Use HTTP servers instead, where available.</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude Code deprecates the legacy SSE transport.</p></li><li class="g-source" data-src="F7" value="7"><div class="g-source__head"><span class="g-source__n">7</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization" target="_blank" rel="noopener">Authorization</a><span class="g-source__tag std">Standard</span></div><blockquote>MCP servers MUST implement OAuth 2.0 Protected Resource Metadata (RFC9728). MCP clients MUST use OAuth 2.0 Protected Resource Metadata for authorization server discovery.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The 2025 authorization profile requires RFC 9728 metadata and discovery.</p></li><li class="g-source" data-src="F8" value="8"><div class="g-source__head"><span class="g-source__n">8</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization" target="_blank" rel="noopener">Authorization</a><span class="g-source__tag std">Standard</span></div><blockquote>MCP clients MUST implement Resource Indicators for OAuth 2.0 as defined in RFC 8707 to explicitly specify the target resource for which the token is being requested.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Clients implement resource indicators for the intended resource.</p></li><li class="g-source" data-src="F9" value="9"><div class="g-source__head"><span class="g-source__n">9</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization" target="_blank" rel="noopener">Authorization</a><span class="g-source__tag std">Standard</span></div><blockquote>MCP servers MUST only accept tokens that are valid for use with their own resources. MCP servers MUST NOT accept or transit any other tokens.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Servers validate audience and must not accept or transit foreign tokens.</p></li><li class="g-source" data-src="F10" value="10"><div class="g-source__head"><span class="g-source__n">10</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization" target="_blank" rel="noopener">Authorization</a><span class="g-source__tag std">Standard</span></div><blockquote>The MCP server MUST NOT pass through the token it received from the MCP client.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>An MCP server must not pass the client token through.</p></li><li class="g-source" data-src="F11" value="11"><div class="g-source__head"><span class="g-source__n">11</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/server/tools" target="_blank" rel="noopener">Tools</a><span class="g-source__tag std">Standard</span></div><blockquote>When the list of available tools changes, servers that declared the listChanged capability SHOULD send a notification:</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>In the handshake-era spec servers advertising listChanged should notify on changes.</p></li><li class="g-source" data-src="F12" value="12"><div class="g-source__head"><span class="g-source__n">12</span><a href="https://ts.sdk.modelcontextprotocol.io/v2/migration/support-2026-07-28" target="_blank" rel="noopener">Supporting protocol revision 2026-07-28</a><span class="g-source__tag std">Standard</span></div><blockquote>The 2026-07-28 revision delivers tools/prompts/resources list_changed and resources/updated only on a subscriptions/listen stream the client opened — the server never sends an un-requested notification type.</blockquote><p class="g-source__meta">ts.sdk.modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>In the modern era list-change delivery requires an opted-in subscription.</p></li><li class="g-source" data-src="F13" value="13"><div class="g-source__head"><span class="g-source__n">13</span><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-connector" target="_blank" rel="noopener">MCP connector</a><span class="g-source__tag fact">Documented</span></div><blockquote>The server must be publicly exposed through HTTP (supports both Streamable HTTP and SSE transports). Local STDIO servers cannot be connected directly.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The Messages connector requires a remote HTTP endpoint.</p></li><li class="g-source" data-src="F14" value="14"><div class="g-source__head"><span class="g-source__n">14</span><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-connector" target="_blank" rel="noopener">MCP connector</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>New beta header: Change from mcp-client-2025-04-04 to mcp-client-2025-11-20.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>The old Messages connector beta is deprecated in favor of the newer header.</p></li><li class="g-source" data-src="F15" value="15"><div class="g-source__head"><span class="g-source__n">15</span><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-connector" target="_blank" rel="noopener">MCP connector</a><span class="g-source__tag fact">Documented</span></div><blockquote>Tool configuration moved: Tool configuration now lives in the tools array as MCPToolset objects, not in the MCP server definition.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Connector tool configuration moved into tools.</p></li><li class="g-source" data-src="F17" value="17"><div class="g-source__head"><span class="g-source__n">17</span><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-connector" target="_blank" rel="noopener">MCP connector</a><span class="g-source__tag fact">Documented</span></div><blockquote>The MCP connector is not covered by ZDR arrangements. Data exchanged with MCP servers, including tool definitions and execution results, is retained according to Anthropic’s standard data retention policy.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>MCP connector exchanges are not covered by ZDR.</p></li><li class="g-source" data-src="F18" value="18"><div class="g-source__head"><span class="g-source__n">18</span><a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a><span class="g-source__tag fact">Documented</span></div><blockquote>Local scope is the default. A local-scoped server loads only in the project where you added it and stays private to you.</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude Code local MCP scope is private and project-specific.</p></li><li class="g-source" data-src="F19" value="19"><div class="g-source__head"><span class="g-source__n">19</span><a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a><span class="g-source__tag fact">Documented</span></div><blockquote>Project-scoped servers enable team collaboration by storing configurations in a .mcp.json file at your project’s root directory.</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude Code project scope stores shared config in .mcp.json.</p></li><li class="g-source" data-src="F20" value="20"><div class="g-source__head"><span class="g-source__n">20</span><a href="https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions" target="_blank" rel="noopener">Model IDs and versioning</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>For the 4.6 generation and later, the dateless ID is the canonical model ID for that release. It maps to a single, fixed model snapshot.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>New-generation dateless model IDs identify pinned snapshots.</p></li><li class="g-source" data-src="F21" value="21"><div class="g-source__head"><span class="g-source__n">21</span><a href="https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions" target="_blank" rel="noopener">Model IDs and versioning</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>On the Claude API, these models also have shorter aliases (for example, claude-sonnet-4-5) that point to the most recent dated snapshot for that minor version.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>Earlier Claude API aliases may point to the latest dated snapshot.</p></li><li class="g-source" data-src="F22" value="22"><div class="g-source__head"><span class="g-source__n">22</span><a href="https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions" target="_blank" rel="noopener">Model IDs and versioning</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Occasionally, infrastructure updates produce minor differences in observable behavior even when the model ID and weights have not changed.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>Pinned model weights do not guarantee identical serving behavior.</p></li><li class="g-source" data-src="F23" value="23"><div class="g-source__head"><span class="g-source__n">23</span><a href="https://platform.claude.com/docs/en/about-claude/model-deprecations" target="_blank" rel="noopener">Model deprecations</a><span class="g-source__tag rec">Recommended practice</span></div><blockquote>Once a model is deprecated, migrate all usage to a suitable replacement before the retirement date. Once the model is retired, requests to it fail.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Complete migration before retirement.</p></li><li class="g-source" data-src="F24" value="24"><div class="g-source__head"><span class="g-source__n">24</span><a href="https://platform.claude.com/docs/en/about-claude/model-deprecations" target="_blank" rel="noopener">Model deprecations</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Partner-operated platforms, Claude Models on Google Cloud (Google managed) and Amazon Bedrock, set their own retirement schedules, so a model’s lifecycle status and dates can differ.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>Partner platforms may have distinct retirement schedules.</p></li><li class="g-source" data-src="F25" value="25"><div class="g-source__head"><span class="g-source__n">25</span><a href="https://platform.claude.com/docs/en/models/fable-5-2/migration-guide" target="_blank" rel="noopener">Claude Fable 5.2 and Claude Mythos 5.2 migration guide</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>For Claude Fable 5.2 thinking blocks, a tool list that changes between requests is an edit.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>Changing an MCP tool list is an edit under Fable 5.2 prefix checks.</p></li><li class="g-source" data-src="F26" value="26"><div class="g-source__head"><span class="g-source__n">26</span><a href="https://platform.claude.com/docs/en/models/fable-5-2/migration-guide" target="_blank" rel="noopener">Claude Fable 5.2 and Claude Mythos 5.2 migration guide</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>A prefix check fails if you change system, tools, or earlier messages mid-conversation and then send thinking blocks back. If a prefix check fails, the request receives a 400 error.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>Fable 5.2 prefix violations return HTTP 400.</p></li><li class="g-source" data-src="F27" value="27"><div class="g-source__head"><span class="g-source__n">27</span><a href="https://platform.claude.com/docs/en/models/fable-5-2/migration-guide" target="_blank" rel="noopener">Claude Fable 5.2 and Claude Mythos 5.2 migration guide</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Claude Opus 5 accepts tool_choice any and tool. Claude Fable 5.2 rejects both.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>Fable 5.2 rejects forced tool choice accepted by Opus 5.</p></li><li class="g-source" data-src="F28" value="28"><div class="g-source__head"><span class="g-source__n">28</span><a href="https://platform.claude.com/docs/en/models/fable-5-2/migration-guide" target="_blank" rel="noopener">Claude Fable 5.2 and Claude Mythos 5.2 migration guide</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>The model ID is claude-fable-5-2 on every platform except Amazon Bedrock. There, it’s global.anthropic.claude-fable-5-2 or us.anthropic.claude-fable-5-2, and only the bedrock-runtime endpoint serves the model.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>Fable 5.2 uses platform-specific Bedrock inference profile IDs.</p></li><li class="g-source" data-src="F29" value="29"><div class="g-source__head"><span class="g-source__n">29</span><a href="https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry" target="_blank" rel="noopener">Claude in Microsoft Foundry</a><span class="g-source__tag fact">Documented</span></div><blockquote>Use the deployment name (not necessarily the model ID) in your API requests.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Foundry requests use deployment names.</p></li><li class="g-source" data-src="F30" value="30"><div class="g-source__head"><span class="g-source__n">30</span><a href="https://code.claude.com/docs/en/llm-gateway" target="_blank" rel="noopener">Other LLM gateways</a><span class="g-source__tag fact">Documented</span></div><blockquote>ANTHROPIC_BASE_URL is the variable that points Claude Code at the gateway.</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude Code points to a gateway with ANTHROPIC_BASE_URL.</p></li><li class="g-source" data-src="F31" value="31"><div class="g-source__head"><span class="g-source__n">31</span><a href="https://platform.claude.com/docs/en/models/fable-5-2/migration-guide" target="_blank" rel="noopener">Claude Fable 5.2 and Claude Mythos 5.2 migration guide</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>In the other direction, Claude Fable 5.1 can’t read Claude Fable 5.2’s blocks.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>Rollback to Fable 5.1 cannot preserve Fable 5.2 thinking blocks.</p></li><li class="g-source" data-src="F32" value="32"><div class="g-source__head"><span class="g-source__n">32</span><a href="https://platform.claude.com/docs/en/models/fable-5-2/migration-guide" target="_blank" rel="noopener">Claude Fable 5.2 and Claude Mythos 5.2 migration guide</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>There, fast mode has its own model ID: send requests to a claude-fable-5-2-fast deployment and leave out speed.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Documentation accessed 2026-11-19; confirm platform and model availability before deployment.</p><p class="g-source__claim"><span class="sr">Supports: </span>Fable 5.2 Foundry fast mode uses a deployment name rather than speed.</p></li><li class="g-source" data-src="F33" value="33"><div class="g-source__head"><span class="g-source__n">33</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization" target="_blank" rel="noopener">Authorization</a><span class="g-source__tag std">Standard</span></div><blockquote>Implementations using an STDIO transport SHOULD NOT follow this specification, and instead retrieve credentials from the environment.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Stdio authorization uses environment-supplied credentials rather than the HTTP profile.</p></li><li class="g-source" data-src="F34" value="34"><div class="g-source__head"><span class="g-source__n">34</span><a href="https://platform.claude.com/docs/en/release-notes/system-prompts/overview" target="_blank" rel="noopener">System prompts</a><span class="g-source__tag fact">Documented</span></div><blockquote>Anthropic periodically updates the system prompt to improve Claude’s responses. These updates do not apply to the Claude API.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude consumer-app system prompt updates do not apply to the Claude API.</p></li><li class="g-source" data-src="F35" value="35"><div class="g-source__head"><span class="g-source__n">35</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization" target="_blank" rel="noopener">Authorization</a><span class="g-source__tag std">Standard</span></div><blockquote>Invalid or expired tokens MUST receive a HTTP 401 response.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Invalid or expired tokens receive HTTP 401 under the 2025 authorization profile.</p></li><li class="g-source" data-src="F36" value="36"><div class="g-source__head"><span class="g-source__n">36</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization" target="_blank" rel="noopener">Authorization</a><span class="g-source__tag std">Standard</span></div><blockquote>Authorization servers MUST implement OAuth 2.1 with appropriate security measures for both confidential and public clients.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The authorization profile requires OAuth 2.1 authorization servers.</p></li><li class="g-source" data-src="F37" value="37"><div class="g-source__head"><span class="g-source__n">37</span><a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a><span class="g-source__tag fact">Documented</span></div><blockquote>User-scoped servers are stored in ~/.claude.json and provide cross-project accessibility, making them available across all projects on your machine while remaining private to your user account.</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>User-scoped servers load across projects and are private.</p></li><li class="g-source" data-src="F38" value="38"><div class="g-source__head"><span class="g-source__n">38</span><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-connector" target="_blank" rel="noopener">MCP connector</a><span class="g-source__tag fact">Documented</span></div><blockquote>Of the feature set of the MCP specification, only tool calls are currently supported.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The connector supports tool calls only.</p></li><li class="g-source" data-src="F39" value="39"><div class="g-source__head"><span class="g-source__n">39</span><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-connector" target="_blank" rel="noopener">MCP connector</a><span class="g-source__tag fact">Documented</span></div><blockquote>The URL of the MCP server. Must start with https://.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The server URL must use HTTPS.</p></li><li class="g-source" data-src="F40" value="40"><div class="g-source__head"><span class="g-source__n">40</span><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/" target="_blank" rel="noopener">The 2026-07-28 Specification</a><span class="g-source__tag std">Standard</span></div><blockquote>MCP is transforming from a bidirectional stateful protocol into a request/response stateless protocol.</blockquote><p class="g-source__meta">blog.modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The 2026-07-28 revision uses a stateless request/response core.</p></li><li class="g-source" data-src="F41" value="41"><div class="g-source__head"><span class="g-source__n">41</span><a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a><span class="g-source__tag fact">Documented</span></div><blockquote>To share the server with your team instead, add --scope project, or add the entry under mcpServers in .mcp.json at your project root and commit it.</blockquote><p class="g-source__meta">code.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude Code documents adding a shared project MCP server with --scope project.</p></li><li class="g-source" data-src="F42" value="42"><div class="g-source__head"><span class="g-source__n">42</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/server/tools" target="_blank" rel="noopener">Tools</a><span class="g-source__tag std">Standard</span></div><blockquote>Each tool is uniquely identified by a name and includes metadata describing its schema.</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>MCP tool definitions include a unique name, description, and input schema.</p></li><li class="g-source" data-src="F43" value="43"><div class="g-source__head"><span class="g-source__n">43</span><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization" target="_blank" rel="noopener">Authorization</a><span class="g-source__tag std">Standard</span></div><blockquote>Authorization is OPTIONAL for MCP implementations. When supported:</blockquote><p class="g-source__meta">modelcontextprotocol.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>MCP authorization is optional; HTTP implementations supporting it should conform to the profile.</p></li><li class="g-source" data-src="F44" value="44"><div class="g-source__head"><span class="g-source__n">44</span><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-connector" target="_blank" rel="noopener">MCP connector</a><span class="g-source__tag fact">Documented</span></div><blockquote>With the mcp-client-2026-09-15 beta header, the API records the tool list each server returns, and you can pin that list.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The newer connector beta can pin tool lists on supported platforms.</p></li><li class="g-source" data-src="F45" value="45"><div class="g-source__head"><span class="g-source__n">45</span><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-connector" target="_blank" rel="noopener">MCP connector</a><span class="g-source__tag fact">Documented</span></div><blockquote>Send the assistant message back unchanged, mcp_tool_listing blocks included, and keep sending mcp-client-2026-09-15 on every request that carries one. Later requests then use the recorded list for that server instead of asking it again.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The connector can reuse a recorded list when the assistant message is returned unchanged.</p></li><li class="g-source" data-src="F46" value="46"><div class="g-source__head"><span class="g-source__n">46</span><a href="https://platform.claude.com/docs/en/models/fable-5-2/migration-guide" target="_blank" rel="noopener">Claude Fable 5.2 and Claude Mythos 5.2 migration guide</a><span class="g-source__tag fact">Documented</span></div><blockquote>If a router switch, a client-side retry, or a classifier refusal fallback moves a conversation from Claude Fable 5.2 to another model, Claude Fable 5.1 included, the API drops the blocks that model can’t read.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>On a model switch the API drops thinking blocks the new model cannot read.</p></li><li class="g-source" data-src="F47" value="47"><div class="g-source__head"><span class="g-source__n">47</span><a href="https://platform.claude.com/docs/en/models/fable-5-2/migration-guide" target="_blank" rel="noopener">Claude Fable 5.2 and Claude Mythos 5.2 migration guide</a><span class="g-source__tag fact">Documented</span></div><blockquote>To drop the affected blocks and continue without that reasoning while you fix the edit, set it to &quot;drop_block&quot;.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>A prefix mismatch can be handled by dropping affected blocks.</p></li></ol></details></section>

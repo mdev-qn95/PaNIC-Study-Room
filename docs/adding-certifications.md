@@ -97,10 +97,21 @@ Arrays match the source by position. `null` means "show the source text alone" (
 
 Earlier kinds win when matches overlap. `phrases` are literal (case-insensitive, whole words; spaces match any whitespace, hyphens any dash); `patterns` are regular expressions; `highlight` colours only those words inside a pattern match. `color` is `green` or `red`. Optional `exclusions` uses the same `phrases` / `patterns` shape and takes precedence to keep ambiguous matches uncoloured. Add `"keywords": "keywords.json"` to the catalog entry's `bank` to show the **Highlight keywords** switch.
 
-## 5. Check before publishing
+## 5. Study guide (optional) — `data/certs/<id>/guide/`
+
+A certification can carry a reading guide, with or without a question bank (CCDV-P has a guide while its bank is in preparation). Add `"guide": {"source": "guide/index.json"}` to the catalog entry; the certification page then shows **Read the study guide** and the guide opens at `#/guide/<id>` (contents) and `#/guide/<id>/<chapter-slug>`.
+
+- `guide/index.json`: `title`, `summary`, `about`, `credit` (`name`, `url`, `site`), `blueprint`, `intro`, `domains` (each with `skills`) and `reference`. Every chapter entry has `slug`, `title`, `summary`, `status`, `reviewed`, `file`, `sections` and `sources`; skills add `id`, `short`, `skillTitle` and `objective`.
+- `guide/chapters/<slug>.html`: a pre-rendered HTML fragment (no scripts). Citation markers are `<button class="cite" data-cite="F3">` and resolve to `<li class="g-source" data-src="F3">` in the same file; links between chapters use `#/guide/<id>/<slug>`.
+- Reading progress is kept per browser under `panic-guide-<id>-v1`.
+- Only republish a guide whose author has given permission, and keep the credit.
+
+The CCDV-P guide is generated from the source repository (MDX + citation YAML) with `python3 -I scripts/import-guide.py <source-repo> data/certs/ccdv-p/guide ccdv-p` (needs `markdown-it-py` and `PyYAML`; the source repository's own code is never run).
+
+## 6. Check before publishing
 
 ```
-node tests/catalog.cjs && node tests/banks.cjs && node tests/keywords.cjs
+node tests/catalog.cjs && node tests/banks.cjs && node tests/keywords.cjs && node tests/guide.cjs
 ```
 
 Banks load only when a certification is opened, so adding certifications does not slow down the library. The site fetches JSON, so open it through a web server (Vercel, or `python3 -m http.server`), not as a `file://` page.

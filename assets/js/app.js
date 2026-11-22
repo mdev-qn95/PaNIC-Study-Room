@@ -82,7 +82,7 @@ function catalogRows() {
       <span class="row-tab" aria-hidden="true"></span>
       <span class="row-main ${c.code ? '' : 'no-code'}">${c.code ? `<span class="row-code">${esc(c.code)}${verified(c)}</span>` : ''}<span class="row-title">${titleHtml(c)}${c.code ? '' : verified(c)}</span><span class="row-sum">${esc(c.summary)}</span></span>
       <span class="row-provider">${esc(p.short)}</span>
-      <span class="row-meta">${c.status === 'live' ? `${c.questions} questions${languages(c).length > 1 ? `<small>${languages(c).join(' + ')}</small>` : ''}` : `<span class="pill ${c.status}">${statusLabel[c.status]}</span>`}</span>
+      <span class="row-meta">${c.status === 'live' ? `${c.questions} questions${languages(c).length > 1 ? `<small>${languages(c).join(' + ')}</small>` : ''}` : `<span class="pill ${c.status}">${statusLabel[c.status]}</span>${c.guide ? '<small>Study guide open</small>' : ''}`}</span>
       <span class="row-progress">${c.status === 'live' ? (s?.answered ? `<span class="bar"><i style="width:${done}%"></i></span><small>${done}% answered</small>` : '<small>Not started</small>') : ''}</span>
       <span class="row-go">${icon('right')}</span></a>`; }).join('');
 }
@@ -148,8 +148,8 @@ function renderPlannedCert(c) {
     <section class="cert-hero" style="--c:${p.color};--on:${p.ink}">
       <div class="cover ghosted"><span>${esc(p.short)}</span>${c.code ? `<strong>${esc(c.code)}</strong><em>${esc(c.title)}</em>` : `<strong class="name">${esc(c.title)}</strong>`}${hasLevel(c) ? '' : `<small>${esc(c.level)}</small>`}</div>
       <div class="cert-intro"><span class="pill ${c.status}">${statusLabel[c.status]}</span><h1>${hasLevel(c) ? `${esc(c.title)}${verified(c)}` : `${esc(c.title)} <span class="h1-level">${esc(c.level)}${verified(c)}</span>`}</h1><p>${esc(c.summary)}</p>
-        <p class="muted">${c.status === 'soon' ? 'This question bank is being prepared. It will appear on the shelf as soon as it is ready.' : `${esc(p.name)} certifications are on the roadmap. The study room will open once a verified question bank is available.`}</p>
-        <div class="actions">${siblings.map(s => `<a class="ghost" href="#/cert/${s.id}">Study ${esc(label(s))} meanwhile</a>`).join('')}</div>
+        <p class="muted">${c.status === 'soon' ? `This question bank is being prepared. It will appear on the shelf as soon as it is ready.${c.guide ? ' Meanwhile, the study guide is open to read.' : ''}` : `${esc(p.name)} certifications are on the roadmap. The study room will open once a verified question bank is available.`}</p>
+        <div class="actions">${c.guide ? `<a class="primary" href="#/guide/${c.id}">${icon('book')} Read the study guide</a>` : ''}${siblings.map(s => `<a class="ghost" href="#/cert/${s.id}">Study ${esc(label(s))} meanwhile</a>`).join('')}</div>
       </div>
     </section>${footer()}</div>`;
 }
@@ -175,6 +175,7 @@ async function renderCert(id, token) {
         <div class="actions">
           <a class="primary" href="#/study/${c.id}">${icon('play')} ${started ? `Continue practice` : 'Start practice'}</a>
           <a class="ghost" href="#/exam/${c.id}">${icon('clock')} ${examOpen ? 'Resume mock exam' : 'Mock exam'}</a>
+          ${c.guide ? `<a class="ghost" href="#/guide/${c.id}">${icon('book')} Study guide</a>` : ''}
         </div>
       </div>
     </section>
@@ -382,11 +383,85 @@ document.addEventListener('keydown', e => {
 });
 
 /* ---------- Router ---------- */
+/* ---------- Study guide (optional `guide` in catalog.json; content in data/certs/<id>/guide/) ---------- */
+const guideKey = c => `panic-guide-${c.id}-v1`;
+const guideState = c => ({read:{}, last:null, ...(STORE.read(guideKey(c), null) || {})});
+const guideChapters = g => [{...g.intro, kind:'intro'}, ...g.domains.flatMap(d => d.skills.map(s => ({...s, kind:'skill', domain:d}))), ...g.reference.map(r => ({...r, kind:'reference'}))];
+const guideStatus = ch => `<span class="g-status ${ch.status === 'fact-checked' ? 'checked' : 'draft'}">${ch.status === 'fact-checked' ? `${icon('check')} Fact-checked` : 'Draft'}</span>`;
+const guideCredit = g => `<p class="credit">Guide by <a href="${esc(g.credit.url)}" target="_blank" rel="noopener noreferrer">${esc(g.credit.name)}</a>, republished with permission · <a href="${esc(g.credit.site)}" target="_blank" rel="noopener noreferrer">Original site</a></p>`;
+function guideRow(c, ch, st) {
+  const read = !!st.read[ch.slug];
+  return `<a class="g-row ${read ? 'read' : ''}" href="#/guide/${c.id}/${ch.slug}"><span class="g-row__id">${ch.id ? esc(ch.id) : icon(ch.kind === 'intro' ? 'book' : 'layers')}</span><span class="g-row__text"><b>${esc(ch.kind === 'skill' ? ch.skillTitle : ch.title)}</b><small>${esc(ch.summary)}</small></span><span class="g-row__end">${read ? `<span class="g-read">${icon('check')}<span class="sr">Read</span></span>` : ch.status === 'fact-checked' ? '' : guideStatus(ch)}</span></a>`;
+}
+async function renderGuide(c, slug, token) {
+  const p = providerOf(c), view = $('viewGuide');
+  view.innerHTML = `<div class="page narrow"><div class="loading">Opening the ${esc(label(c))} study guide…</div></div>`;
+  let g; try { g = await STORE.loadGuide(c); } catch { view.innerHTML = `<div class="page narrow"><div class="loading">The ${esc(label(c))} study guide could not be loaded. Check your connection and reload the page.</div></div>`; return; }
+  if (token !== routeToken) return;
+  const all = guideChapters(g), st = guideState(c), skills = all.filter(x => x.kind === 'skill');
+  const crumbs = tail => `<nav class="breadcrumb" aria-label="Breadcrumb"><a href="#/">Library</a>${icon('right')}<span>${esc(p.short)}</span>${icon('right')}<a href="#/cert/${c.id}">${esc(label(c))}</a>${icon('right')}${tail}</nav>`;
+  if (!slug) {
+    const done = skills.filter(s => st.read[s.slug]).length, resume = all.find(x => x.slug === st.last), next = skills.find(s => !st.read[s.slug]) || all[0];
+    document.title = `${label(c)} study guide · PaNIC Study Room`;
+    view.innerHTML = `<div class="page narrow guide">
+      ${crumbs('<span aria-current="page">Study guide</span>')}
+      <section class="g-hero" style="--c:${p.color}">
+        <p class="g-eyebrow">${esc(label(c))} · Study guide</p>
+        <h1>${esc(g.blueprint.name)}</h1>
+        <p class="g-lede">${esc(g.summary)}</p>
+        ${guideCredit(g)}
+        <dl class="facts"><div><dt>Skill chapters</dt><dd>${skills.length}</dd></div><div><dt>Domains</dt><dd>${g.domains.length}</dd></div><div><dt>Blueprint</dt><dd>v${esc(g.blueprint.version)} · ${esc(g.blueprint.effective)}</dd></div><div><dt>Read</dt><dd>${done}/${skills.length}</dd></div></dl>
+        <div class="actions">${resume ? `<a class="primary" href="#/guide/${c.id}/${resume.slug}">${icon('book')} Continue: ${esc(resume.short || resume.title)}</a><a class="ghost" href="#/guide/${c.id}/${next.slug}">Next unread</a>` : `<a class="primary" href="#/guide/${c.id}/${g.intro.slug}">${icon('book')} Start with the introduction</a>`}</div>
+        <p class="muted small g-about">${esc(g.about)}</p>
+      </section>
+      <section class="g-toc" aria-label="Chapters">
+        <div class="g-group">${guideRow(c, all[0], st)}</div>
+        ${g.domains.map(d => `<div class="g-group"><div class="g-group__head"><h2><span>Domain ${d.n}</span>${esc(d.title)}</h2><span class="g-weight" title="Share of scored items">${d.weight}%</span></div>${all.filter(x => x.domain === d).map(s => guideRow(c, s, st)).join('')}</div>`).join('')}
+        <div class="g-group"><div class="g-group__head"><h2><span>Appendix</span>Reference</h2></div>${all.filter(x => x.kind === 'reference').map(r => guideRow(c, r, st)).join('')}</div>
+      </section>${footer()}</div>`;
+    return;
+  }
+  const i = all.findIndex(x => x.slug === slug); if (i < 0) { location.hash = `#/guide/${c.id}`; return; }
+  const ch = all[i], prev = all[i - 1], next = all[i + 1], d = ch.domain;
+  document.title = `${ch.title} · ${label(c)} study guide`;
+  const eyebrow = ch.kind === 'skill' ? `${esc(ch.id)} · Domain ${d.n} · ${d.weight}%` : ch.kind === 'intro' ? 'Introduction' : 'Reference';
+  const pager = (x, dir) => x ? `<a class="g-pager__link ${dir}" href="#/guide/${c.id}/${x.slug}"><small>${dir === 'prev' ? 'Previous' : 'Next'}</small><b>${esc(x.short || x.title)}</b></a>` : '<span></span>';
+  view.innerHTML = `<div class="page guide-page">
+    ${crumbs(`<a href="#/guide/${c.id}">Study guide</a>${icon('right')}<span aria-current="page">${esc(ch.short || ch.title)}</span>`)}
+    <article class="g-article" style="--c:${p.color}">
+      <header class="g-head">
+        <p class="g-eyebrow">${eyebrow}</p>
+        <h1>${esc(ch.title)}</h1>
+        <p class="g-lede">${esc(ch.summary)}</p>
+        <p class="g-meta">${guideStatus(ch)}<span>Reviewed ${fmtDate(ch.reviewed)}</span>${ch.sources ? `<span>${ch.sources} sources</span>` : ''}</p>
+        ${ch.objective ? `<details class="g-objective"><summary>Official objective</summary><p>${esc(ch.objective)}</p><p class="muted small">${esc(g.blueprint.name)} Exam Guide v${esc(g.blueprint.version)} (${esc(g.blueprint.effective)}), §5.</p></details>` : ''}
+        ${ch.sections.length > 1 ? `<details class="g-onpage"><summary>On this page</summary><ol>${ch.sections.filter(s => s.level === 2).map(s => `<li><button type="button" data-jump="g-${esc(s.id)}">${esc(s.text)}</button></li>`).join('')}${ch.sources ? '<li><button type="button" data-jump="g-sources">Sources</button></li>' : ''}</ol></details>` : ''}
+      </header>
+      <div class="g-body" id="guideBody"><div class="loading">Loading the chapter…</div></div>
+      <nav class="g-pager" aria-label="Chapters">${pager(prev, 'prev')}${pager(next, 'next')}</nav>
+      ${guideCredit(g)}
+    </article>${footer()}</div>`;
+  let body; try { body = await STORE.loadText(`${CAT.folder(c)}guide/${ch.file}`); } catch { $('guideBody').innerHTML = '<p class="loading">This chapter could not be loaded. Check your connection and reload the page.</p>'; return; }
+  if (token !== routeToken) return;
+  $('guideBody').innerHTML = body;
+  STORE.write(guideKey(c), {...st, read:{...st.read, [ch.slug]:Date.now()}, last:ch.slug});
+}
+function openCite(btn) {
+  const li = $('guideBody')?.querySelector(`.g-source[data-src="${CSS.escape(btn.dataset.cite)}"]`); if (!li) return;
+  $('citeBody').innerHTML = li.innerHTML; $('citeDialog').showModal();
+}
+$('viewGuide').addEventListener('click', e => {
+  const cite = e.target.closest('.cite'); if (cite) { openCite(cite); return; }
+  const jump = e.target.closest('[data-jump]'); if (jump) { const t = document.getElementById(jump.dataset.jump); if (t) { t.closest('details')?.setAttribute('open', ''); t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'}); } }
+});
+$('closeCite').onclick = () => $('citeDialog').close();
+$('citeDialog').addEventListener('click', e => { if (e.target === $('citeDialog')) $('citeDialog').close(); });
+
 let routeToken = 0;
 function showView(name) {
-  ['viewHome','viewCert','viewProgress'].forEach(v => $(v).hidden = v !== name); $('studyApp').hidden = name !== 'studyApp';
+  ['viewHome','viewCert','viewProgress','viewGuide'].forEach(v => $(v).hidden = v !== name); $('studyApp').hidden = name !== 'studyApp';
   document.body.classList.toggle('in-study', name === 'studyApp');
-  document.querySelectorAll('[data-nav]').forEach(a => a.toggleAttribute('aria-current', (a.dataset.nav === 'home' && ['viewHome','viewCert'].includes(name)) || (a.dataset.nav === 'progress' && name === 'viewProgress')));
+  document.querySelectorAll('[data-nav]').forEach(a => a.toggleAttribute('aria-current', (a.dataset.nav === 'home' && ['viewHome','viewCert','viewGuide'].includes(name)) || (a.dataset.nav === 'progress' && name === 'viewProgress')));
 }
 function legacy(hash) { if (hash === '#home' || hash === '' || hash === '#') return '#/'; if (hash === '#study') return '#/study/ccar-p'; const m = hash.match(/^#study\/([\w-]+)$/); return m ? `#/study/${m[1]}` : hash; }
 async function route() {
@@ -395,6 +470,7 @@ async function route() {
   const [, view, id, sub] = hash.split('/');
   updateStreakChip();
   if (view === 'cert') { showView('viewCert'); document.title = `${CAT.cert(id) ? label(CAT.cert(id)) : 'Certification'} · PaNIC Study Room`; window.scrollTo(0, 0); await renderCert(id, token); return; }
+  if (view === 'guide') { const c = CAT.cert(id); if (!c?.guide) { location.hash = c ? `#/cert/${c.id}` : '#/'; return; } showView('viewGuide'); window.scrollTo(0, 0); await renderGuide(c, sub, token); return; }
   if (view === 'progress') { showView('viewProgress'); document.title = 'My progress · PaNIC Study Room'; renderProgress(); window.scrollTo(0, 0); return; }
   if (view === 'study' || view === 'exam') {
     const c = CAT.cert(id); if (!c || c.status !== 'live') { location.hash = c ? `#/cert/${c.id}` : '#/'; return; }

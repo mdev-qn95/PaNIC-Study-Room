@@ -1,0 +1,2278 @@
+{
+ "schema": 1,
+ "certification": "ccdv-p",
+ "language": "en",
+ "title": "Claude Certified Developer – Professional (CCDV-P) Study Guide",
+ "credit": {
+  "name": "dbirks",
+  "url": "https://github.com/dbirks/claude-certified-developer-professional-study-guide",
+  "site": "https://dbirks.github.io/claude-certified-developer-professional-study-guide/"
+ },
+ "summary": "A source-cited study guide: 25 skill chapters across the 8 domains of the official blueprint, with every factual claim linked to a verbatim quote from its source.",
+ "about": "A source-cited study guide for the CCDV-P exam, republished in PaNIC Study Room with the author’s permission. Not affiliated with, endorsed or reviewed by Anthropic. Exam-lens boxes are the author’s editorial inference, not official exam content. Reviews were performed by AI models, not human subject-matter experts.",
+ "blueprint": {
+  "name": "Claude Certified Developer – Professional",
+  "code": "CCDV-P",
+  "version": "1.0",
+  "effective": "November 2026",
+  "verified": "2026-11-19"
+ },
+ "intro": {
+  "slug": "introduction",
+  "title": "Introduction",
+  "summary": "What the CCDV-P exam measures, how this guide is organized, and how to read its citations.",
+  "status": "fact-checked",
+  "reviewed": "2026-11-19",
+  "file": "chapters/introduction.html",
+  "sections": [
+   {
+    "level": 2,
+    "id": "about-the-exam",
+    "text": "About the exam"
+   },
+   {
+    "level": 2,
+    "id": "how-the-exam-items-work",
+    "text": "How the exam items work"
+   },
+   {
+    "level": 2,
+    "id": "how-to-read-this-guide",
+    "text": "How to read this guide"
+   }
+  ],
+  "sources": 0
+ },
+ "domains": [
+  {
+   "n": 1,
+   "slug": "agent-architecture",
+   "title": "Advanced Agent Architecture and Orchestration",
+   "weight": 17,
+   "skills": [
+    {
+     "slug": "multi-agent-orchestration",
+     "title": "Multi-Agent Orchestration",
+     "summary": "Decide when a multi-agent design earns its token cost, how to bound fan-out and isolation, and where approvals and cancellation belong.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/multi-agent-orchestration.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "orchestration-patterns-and-what-they-cost",
+       "text": "Orchestration patterns and what they cost"
+      },
+      {
+       "level": 2,
+       "id": "bounding-delegation-and-context-isolation",
+       "text": "Bounding delegation and context isolation"
+      },
+      {
+       "level": 2,
+       "id": "parallel-dispatch-and-critical-path-latency",
+       "text": "Parallel dispatch and critical-path latency"
+      },
+      {
+       "level": 2,
+       "id": "inter-agent-communication-and-structured-handoffs",
+       "text": "Inter-agent communication and structured handoffs"
+      },
+      {
+       "level": 2,
+       "id": "human-in-the-loop-and-approval-flow",
+       "text": "Human-in-the-loop and approval flow"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 59,
+     "id": "1.1",
+     "short": "Multi-Agent Orchestration",
+     "skillTitle": "Multi-Agent Orchestration",
+     "objective": "Evaluating orchestration patterns for production multi-agent designs and inter-agent failures, including supervisor/worker hierarchies, parallel subagent dispatch, delegation and context-isolation boundaries, inter-agent communication, and human-in-the-loop and approval flows."
+    },
+    {
+     "slug": "durable-execution",
+     "title": "Durable Execution and State Management",
+     "summary": "Decide which state a resumed agent must reload, which side effects need idempotency guards, and how to survive a model version change.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/durable-execution.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "what-each-state-store-covers",
+       "text": "What each state store covers"
+      },
+      {
+       "level": 2,
+       "id": "session-persistence-resume-and-fork",
+       "text": "Session persistence, resume, and fork"
+      },
+      {
+       "level": 2,
+       "id": "file-checkpointing-and-rewind",
+       "text": "File checkpointing and rewind"
+      },
+      {
+       "level": 2,
+       "id": "crash-recovery-for-side-effects",
+       "text": "Crash recovery for side effects"
+      },
+      {
+       "level": 2,
+       "id": "memory-architecture-patterns",
+       "text": "Memory architecture patterns"
+      },
+      {
+       "level": 2,
+       "id": "surviving-a-model-version-change",
+       "text": "Surviving a model version change"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 53,
+     "id": "1.2",
+     "short": "Durable Execution",
+     "skillTitle": "Durable Execution and State Management",
+     "objective": "Applying session persistence, checkpointing, resumability, and memory architecture patterns to long-running agents that must survive interruption, restart, and model version change."
+    },
+    {
+     "slug": "architecture-selection",
+     "title": "Architecture Selection at Scale",
+     "summary": "Decide between workflow and agentic patterns from measured cost, reliability, and quality data, and pick the execution layer and shared standards.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/architecture-selection.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "workflow-agent-and-multi-agent-are-control-flow-choices",
+       "text": "Workflow, agent, and multi-agent are control-flow choices"
+      },
+      {
+       "level": 2,
+       "id": "measure-the-running-system-before-you-change-it",
+       "text": "Measure the running system before you change it"
+      },
+      {
+       "level": 2,
+       "id": "a-hypothetical-workflow-versus-bounded-agent",
+       "text": "A hypothetical: workflow versus bounded agent"
+      },
+      {
+       "level": 2,
+       "id": "choose-the-execution-layer",
+       "text": "Choose the execution layer"
+      },
+      {
+       "level": 2,
+       "id": "migrate-in-both-directions",
+       "text": "Migrate in both directions"
+      },
+      {
+       "level": 2,
+       "id": "set-reusable-pattern-standards",
+       "text": "Set reusable-pattern standards"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 32,
+     "id": "1.3",
+     "short": "Architecture Selection",
+     "skillTitle": "Architecture Selection at Scale",
+     "objective": "Evaluating production cost, reliability, and quality data to decide whether to evolve a running system between workflow and agentic patterns, and selecting the agent harness, framework, and reusable-pattern standards a team should adopt."
+    },
+    {
+     "slug": "context-memory",
+     "title": "Context and Memory Architecture",
+     "summary": "Choose context, memory, tool-loading, and cache policies for a long-running agent.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/context-memory.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-context-policy-works",
+       "text": "How context policy works"
+      },
+      {
+       "level": 2,
+       "id": "limits-overflow-and-cost-ceilings",
+       "text": "Limits, overflow, and cost ceilings"
+      },
+      {
+       "level": 2,
+       "id": "context-editing-pruning-that-leaves-history-intact",
+       "text": "Context editing: pruning that leaves history intact"
+      },
+      {
+       "level": 2,
+       "id": "compaction-summarizing-the-prefix",
+       "text": "Compaction: summarizing the prefix"
+      },
+      {
+       "level": 3,
+       "id": "on-demand-compaction",
+       "text": "On-demand compaction"
+      },
+      {
+       "level": 3,
+       "id": "threshold-compaction-and-client-defaults",
+       "text": "Threshold compaction and client defaults"
+      },
+      {
+       "level": 2,
+       "id": "persistent-memory-state-that-outlives-the-window",
+       "text": "Persistent memory: state that outlives the window"
+      },
+      {
+       "level": 2,
+       "id": "cache-safe-instruction-changes-mid-conversation",
+       "text": "Cache-safe instruction changes mid-conversation"
+      },
+      {
+       "level": 2,
+       "id": "keeping-large-tool-catalogs-out-of-the-window",
+       "text": "Keeping large tool catalogs out of the window"
+      },
+      {
+       "level": 2,
+       "id": "worked-example-a-deferred-catalog-and-a-mid-run-escalation",
+       "text": "Worked example: a deferred catalog and a mid-run escalation"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 45,
+     "id": "1.4",
+     "short": "Context and Memory",
+     "skillTitle": "Context and Memory Architecture",
+     "objective": "Evaluating context-policy options for long-running agents approaching context limits or cost ceilings, including context compaction and editing, persistent memory, cache-safe instruction changes mid-conversation, and tool-use techniques that keep large tool catalogs out of the context window."
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "slug": "production-integration",
+   "title": "Production Integration, Reliability, and Knowledge Grounding",
+   "weight": 20,
+   "skills": [
+    {
+     "slug": "reliability",
+     "title": "Reliability Engineering for Claude Services",
+     "summary": "Decide which failure signal a Claude response carries, then choose the matching recovery: fail fast, budgeted retry, stop-reason handling, or parity-checked failover.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/reliability.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "read-the-signal-before-you-react",
+       "text": "Read the signal before you react"
+      },
+      {
+       "level": 2,
+       "id": "retry-and-backoff-design",
+       "text": "Retry and backoff design"
+      },
+      {
+       "level": 2,
+       "id": "circuit-breakers-and-graceful-degradation",
+       "text": "Circuit breakers and graceful degradation"
+      },
+      {
+       "level": 2,
+       "id": "telling-rate-limits-refusals-and-context-window-stops-apart",
+       "text": "Telling rate limits, refusals, and context-window stops apart"
+      },
+      {
+       "level": 2,
+       "id": "cross-platform-fallback-and-feature-parity",
+       "text": "Cross-platform fallback and feature parity"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 46,
+     "id": "2.1",
+     "short": "Reliability",
+     "skillTitle": "Reliability Engineering for Claude Services",
+     "objective": "Evaluating and applying resilience patterns for production Claude integrations, including retry and backoff design, circuit breakers, graceful degradation, and cross-model, cross-region, and cross-platform fallbacks that distinguish rate limits from safety refusals from context-window stops while respecting per-platform feature parity."
+    },
+    {
+     "slug": "scale-throughput",
+     "title": "Scale and Throughput Management",
+     "summary": "Decide whether requests, input tokens, output tokens, queueing, tenant caps, or batch economics constrain a Claude workload, and pick the matching remedy.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/scale-throughput.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-claude-meters-throughput",
+       "text": "How Claude meters throughput"
+      },
+      {
+       "level": 2,
+       "id": "read-limits-from-the-response-headers",
+       "text": "Read limits from the response headers"
+      },
+      {
+       "level": 2,
+       "id": "rate-limit-strategy",
+       "text": "Rate-limit strategy"
+      },
+      {
+       "level": 3,
+       "id": "tiers-model-buckets-and-version-drift",
+       "text": "Tiers, model buckets, and version drift"
+      },
+      {
+       "level": 3,
+       "id": "bursts-and-ramp-limits",
+       "text": "Bursts and ramp limits"
+      },
+      {
+       "level": 3,
+       "id": "spend-caps-and-other-429s",
+       "text": "Spend caps and other 429s"
+      },
+      {
+       "level": 2,
+       "id": "queueing-and-backpressure",
+       "text": "Queueing and backpressure"
+      },
+      {
+       "level": 2,
+       "id": "multi-tenant-quota-and-isolation",
+       "text": "Multi-tenant quota and isolation"
+      },
+      {
+       "level": 2,
+       "id": "batch-pipeline-design",
+       "text": "Batch pipeline design"
+      },
+      {
+       "level": 2,
+       "id": "capacity-planning-and-the-binding-constraint",
+       "text": "Capacity planning and the binding constraint"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 59,
+     "id": "2.2",
+     "short": "Scale and Throughput",
+     "skillTitle": "Scale and Throughput Management",
+     "objective": "Analyzing rate-limit strategy, queueing and backpressure, batch pipeline design, multi-tenant quota and isolation, and capacity planning for high-volume Claude workloads, and identifying whether rate limits, token throughput, or batch economics is the binding constraint."
+    },
+    {
+     "slug": "mcp-change-management",
+     "title": "Production MCP and Change Management",
+     "summary": "Decide which layer of a running agent changed — protocol, endpoint, credential, tool schema, model, prompt, or route — and release it as one tested bundle.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/mcp-change-management.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "the-deployable-contract",
+       "text": "The deployable contract"
+      },
+      {
+       "level": 2,
+       "id": "remote-mcp-deployment-and-authentication",
+       "text": "Remote MCP deployment and authentication"
+      },
+      {
+       "level": 2,
+       "id": "tool-and-schema-versioning",
+       "text": "Tool and schema versioning"
+      },
+      {
+       "level": 2,
+       "id": "the-messages-api-connector",
+       "text": "The Messages API connector"
+      },
+      {
+       "level": 2,
+       "id": "model-and-prompt-versioning",
+       "text": "Model and prompt versioning"
+      },
+      {
+       "level": 2,
+       "id": "platform-parity-and-gateway-routing",
+       "text": "Platform parity and gateway routing"
+      },
+      {
+       "level": 2,
+       "id": "migration-testing-against-breaking-changes",
+       "text": "Migration testing against breaking changes"
+      },
+      {
+       "level": 2,
+       "id": "progressive-rollout-with-rollback",
+       "text": "Progressive rollout with rollback"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 46,
+     "id": "2.3",
+     "short": "MCP and Change Management",
+     "skillTitle": "Production MCP and Change Management",
+     "objective": "Applying production MCP operation and change-management practice to MCP server deployments, model version migrations, and prompt updates, including remote MCP deployment and authentication, tool and schema versioning, migration testing against breaking behavior changes, platform-specific configuration parity and gateway/routing architectures, prompt versioning, and progressive rollout with rollback."
+    },
+    {
+     "slug": "retrieval-grounding",
+     "title": "Retrieval and Knowledge Grounding at Scale",
+     "summary": "Decide between direct context, indexed RAG, and agentic search, and locate a retrieval-quality failure at the stage where evidence is lost.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/retrieval-grounding.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-evidence-reaches-the-prompt",
+       "text": "How evidence reaches the prompt"
+      },
+      {
+       "level": 2,
+       "id": "indexing-and-contextual-retrieval",
+       "text": "Indexing and contextual retrieval"
+      },
+      {
+       "level": 2,
+       "id": "candidate-retrieval-and-ranking",
+       "text": "Candidate retrieval and ranking"
+      },
+      {
+       "level": 2,
+       "id": "grounding-contracts-citations-and-source-attribution",
+       "text": "Grounding contracts: citations and source attribution"
+      },
+      {
+       "level": 2,
+       "id": "uncertainty-declaration-and-confidence-signals",
+       "text": "Uncertainty declaration and confidence signals"
+      },
+      {
+       "level": 2,
+       "id": "stage-by-stage-diagnosis",
+       "text": "Stage-by-stage diagnosis"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 43,
+     "id": "2.4",
+     "short": "Retrieval and Grounding",
+     "skillTitle": "Retrieval and Knowledge Grounding at Scale",
+     "objective": "Evaluating retrieval architecture for knowledge-grounded production applications, including agentic search versus RAG tradeoffs, chunking and embedding strategy, hybrid search, and reranking, and designing grounding practices such as source citation, uncertainty declaration, and confidence signals, and diagnosing retrieval-quality failures by stage."
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "slug": "observability",
+   "title": "Observability and Production Monitoring",
+   "weight": 12,
+   "skills": [
+    {
+     "slug": "telemetry",
+     "title": "Telemetry and Instrumentation",
+     "summary": "Decide which signals, token sources, content-capture settings, and propagation hops a production Claude system needs under privacy constraints.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/telemetry.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-it-works",
+       "text": "How it works"
+      },
+      {
+       "level": 2,
+       "id": "distributed-traces-for-agent-loops-and-tool-calls",
+       "text": "Distributed traces for agent loops and tool calls"
+      },
+      {
+       "level": 2,
+       "id": "token-and-cost-metrics",
+       "text": "Token and cost metrics"
+      },
+      {
+       "level": 2,
+       "id": "cache-performance-diagnostics",
+       "text": "Cache-performance diagnostics"
+      },
+      {
+       "level": 2,
+       "id": "structured-log-events",
+       "text": "Structured log events"
+      },
+      {
+       "level": 2,
+       "id": "grounding-and-reasoning-traceability",
+       "text": "Grounding and reasoning traceability"
+      },
+      {
+       "level": 2,
+       "id": "content-capture-under-privacy-constraints",
+       "text": "Content capture under privacy constraints"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 76,
+     "id": "3.1",
+     "short": "Telemetry",
+     "skillTitle": "Telemetry and Instrumentation",
+     "objective": "Applying instrumentation practice to production Claude systems under debuggability and privacy requirements, including distributed traces for agent loops and tool calls, token and cost metrics, cache-performance diagnostics, grounding and reasoning traceability, structured log events, and content-capture configuration under privacy constraints such as zero-data-retention."
+    },
+    {
+     "slug": "monitoring-alerting",
+     "title": "Production Monitoring and Alerting",
+     "summary": "Decide which SLIs an LLM service needs, how to alert on burn rates and spend, and how to separate quality drift, cache loss, and model shifts.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/monitoring-alerting.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-it-works-signals-budgets-and-burn-rate",
+       "text": "How it works: signals, budgets, and burn rate"
+      },
+      {
+       "level": 2,
+       "id": "latency-stop-reasons-and-quality-slis",
+       "text": "Latency, stop reasons, and quality SLIs"
+      },
+      {
+       "level": 2,
+       "id": "token-and-cost-telemetry",
+       "text": "Token and cost telemetry"
+      },
+      {
+       "level": 2,
+       "id": "alert-rules-and-routing",
+       "text": "Alert rules and routing"
+      },
+      {
+       "level": 2,
+       "id": "anomalous-usage-and-spend-limits",
+       "text": "Anomalous usage and spend limits"
+      },
+      {
+       "level": 2,
+       "id": "drift-after-model-updates",
+       "text": "Drift after model updates"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 38,
+     "id": "3.2",
+     "short": "Monitoring and Alerting",
+     "skillTitle": "Production Monitoring and Alerting",
+     "objective": "Analyzing production signals from LLM-backed services to define service level indicators (SLIs) and SLOs, design alerting and dashboards (including token and cost telemetry), and detect quality drift, behavioral regressions, and anomalous usage, including drift after model updates."
+    },
+    {
+     "slug": "trace-analysis",
+     "title": "Trace Analysis at Scale",
+     "summary": "Decide what to sample, aggregate, and compare so trace data quantifies systemic agent failures instead of illustrating anecdotes.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/trace-analysis.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-it-works",
+       "text": "How it works"
+      },
+      {
+       "level": 2,
+       "id": "sampling-design-and-collector-capacity",
+       "text": "Sampling design and collector capacity"
+      },
+      {
+       "level": 2,
+       "id": "claude-trace-surfaces-and-identifiers",
+       "text": "Claude trace surfaces and identifiers"
+      },
+      {
+       "level": 2,
+       "id": "aggregation-denominators-and-cardinality",
+       "text": "Aggregation, denominators, and cardinality"
+      },
+      {
+       "level": 2,
+       "id": "failure-cohort-analysis",
+       "text": "Failure-cohort analysis"
+      },
+      {
+       "level": 3,
+       "id": "worked-regression-synthetic",
+       "text": "Worked regression (synthetic)"
+      },
+      {
+       "level": 3,
+       "id": "transcript-review-and-next-measurement",
+       "text": "Transcript review and next measurement"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 41,
+     "id": "3.3",
+     "short": "Trace Analysis",
+     "skillTitle": "Trace Analysis at Scale",
+     "objective": "Analyzing high-volume trace data using sampling strategies, aggregation, and failure-cohort analysis to surface and quantify systemic issues that are not visible in individual traces."
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "slug": "debugging",
+   "title": "Advanced Debugging and Incident Response",
+   "weight": 10,
+   "skills": [
+    {
+     "slug": "failure-diagnosis",
+     "title": "Complex Failure Diagnosis",
+     "summary": "Decide whether a production agent failure came from the model, the harness, tools, or data by replaying evidence layer by layer.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/failure-diagnosis.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-it-works-the-evidence-chain",
+       "text": "How it works: the evidence chain"
+      },
+      {
+       "level": 2,
+       "id": "multi-turn-and-multi-agent-transcript-integrity",
+       "text": "Multi-turn and multi-agent transcript integrity"
+      },
+      {
+       "level": 2,
+       "id": "model-harness-tool-or-data-isolating-the-origin",
+       "text": "Model, harness, tool, or data: isolating the origin"
+      },
+      {
+       "level": 3,
+       "id": "retrieval-versus-grounding",
+       "text": "Retrieval versus grounding"
+      },
+      {
+       "level": 2,
+       "id": "refusals-and-non-deterministic-failures",
+       "text": "Refusals and non-deterministic failures"
+      },
+      {
+       "level": 3,
+       "id": "refusals-are-successful-responses",
+       "text": "Refusals are successful responses"
+      },
+      {
+       "level": 3,
+       "id": "non-determinism",
+       "text": "Non-determinism"
+      },
+      {
+       "level": 2,
+       "id": "turning-on-the-evidence",
+       "text": "Turning on the evidence"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 38,
+     "id": "4.1",
+     "short": "Failure Diagnosis",
+     "skillTitle": "Complex Failure Diagnosis",
+     "objective": "Analyzing evidence from complex production failures, including multi-turn, multi-agent, and non-deterministic failures, to isolate the problem origin among model output, agent harness, tools, and data, including model refusals as a failure class and retrieval-grounding failures."
+    },
+    {
+     "slug": "incident-response",
+     "title": "Incident Response and Learning Loops",
+     "summary": "Decide triage order, containment, rollback, and communication during an LLM outage, and convert the incident into evals, alerts, and postmortems.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/incident-response.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "incident-command-roles-record-and-communication",
+       "text": "Incident command: roles, record, and communication"
+      },
+      {
+       "level": 2,
+       "id": "triage-vendor-outage-quality-regression-or-your-incident",
+       "text": "Triage: vendor outage, quality regression, or your incident"
+      },
+      {
+       "level": 2,
+       "id": "containment-mitigation-and-rollback",
+       "text": "Containment, mitigation, and rollback"
+      },
+      {
+       "level": 2,
+       "id": "end-to-end-flow",
+       "text": "End-to-end flow"
+      },
+      {
+       "level": 2,
+       "id": "worked-example-runaway-refund-agent",
+       "text": "Worked example: runaway refund agent"
+      },
+      {
+       "level": 2,
+       "id": "learning-loop-postmortem-regression-evals-monitoring",
+       "text": "Learning loop: postmortem, regression evals, monitoring"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 42,
+     "id": "4.2",
+     "short": "Incident Response",
+     "skillTitle": "Incident Response and Learning Loops",
+     "objective": "Evaluating incident-response options during an LLM-system outage or quality regression, including triage, mitigation, rollback, and communication, and converting the incident into regression evaluations, monitoring coverage, and postmortem findings."
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "slug": "evaluation",
+   "title": "Evaluation Engineering and Quality Assurance",
+   "weight": 12,
+   "skills": [
+    {
+     "slug": "evaluation-design",
+     "title": "Evaluation System Design",
+     "summary": "Decide how to build offline eval suites, grade agent behavior, set CI/CD gate thresholds, and release prompt, model, and agent changes.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/evaluation-design.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-an-offline-evaluation-works",
+       "text": "How an offline evaluation works"
+      },
+      {
+       "level": 2,
+       "id": "golden-sets-and-suite-content",
+       "text": "Golden sets and suite content"
+      },
+      {
+       "level": 2,
+       "id": "behavioral-checks-without-brittle-paths",
+       "text": "Behavioral checks without brittle paths"
+      },
+      {
+       "level": 2,
+       "id": "multi-trial-variance-pass-k-and-pass-k",
+       "text": "Multi-trial variance: pass@k and pass^k"
+      },
+      {
+       "level": 2,
+       "id": "ci-cd-evaluation-gates",
+       "text": "CI/CD evaluation gates"
+      },
+      {
+       "level": 2,
+       "id": "retrieval-metrics-and-groundedness",
+       "text": "Retrieval metrics and groundedness"
+      },
+      {
+       "level": 2,
+       "id": "release-criteria-for-prompt-model-and-agent-changes",
+       "text": "Release criteria for prompt, model, and agent changes"
+      },
+      {
+       "level": 2,
+       "id": "keeping-the-suite-valid",
+       "text": "Keeping the suite valid"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 42,
+     "id": "5.1",
+     "short": "Evaluation Design",
+     "skillTitle": "Evaluation System Design",
+     "objective": "Evaluating and designing offline evaluation systems for Claude applications, including golden sets, regression suites, behavioral checks, CI/CD evaluation gates, retrieval precision and groundedness metrics, and release criteria for prompt, model, and agent changes, and maintaining suite validity over time against contamination, saturation, and coverage gaps."
+    },
+    {
+     "slug": "llm-as-judge",
+     "title": "LLM-as-Judge Engineering",
+     "summary": "Decide whether a Claude judge is calibrated enough to gate releases: rubric design, order swapping, inter-rater reliability, and drift control.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/llm-as-judge.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "choosing-the-grading-method",
+       "text": "Choosing the grading method"
+      },
+      {
+       "level": 2,
+       "id": "rubric-design",
+       "text": "Rubric design"
+      },
+      {
+       "level": 2,
+       "id": "grading-mode-pointwise-pairwise-and-reference-guided",
+       "text": "Grading mode: pointwise, pairwise, and reference-guided"
+      },
+      {
+       "level": 2,
+       "id": "bias-and-position-effects",
+       "text": "Bias and position effects"
+      },
+      {
+       "level": 2,
+       "id": "calibrating-the-judge-against-human-labels",
+       "text": "Calibrating the judge against human labels"
+      },
+      {
+       "level": 2,
+       "id": "judge-request-mechanics",
+       "text": "Judge request mechanics"
+      },
+      {
+       "level": 2,
+       "id": "judge-drift-across-model-versions",
+       "text": "Judge drift across model versions"
+      },
+      {
+       "level": 2,
+       "id": "error-analysis-and-release-gates",
+       "text": "Error analysis and release gates"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 45,
+     "id": "5.2",
+     "short": "LLM-as-Judge",
+     "skillTitle": "LLM-as-Judge Engineering",
+     "objective": "Analyzing LLM-as-judge evaluator quality against human-labeled data, including calibration, rubric design, bias and position effects, inter-rater reliability, and judge drift across model versions."
+    },
+    {
+     "slug": "online-quality",
+     "title": "Online Quality Measurement",
+     "summary": "Choose sampling, experiment, feedback, and metric designs that measure quality on live Claude application traffic.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/online-quality.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-online-evaluation-fits-together",
+       "text": "How online evaluation fits together"
+      },
+      {
+       "level": 2,
+       "id": "live-traffic-sampling-and-privacy",
+       "text": "Live-traffic sampling and privacy"
+      },
+      {
+       "level": 2,
+       "id": "a-b-testing-and-rollout",
+       "text": "A/B testing and rollout"
+      },
+      {
+       "level": 2,
+       "id": "worked-example-sizing-and-reading-an-a-b-test",
+       "text": "Worked example: sizing and reading an A/B test"
+      },
+      {
+       "level": 2,
+       "id": "metric-selection-by-task-type",
+       "text": "Metric selection by task type"
+      },
+      {
+       "level": 2,
+       "id": "production-data-sources-and-api-details",
+       "text": "Production data sources and API details"
+      },
+      {
+       "level": 2,
+       "id": "feedback-loops-and-drift",
+       "text": "Feedback loops and drift"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 41,
+     "id": "5.3",
+     "short": "Online Quality",
+     "skillTitle": "Online Quality Measurement",
+     "objective": "Analyzing quality on live production traffic using online evaluation techniques, including live-traffic sampling, A/B testing, feedback loops, and metric selection matched to task type (extraction, generation, agentic, retrieval-grounded)."
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "slug": "cost-latency",
+   "title": "Cost and Latency Optimization at Scale",
+   "weight": 8,
+   "skills": [
+    {
+     "slug": "cost-architecture",
+     "title": "Cost Architecture at Scale",
+     "summary": "Decide which cost lever to pull—caching, model routing, batch offload, or budget enforcement—from usage data and per-tenant economics.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/cost-architecture.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-the-cost-model-works",
+       "text": "How the cost model works"
+      },
+      {
+       "level": 2,
+       "id": "caching-strategy-and-cache-diagnostics",
+       "text": "Caching strategy and cache diagnostics"
+      },
+      {
+       "level": 2,
+       "id": "model-routing-and-cascades",
+       "text": "Model routing and cascades"
+      },
+      {
+       "level": 2,
+       "id": "batch-versus-realtime-economics",
+       "text": "Batch versus realtime economics"
+      },
+      {
+       "level": 2,
+       "id": "per-tenant-budget-enforcement",
+       "text": "Per-tenant budget enforcement"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 42,
+     "id": "6.1",
+     "short": "Cost Architecture",
+     "skillTitle": "Cost Architecture at Scale",
+     "objective": "Evaluating fleet-level optimization strategies using usage and cost data, including cost modeling and forecasting, model routing and cascades across the Claude model family, caching strategy and cache diagnostics, batch-versus-realtime economics, and per-tenant budget enforcement."
+    },
+    {
+     "slug": "latency-engineering",
+     "title": "Latency Engineering",
+     "summary": "Decide which latency lever to pull—streaming, parallel tools, cache checkpoints, effort, model, fast mode—from TTFT and TTLT evidence.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/latency-engineering.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-latency-decomposes",
+       "text": "How latency decomposes"
+      },
+      {
+       "level": 2,
+       "id": "streaming-and-the-first-token-metric",
+       "text": "Streaming and the first-token metric"
+      },
+      {
+       "level": 2,
+       "id": "parallel-tool-execution",
+       "text": "Parallel tool execution"
+      },
+      {
+       "level": 2,
+       "id": "cache-checkpointing",
+       "text": "Cache checkpointing"
+      },
+      {
+       "level": 2,
+       "id": "effort-model-choice-and-capacity-tiers",
+       "text": "Effort, model choice, and capacity tiers"
+      },
+      {
+       "level": 2,
+       "id": "working-against-a-target",
+       "text": "Working against a target"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 36,
+     "id": "6.2",
+     "short": "Latency Engineering",
+     "skillTitle": "Latency Engineering",
+     "objective": "Analyzing the latency profile of a Claude application against a latency target, distinguishing time-to-first-token from total latency, and applying streaming, parallel tool execution, cache checkpointing, and effort-level tuning."
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "slug": "security",
+   "title": "Runtime Guardrails and Production Security",
+   "weight": 11,
+   "skills": [
+    {
+     "slug": "runtime-guardrails",
+     "title": "Runtime Guardrail Systems",
+     "summary": "Decide which layer — hook, permission rule, sandbox, approval gate, classifier, or refusal branch — must enforce each production risk.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/runtime-guardrails.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-the-layers-fit-together",
+       "text": "How the layers fit together"
+      },
+      {
+       "level": 2,
+       "id": "hook-based-policy-enforcement",
+       "text": "Hook-based policy enforcement"
+      },
+      {
+       "level": 2,
+       "id": "the-permission-pipeline-and-rule-order",
+       "text": "The permission pipeline and rule order"
+      },
+      {
+       "level": 2,
+       "id": "input-filtering-output-filtering-and-pii-redaction",
+       "text": "Input filtering, output filtering, and PII redaction"
+      },
+      {
+       "level": 2,
+       "id": "sandboxing-and-credential-isolation",
+       "text": "Sandboxing and credential isolation"
+      },
+      {
+       "level": 2,
+       "id": "approval-gates-and-irreversible-actions",
+       "text": "Approval gates and irreversible actions"
+      },
+      {
+       "level": 2,
+       "id": "refusal-handling-and-safety-fallbacks",
+       "text": "Refusal handling and safety fallbacks"
+      },
+      {
+       "level": 2,
+       "id": "tuning-false-positives-and-false-negatives",
+       "text": "Tuning false positives and false negatives"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 53,
+     "id": "7.1",
+     "short": "Runtime Guardrails",
+     "skillTitle": "Runtime Guardrail Systems",
+     "objective": "Evaluating layered guardrail architectures against a production agent’s risk profile, including input/output filtering, PII redactors, hook-based policy enforcement, destructive-action prevention, sandboxing that grants tool and web access without exposing production systems, approval gates, refusal handling and safety fallbacks, deterministic enforcement for irreversible actions, and false-positive/false-negative tuning."
+    },
+    {
+     "slug": "threat-defense",
+     "title": "Threat Defense and Adversarial Testing for Agentic Systems",
+     "summary": "Decide which injection, exfiltration, and MCP failure mode an agent faces, and place the deterministic control that breaks it outside the model.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/threat-defense.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "attack-surface-untrusted-content-reaching-the-model",
+       "text": "Attack surface: untrusted content reaching the model"
+      },
+      {
+       "level": 2,
+       "id": "the-lethal-trifecta-and-its-exfiltration-paths",
+       "text": "The lethal trifecta and its exfiltration paths"
+      },
+      {
+       "level": 2,
+       "id": "defense-in-depth",
+       "text": "Defense in depth"
+      },
+      {
+       "level": 2,
+       "id": "worked-example-injection-inside-an-mcp-tool-result",
+       "text": "Worked example: injection inside an MCP tool result"
+      },
+      {
+       "level": 2,
+       "id": "secure-mcp-configuration",
+       "text": "Secure MCP configuration"
+      },
+      {
+       "level": 2,
+       "id": "unsafe-autonomy-and-the-sandbox-boundary",
+       "text": "Unsafe autonomy and the sandbox boundary"
+      },
+      {
+       "level": 2,
+       "id": "memory-and-file-poisoning",
+       "text": "Memory and file poisoning"
+      },
+      {
+       "level": 2,
+       "id": "red-team-exercise-design",
+       "text": "Red-team exercise design"
+      },
+      {
+       "level": 2,
+       "id": "framework-mapping",
+       "text": "Framework mapping"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 43,
+     "id": "7.2",
+     "short": "Threat Defense",
+     "skillTitle": "Threat Defense and Adversarial Testing for Agentic Systems",
+     "objective": "Analyzing the attack surface of tool-using agents that process untrusted content, including prompt injection, tool and memory poisoning, data exfiltration paths, unsafe-autonomy conditions, and the high-risk combination of private data access, untrusted input, and external communication, and applying defense-in-depth mitigations, red-team exercise design, and secure MCP configuration, drawing on the OWASP Top 10 for LLM Applications and the NIST AI Risk Management Framework and its Generative AI Profile."
+    },
+    {
+     "slug": "identity-secrets-audit",
+     "title": "Identity, Secrets, and Audit at Scale",
+     "summary": "Decide which credential a Claude workload holds, how its tools are permitted and authorized, and which audit source proves what happened.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/identity-secrets-audit.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-a-claude-workload-gets-an-identity",
+       "text": "How a Claude workload gets an identity"
+      },
+      {
+       "level": 2,
+       "id": "workload-identity-federation",
+       "text": "Workload identity federation"
+      },
+      {
+       "level": 2,
+       "id": "claude-code-and-cloud-provider-credentials",
+       "text": "Claude Code and cloud-provider credentials"
+      },
+      {
+       "level": 2,
+       "id": "least-privilege-for-tools-and-mcp",
+       "text": "Least privilege for tools and MCP"
+      },
+      {
+       "level": 2,
+       "id": "audit-logging-of-security-relevant-actions",
+       "text": "Audit logging of security-relevant actions"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 52,
+     "id": "7.3",
+     "short": "Identity, Secrets, Audit",
+     "skillTitle": "Identity, Secrets, and Audit at Scale",
+     "objective": "Applying enterprise identity and secrets practice to production Claude deployments, including agent identity, workload identity federation replacing static API keys, credential and secrets management, least-privilege tool permissioning, and audit logging of security-relevant agent actions."
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "slug": "agent-fleets",
+   "title": "Agent Fleet Operations for Software Delivery",
+   "weight": 10,
+   "skills": [
+    {
+     "slug": "parallel-agents",
+     "title": "Parallel Agent Orchestration for Engineering Work",
+     "summary": "Choose a parallel topology, isolate and merge agent edits safely, size task decomposition, and diagnose fleet failures from Claude Code telemetry.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/parallel-agents.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "five-execution-models",
+       "text": "Five execution models"
+      },
+      {
+       "level": 2,
+       "id": "worktree-isolation",
+       "text": "Worktree isolation"
+      },
+      {
+       "level": 2,
+       "id": "task-decomposition",
+       "text": "Task decomposition"
+      },
+      {
+       "level": 2,
+       "id": "merge-and-conflict-strategy",
+       "text": "Merge and conflict strategy"
+      },
+      {
+       "level": 2,
+       "id": "fleet-telemetry",
+       "text": "Fleet telemetry"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 78,
+     "id": "8.1",
+     "short": "Parallel Agents",
+     "skillTitle": "Parallel Agent Orchestration for Engineering Work",
+     "objective": "Evaluating parallel fan-out patterns for large engineering tasks, including parallel agents on isolated worktrees, task decomposition, and merge and conflict strategy, and diagnosing fleet-level failure modes from fleet telemetry."
+    },
+    {
+     "slug": "verification-review",
+     "title": "Verification and AI Code Review Operations",
+     "summary": "Decide which checks run before a pull request, how to calibrate an AI reviewer in shadow mode, and where human approvals belong.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/verification-review.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-the-verification-funnel-works",
+       "text": "How the verification funnel works"
+      },
+      {
+       "level": 2,
+       "id": "pre-pr-verification-loops",
+       "text": "Pre-PR verification loops"
+      },
+      {
+       "level": 2,
+       "id": "review-surfaces-managed-local-and-ci",
+       "text": "Review surfaces: managed, local, and CI"
+      },
+      {
+       "level": 2,
+       "id": "merge-gate-mechanics",
+       "text": "Merge-gate mechanics"
+      },
+      {
+       "level": 2,
+       "id": "shadow-mode-then-calibration",
+       "text": "Shadow mode, then calibration"
+      },
+      {
+       "level": 2,
+       "id": "convergence-when-the-author-is-an-agent",
+       "text": "Convergence when the author is an agent"
+      },
+      {
+       "level": 2,
+       "id": "human-oversight-design",
+       "text": "Human oversight design"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 39,
+     "id": "8.2",
+     "short": "Verification and Review",
+     "skillTitle": "Verification and AI Code Review Operations",
+     "objective": "Analyzing verification operations in delivery pipelines where generation outpaces review, including AI code review introduced in shadow mode, calibration against human review before merge gating, and human oversight design."
+    },
+    {
+     "slug": "unattended-operations",
+     "title": "Unattended and Event-Driven Agent Operations",
+     "summary": "Choose goal, schedule, or event triggers for Claude Code runs, and design their bounds, checkpoints, notifications, and escalation.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/unattended-operations.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "trigger-bounds-and-evidence",
+       "text": "Trigger, bounds, and evidence"
+      },
+      {
+       "level": 2,
+       "id": "bounds-turns-money-and-permissions",
+       "text": "Bounds: turns, money, and permissions"
+      },
+      {
+       "level": 2,
+       "id": "goals-schedules-and-cloud-tasks",
+       "text": "Goals, schedules, and cloud tasks"
+      },
+      {
+       "level": 2,
+       "id": "event-responders-and-ci-first-response",
+       "text": "Event responders and CI first response"
+      },
+      {
+       "level": 2,
+       "id": "checkpointing-and-recovery",
+       "text": "Checkpointing and recovery"
+      },
+      {
+       "level": 2,
+       "id": "notification-escalation-and-termination",
+       "text": "Notification, escalation, and termination"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 40,
+     "id": "8.3",
+     "short": "Unattended Operations",
+     "skillTitle": "Unattended and Event-Driven Agent Operations",
+     "objective": "Applying unattended-operation patterns to goal- or schedule-driven engineering tasks, including agents running toward goals, on schedules, or as event-driven responders such as CI/CD incident first response, with checkpointing, notification, and escalation design."
+    },
+    {
+     "slug": "org-configuration",
+     "title": "Organization-Wide Coding Agent Configuration",
+     "summary": "Decide which Claude Code policy layer enforces permissions, MCP servers, telemetry, gateway routing, and shared Skills across a fleet.",
+     "status": "fact-checked",
+     "reviewed": "2026-11-19",
+     "file": "chapters/org-configuration.html",
+     "sections": [
+      {
+       "level": 2,
+       "id": "how-the-settings-stack-resolves",
+       "text": "How the settings stack resolves"
+      },
+      {
+       "level": 3,
+       "id": "managed-delivery-mechanisms",
+       "text": "Managed delivery mechanisms"
+      },
+      {
+       "level": 3,
+       "id": "server-managed-settings-and-their-skip-rule",
+       "text": "Server-managed settings and their skip rule"
+      },
+      {
+       "level": 2,
+       "id": "enforcing-permissions-and-hooks",
+       "text": "Enforcing permissions and hooks"
+      },
+      {
+       "level": 2,
+       "id": "mcp-server-governance",
+       "text": "MCP server governance"
+      },
+      {
+       "level": 2,
+       "id": "gateway-routing-and-cloud-providers",
+       "text": "Gateway routing and cloud providers"
+      },
+      {
+       "level": 3,
+       "id": "worked-example-gateway-pinned-fleet",
+       "text": "Worked example: gateway-pinned fleet"
+      },
+      {
+       "level": 2,
+       "id": "governance-for-plugins-skills-and-shared-prompts",
+       "text": "Governance for plugins, Skills, and shared prompts"
+      },
+      {
+       "level": 3,
+       "id": "claude-md-is-context-not-enforcement",
+       "text": "CLAUDE.md is context, not enforcement"
+      },
+      {
+       "level": 2,
+       "id": "decision-criteria",
+       "text": "Decision criteria"
+      },
+      {
+       "level": 2,
+       "id": "failure-modes-and-recovery",
+       "text": "Failure modes and recovery"
+      },
+      {
+       "level": 2,
+       "id": "exam-lens",
+       "text": "Exam lens"
+      },
+      {
+       "level": 2,
+       "id": "self-check",
+       "text": "Self-check"
+      }
+     ],
+     "sources": 44,
+     "id": "8.4",
+     "short": "Org-Wide Configuration",
+     "skillTitle": "Organization-Wide Coding Agent Configuration",
+     "objective": "Applying enterprise configuration for organizations adopting coding agents, including managed settings and policies, MCP allowlists, telemetry, gateway routing, and governance with a quality and safety bar for sharing prompts, Skills, and MCP servers across teams."
+    }
+   ]
+  }
+ ],
+ "reference": [
+  {
+   "slug": "exam-day-review",
+   "title": "Exam-day review",
+   "summary": "Every skill's decision patterns and top traps on one page, linked back to the chapters.",
+   "status": "draft",
+   "reviewed": "2026-11-19",
+   "file": "chapters/exam-day-review.html",
+   "sections": [
+    {
+     "level": 2,
+     "id": "domain-1-advanced-agent-architecture-and-orchestration-17",
+     "text": "Domain 1 — Advanced Agent Architecture and Orchestration (17%)"
+    },
+    {
+     "level": 3,
+     "id": "1-1-multi-agent-orchestration",
+     "text": "1.1 Multi-Agent Orchestration"
+    },
+    {
+     "level": 3,
+     "id": "1-2-durable-execution",
+     "text": "1.2 Durable Execution"
+    },
+    {
+     "level": 3,
+     "id": "1-3-architecture-selection",
+     "text": "1.3 Architecture Selection"
+    },
+    {
+     "level": 3,
+     "id": "1-4-context-and-memory",
+     "text": "1.4 Context and Memory"
+    },
+    {
+     "level": 2,
+     "id": "domain-2-production-integration-reliability-and-knowledge-grounding-20",
+     "text": "Domain 2 — Production Integration, Reliability, and Knowledge Grounding (20%)"
+    },
+    {
+     "level": 3,
+     "id": "2-1-reliability",
+     "text": "2.1 Reliability"
+    },
+    {
+     "level": 3,
+     "id": "2-2-scale-and-throughput",
+     "text": "2.2 Scale and Throughput"
+    },
+    {
+     "level": 3,
+     "id": "2-3-mcp-and-change-management",
+     "text": "2.3 MCP and Change Management"
+    },
+    {
+     "level": 3,
+     "id": "2-4-retrieval-and-grounding",
+     "text": "2.4 Retrieval and Grounding"
+    },
+    {
+     "level": 2,
+     "id": "domain-3-observability-and-production-monitoring-12",
+     "text": "Domain 3 — Observability and Production Monitoring (12%)"
+    },
+    {
+     "level": 3,
+     "id": "3-1-telemetry",
+     "text": "3.1 Telemetry"
+    },
+    {
+     "level": 3,
+     "id": "3-2-monitoring-and-alerting",
+     "text": "3.2 Monitoring and Alerting"
+    },
+    {
+     "level": 3,
+     "id": "3-3-trace-analysis",
+     "text": "3.3 Trace Analysis"
+    },
+    {
+     "level": 2,
+     "id": "domain-4-advanced-debugging-and-incident-response-10",
+     "text": "Domain 4 — Advanced Debugging and Incident Response (10%)"
+    },
+    {
+     "level": 3,
+     "id": "4-1-failure-diagnosis",
+     "text": "4.1 Failure Diagnosis"
+    },
+    {
+     "level": 3,
+     "id": "4-2-incident-response",
+     "text": "4.2 Incident Response"
+    },
+    {
+     "level": 2,
+     "id": "domain-5-evaluation-engineering-and-quality-assurance-12",
+     "text": "Domain 5 — Evaluation Engineering and Quality Assurance (12%)"
+    },
+    {
+     "level": 3,
+     "id": "5-1-evaluation-design",
+     "text": "5.1 Evaluation Design"
+    },
+    {
+     "level": 3,
+     "id": "5-2-llm-as-judge",
+     "text": "5.2 LLM-as-Judge"
+    },
+    {
+     "level": 3,
+     "id": "5-3-online-quality",
+     "text": "5.3 Online Quality"
+    },
+    {
+     "level": 2,
+     "id": "domain-6-cost-and-latency-optimization-at-scale-8",
+     "text": "Domain 6 — Cost and Latency Optimization at Scale (8%)"
+    },
+    {
+     "level": 3,
+     "id": "6-1-cost-architecture",
+     "text": "6.1 Cost Architecture"
+    },
+    {
+     "level": 3,
+     "id": "6-2-latency-engineering",
+     "text": "6.2 Latency Engineering"
+    },
+    {
+     "level": 2,
+     "id": "domain-7-runtime-guardrails-and-production-security-11",
+     "text": "Domain 7 — Runtime Guardrails and Production Security (11%)"
+    },
+    {
+     "level": 3,
+     "id": "7-1-runtime-guardrails",
+     "text": "7.1 Runtime Guardrails"
+    },
+    {
+     "level": 3,
+     "id": "7-2-threat-defense",
+     "text": "7.2 Threat Defense"
+    },
+    {
+     "level": 3,
+     "id": "7-3-identity-secrets-and-audit",
+     "text": "7.3 Identity, Secrets, and Audit"
+    },
+    {
+     "level": 2,
+     "id": "domain-8-agent-fleet-operations-for-software-delivery-10",
+     "text": "Domain 8 — Agent Fleet Operations for Software Delivery (10%)"
+    },
+    {
+     "level": 3,
+     "id": "8-1-parallel-agents",
+     "text": "8.1 Parallel Agents"
+    },
+    {
+     "level": 3,
+     "id": "8-2-verification-and-review",
+     "text": "8.2 Verification and Review"
+    },
+    {
+     "level": 3,
+     "id": "8-3-unattended-operations",
+     "text": "8.3 Unattended Operations"
+    },
+    {
+     "level": 3,
+     "id": "8-4-organization-wide-configuration",
+     "text": "8.4 Organization-Wide Configuration"
+    }
+   ],
+   "sources": 0
+  },
+  {
+   "slug": "api-reference",
+   "title": "Messages API and tool-use quick reference",
+   "summary": "Look up Messages API request and response shapes, tool-use turn rules, streaming events, usage fields, model IDs, and beta headers.",
+   "status": "fact-checked",
+   "reviewed": "2026-11-19",
+   "file": "chapters/api-reference.html",
+   "sections": [
+    {
+     "level": 2,
+     "id": "endpoint-headers-and-transport-limits",
+     "text": "Endpoint, headers, and transport limits"
+    },
+    {
+     "level": 2,
+     "id": "request-body",
+     "text": "Request body"
+    },
+    {
+     "level": 2,
+     "id": "content-block-types",
+     "text": "Content block types"
+    },
+    {
+     "level": 2,
+     "id": "tool-use-turn-rules",
+     "text": "Tool-use turn rules"
+    },
+    {
+     "level": 3,
+     "id": "worked-example-streaming-tool-loop",
+     "text": "Worked example: streaming tool loop"
+    },
+    {
+     "level": 2,
+     "id": "input-schema-strict-tools-and-structured-outputs",
+     "text": "input_schema, strict tools, and structured outputs"
+    },
+    {
+     "level": 2,
+     "id": "streaming-sse-event-sequence",
+     "text": "Streaming SSE event sequence"
+    },
+    {
+     "level": 2,
+     "id": "usage-accounting",
+     "text": "Usage accounting"
+    },
+    {
+     "level": 2,
+     "id": "stop-reason-versus-http-errors",
+     "text": "stop_reason versus HTTP errors"
+    },
+    {
+     "level": 2,
+     "id": "model-ids-and-context-windows",
+     "text": "Model IDs and context windows"
+    },
+    {
+     "level": 2,
+     "id": "beta-headers-versus-ga",
+     "text": "Beta headers versus GA"
+    }
+   ],
+   "sources": 44
+  },
+  {
+   "slug": "building-blocks",
+   "title": "Choosing the right building block",
+   "summary": "Decide who runs the agent loop, which integration and reusable instruction fits, where a control is enforced, and which provider route to use.",
+   "status": "fact-checked",
+   "reviewed": "2026-11-19",
+   "file": "chapters/building-blocks.html",
+   "sections": [
+    {
+     "level": 2,
+     "id": "choose-the-execution-owner-and-interface",
+     "text": "Choose the execution owner and interface"
+    },
+    {
+     "level": 2,
+     "id": "select-integrations-and-reusable-instructions",
+     "text": "Select integrations and reusable instructions"
+    },
+    {
+     "level": 2,
+     "id": "where-does-this-control-get-enforced",
+     "text": "Where does this control get enforced?"
+    },
+    {
+     "level": 2,
+     "id": "choose-the-provider-route",
+     "text": "Choose the provider route"
+    },
+    {
+     "level": 2,
+     "id": "exact-cli-and-configuration-details",
+     "text": "Exact CLI and configuration details"
+    },
+    {
+     "level": 2,
+     "id": "practitioner-reasoning",
+     "text": "Practitioner reasoning"
+    },
+    {
+     "level": 2,
+     "id": "worked-example",
+     "text": "Worked example"
+    },
+    {
+     "level": 2,
+     "id": "common-mistakes",
+     "text": "Common mistakes"
+    },
+    {
+     "level": 2,
+     "id": "version-caveats",
+     "text": "Version caveats"
+    },
+    {
+     "level": 2,
+     "id": "exam-lens",
+     "text": "Exam lens"
+    },
+    {
+     "level": 2,
+     "id": "self-check",
+     "text": "Self-check"
+    }
+   ],
+   "sources": 39
+  },
+  {
+   "slug": "glossary",
+   "title": "Glossary and operational formulas",
+   "summary": "Look up operational terms and the formulas behind SLIs, error budgets, cache cost, throughput, pass@k, kappa, and Little's law.",
+   "status": "fact-checked",
+   "reviewed": "2026-11-19",
+   "file": "chapters/glossary.html",
+   "sections": [
+    {
+     "level": 2,
+     "id": "service-health-and-telemetry",
+     "text": "Service health and telemetry"
+    },
+    {
+     "level": 3,
+     "id": "objectives-and-budgets",
+     "text": "Objectives and budgets"
+    },
+    {
+     "level": 3,
+     "id": "telemetry-primitives",
+     "text": "Telemetry primitives"
+    },
+    {
+     "level": 2,
+     "id": "messages-api-and-agent-execution",
+     "text": "Messages API and agent execution"
+    },
+    {
+     "level": 3,
+     "id": "stop-reasons-and-what-to-do-with-them",
+     "text": "Stop reasons and what to do with them"
+    },
+    {
+     "level": 3,
+     "id": "execution-terms",
+     "text": "Execution terms"
+    },
+    {
+     "level": 2,
+     "id": "tokens-caching-price-and-latency",
+     "text": "Tokens, caching, price, and latency"
+    },
+    {
+     "level": 3,
+     "id": "token-and-cache-terms",
+     "text": "Token and cache terms"
+    },
+    {
+     "level": 3,
+     "id": "speed-and-cost-terms",
+     "text": "Speed and cost terms"
+    },
+    {
+     "level": 2,
+     "id": "reliability-evaluation-statistics-and-queueing",
+     "text": "Reliability, evaluation, statistics, and queueing"
+    },
+    {
+     "level": 3,
+     "id": "retries-and-overload",
+     "text": "Retries and overload"
+    },
+    {
+     "level": 3,
+     "id": "evaluation-and-statistics",
+     "text": "Evaluation and statistics"
+    },
+    {
+     "level": 3,
+     "id": "queueing",
+     "text": "Queueing"
+    },
+    {
+     "level": 2,
+     "id": "operational-formulas",
+     "text": "Operational formulas"
+    },
+    {
+     "level": 2,
+     "id": "api-facts-to-re-check-before-you-rely-on-them",
+     "text": "API facts to re-check before you rely on them"
+    },
+    {
+     "level": 2,
+     "id": "measurement-practice",
+     "text": "Measurement practice"
+    },
+    {
+     "level": 2,
+     "id": "where-usage-connects-to-outcomes",
+     "text": "Where usage connects to outcomes"
+    },
+    {
+     "level": 2,
+     "id": "worked-example-one-day-of-an-extraction-service",
+     "text": "Worked example: one day of an extraction service"
+    },
+    {
+     "level": 2,
+     "id": "common-mistakes",
+     "text": "Common mistakes"
+    },
+    {
+     "level": 2,
+     "id": "exam-lens",
+     "text": "Exam lens"
+    },
+    {
+     "level": 2,
+     "id": "self-check",
+     "text": "Self-check"
+    }
+   ],
+   "sources": 39
+  }
+ ]
+}

@@ -1,0 +1,497 @@
+<p>This glossary defines service health, Claude API, evaluation, and capacity terms. Its formulas use illustrative numbers; check current documentation for prices, cache limits, and SDK defaults.</p>
+<h2 id="g-service-health-and-telemetry">Service health and telemetry</h2>
+<p>An <strong>SLI (service-level indicator)</strong> is a measured signal of customer-relevant service behavior. SRE guidance recommends writing it as a ratio of two counts: the number of good events divided by the total number of events, for example successful HTTP requests over total HTTP requests.<sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup> A <strong>SLO (service-level objective)</strong> adds two pieces to that indicator: a performance goal and a period over which the goal is evaluated against the indicator.<sup class="cite-group"><button type="button" class="cite" data-cite="F1" aria-label="Source 1">1</button></sup> Two common SLIs are availability, the proportion of successful requests, and latency, the proportion of requests faster than a defined threshold.<sup class="cite-group"><button type="button" class="cite" data-cite="F21" aria-label="Source 21">21</button></sup></p>
+<p>An <strong>SLA (service-level agreement)</strong> is a contract with the customer or provider that carries stated remedies or consequences; treat it as legal wording sitting on top of your SLOs, not as the engineering target itself. Decide what counts as a good event before you calculate anything: for Claude-backed work you must state how refusals, failed tool sequences, cancellations, and invalid requests enter the denominator, because an HTTP-successful request can still be a refused or incomplete answer.</p>
+<h3 id="g-objectives-and-budgets">Objectives and budgets</h3>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SLI</strong></td>
+<td>A measured signal of service behavior; often expressed as good events divided by total events.<sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></td>
+</tr>
+<tr>
+<td><strong>SLO</strong></td>
+<td>An SLI plus a performance goal plus an evaluation period.<sup class="cite-group"><button type="button" class="cite" data-cite="F1" aria-label="Source 1">1</button></sup></td>
+</tr>
+<tr>
+<td><strong>SLA</strong></td>
+<td>Commitment with defined remedies; a contract, while the SLO is the engineering target.</td>
+</tr>
+<tr>
+<td><strong>Availability SLI</strong></td>
+<td>Proportion of successful requests.<sup class="cite-group"><button type="button" class="cite" data-cite="F21" aria-label="Source 21">21</button></sup></td>
+</tr>
+<tr>
+<td><strong>Latency SLI</strong></td>
+<td>Proportion of requests faster than a defined threshold.<sup class="cite-group"><button type="button" class="cite" data-cite="F21" aria-label="Source 21">21</button></sup></td>
+</tr>
+<tr>
+<td><strong>Request-based SLI</strong></td>
+<td>SLI whose events are requests: good requests divided by eligible total requests.<sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></td>
+</tr>
+<tr>
+<td><strong>Window-based SLI</strong></td>
+<td>Ratio of good time windows to eligible time windows; define the criterion for a good window.</td>
+</tr>
+<tr>
+<td><strong>Error budget</strong></td>
+<td>Bad-event fraction the SLO permits; a 99.9% objective permits a constant 0.1% error rate.<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></td>
+</tr>
+<tr>
+<td><strong>Burn rate</strong></td>
+<td>How fast, relative to the SLO, the service consumes its error budget.<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button></sup> A constant burn rate of 1 uses the whole budget over the SLO window.<sup class="cite-group"><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></td>
+</tr>
+<tr>
+<td><strong>Rolling window</strong></td>
+<td>Evaluation interval that advances continuously, unlike a calendar-aligned reporting period.</td>
+</tr>
+<tr>
+<td><strong>Good event / bad event</strong></td>
+<td>The two sides of an SLI contract: an event that satisfies or violates the stated success definition.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="g-telemetry-primitives">Telemetry primitives</h3>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Metric</strong></td>
+<td>A measurement of a service captured at runtime that you can aggregate across events.<sup class="cite-group"><button type="button" class="cite" data-cite="F34" aria-label="Source 34">34</button></sup></td>
+</tr>
+<tr>
+<td><strong>Counter</strong></td>
+<td>Monotonically accumulating measurement; a good fit for requests, errors, token counts, and completed tasks.</td>
+</tr>
+<tr>
+<td><strong>Gauge</strong></td>
+<td>Point-in-time reading that can rise and fall, such as active queue depth or in-flight calls.</td>
+</tr>
+<tr>
+<td><strong>Histogram</strong></td>
+<td>Metric instrument intended for statistically meaningful values such as summaries and percentiles, so keep one for latency instead of an average alone.<sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button></sup></td>
+</tr>
+<tr>
+<td><strong>Trace</strong></td>
+<td>Linked view of one request's path through your components; for agents include model turns, tools, retrieval, and retries.</td>
+</tr>
+<tr>
+<td><strong>Span</strong></td>
+<td>A timed parent-child segment inside a trace, such as one Messages API call or one tool invocation.</td>
+</tr>
+<tr>
+<td><strong>Structured log</strong></td>
+<td>Event record with stable machine-readable fields such as request ID, model, <code>stop_reason</code>, token usage, and outcome.</td>
+</tr>
+<tr>
+<td><strong>Cardinality</strong></td>
+<td>Number of distinct label combinations across time series; avoid unbounded label values such as prompt text, user IDs, or tool arguments.</td>
+</tr>
+<tr>
+<td><strong>Golden signal</strong></td>
+<td>A summary health signal such as latency, traffic, errors, or saturation; pair these with task quality and token cost for Claude workloads.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="g-messages-api-and-agent-execution">Messages API and agent execution</h2>
+<p>The Messages API is stateless: you always send the full conversational history with the request, so no prior turns are held as server-side conversation state for you.<sup class="cite-group"><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup> Your application therefore owns the loop: it sends history, reads the response, runs tools, and decides whether to call again. Two response fields drive that decision. <code>stop_reason</code> says why generation ended, and the usage block reports token counts used in cost calculations.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button></sup></p>
+<p>Every successful Messages API response includes a <code>stop_reason</code> field that tells you why Claude stopped generating; check it to decide whether to use the response as-is, continue the conversation, retry, or fall back to another model.<sup class="cite-group"><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button></sup> Documented values include <code>end_turn</code>, <code>max_tokens</code>, <code>stop_sequence</code>, <code>tool_use</code>, <code>pause_turn</code>, <code>refusal</code>, and <code>model_context_window_exceeded</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button></sup> In a stream, <code>stop_reason</code> is initially null; inspect the completed response.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button><button type="button" class="cite" data-cite="F39" aria-label="Source 39">39</button></sup></p>
+<h3 id="g-stop-reasons-and-what-to-do-with-them">Stop reasons and what to do with them</h3>
+<ul>
+<li><strong><code>end_turn</code></strong> — Claude completed its response naturally; use the response.<sup class="cite-group"><button type="button" class="cite" data-cite="F18" aria-label="Source 18">18</button></sup></li>
+<li><strong><code>max_tokens</code></strong> — Output reached its token limit; treat it as potentially truncated, then continue or raise the budget.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button></sup></li>
+<li><strong><code>tool_use</code></strong> — Claude handed control to a tool call; execute the tool, return the result, then expect the model's next turn.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button></sup></li>
+<li><strong><code>pause_turn</code></strong> — A server-tool loop reached its iteration limit. To continue, append the unchanged assistant content, keep the same tools, and do not append a user message; reuse the container ID if present.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button></sup></li>
+<li><strong><code>refusal</code></strong> — Claude declined to respond; inspect <code>stop_details</code> and apply your safety-handling policy.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button></sup></li>
+<li><strong><code>stop_sequence</code></strong> — A configured stop string ended generation; inspect <code>stop_sequence</code> to see which fired.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button></sup></li>
+<li><strong><code>model_context_window_exceeded</code></strong> — The response filled the model's context window; treat the output as truncated.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button></sup></li>
+</ul>
+<h3 id="g-execution-terms">Execution terms</h3>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Messages API</strong></td>
+<td>Claude's direct model prompting API; the application orchestrates any custom agent loop itself.<sup class="cite-group"><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup></td>
+</tr>
+<tr>
+<td><strong>Stateless conversation</strong></td>
+<td>Each request carries the history the current turn needs; the API keeps no conversation between calls.<sup class="cite-group"><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup></td>
+</tr>
+<tr>
+<td><strong>Assistant turn</strong></td>
+<td>One model response cycle: text, tool calls, or a stop condition, not necessarily a finished user task.</td>
+</tr>
+<tr>
+<td><strong>Streaming</strong></td>
+<td>Messages API responses arrive incrementally as server-sent events, including text and tool-use deltas, so you can consume output before the response completes.<sup class="cite-group"><button type="button" class="cite" data-cite="F9" aria-label="Source 9">9</button></sup></td>
+</tr>
+<tr>
+<td><strong><code>message_start</code></strong></td>
+<td>Opening stream event carrying an initial Message object with empty content; treat it as pre-completion.<sup class="cite-group"><button type="button" class="cite" data-cite="F39" aria-label="Source 39">39</button></sup></td>
+</tr>
+<tr>
+<td><strong><code>message_delta</code></strong></td>
+<td>Stream event carrying response changes whose usage counts are cumulative, so do not sum event snapshots as if they were deltas.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup></td>
+</tr>
+<tr>
+<td><strong>Tool round-trip</strong></td>
+<td>The model's tool request, your execution, the tool-result submission, and the model's following response; attribute latency and tokens across all four.</td>
+</tr>
+<tr>
+<td><strong>Agent loop</strong></td>
+<td>Application-controlled repetition of model calls, tool runs, and state updates until a stop condition or task policy ends the work.</td>
+</tr>
+<tr>
+<td><strong>Orchestration overhead</strong></td>
+<td>Latency, tokens, and infrastructure spent on routing, tools, retries, and control logic beyond a single generation.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="g-tokens-caching-price-and-latency">Tokens, caching, price, and latency</h2>
+<p>The usage fields are the least intuitive part of Claude cost accounting. When caching is used, <code>input_tokens</code> represents tokens after the last cache breakpoint, not all the input tokens sent.<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup> Total input is <code>cache_read_input_tokens + cache_creation_input_tokens + input_tokens</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup> Read that sum, not <code>input_tokens</code>, whenever you compute a cache percentage or a per-request input volume.</p>
+<p>Prompt caching reduces cost and latency by reusing previously processed portions of your prompt across API calls.<sup class="cite-group"><button type="button" class="cite" data-cite="F20" aria-label="Source 20">20</button></sup> Writes cost more than plain input and reads cost less: a five-minute cache write is billed at 1.25x base input price, cache reads at 0.1x base input price on most models, and cache reads are charged when a subsequent request retrieves the cached content.<sup class="cite-group"><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button></sup> Minimum cacheable lengths and the multipliers both vary by model, so check the current prompt-caching and pricing pages before you set a threshold or forecast a bill.</p>
+<p>For speed, keep three clocks apart: <strong>TTFT (time to first token)</strong> measures submission to first token;<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button></sup> <strong>generation duration</strong> measures first token to last token; and <strong>end-to-end latency</strong> measures task acceptance to your own completion event. Anthropic treats output tokens per second and time to first token as separate speed measures,<sup class="cite-group"><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button></sup> so report both rather than a single &quot;latency&quot; number.</p>
+<h3 id="g-token-and-cache-terms">Token and cache terms</h3>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Input tokens</strong></td>
+<td><code>input_tokens</code> reports uncached input after the last cache breakpoint.<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup></td>
+</tr>
+<tr>
+<td><strong>Total input tokens</strong></td>
+<td><code>cache_read_input_tokens</code> plus <code>cache_creation_input_tokens</code> plus <code>input_tokens</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup></td>
+</tr>
+<tr>
+<td><strong>Output tokens</strong></td>
+<td>Tokens generated in the response; use the final cumulative usage count for throughput math.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup></td>
+</tr>
+<tr>
+<td><strong>Cache creation tokens</strong></td>
+<td><code>cache_creation_input_tokens</code> counts tokens written to the cache when creating a new entry.<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button></sup></td>
+</tr>
+<tr>
+<td><strong>Cache read tokens</strong></td>
+<td><code>cache_read_input_tokens</code> counts tokens retrieved from the cache; it is a volume, not a count of requests that hit.<sup class="cite-group"><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button></sup></td>
+</tr>
+<tr>
+<td><strong>Prompt caching</strong></td>
+<td>Reuse of previously processed prompt portions across API calls.<sup class="cite-group"><button type="button" class="cite" data-cite="F20" aria-label="Source 20">20</button></sup></td>
+</tr>
+<tr>
+<td><strong>Cache breakpoint</strong></td>
+<td>Position that delimits the reusable prefix; everything after the last one lands in <code>input_tokens</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup></td>
+</tr>
+<tr>
+<td><strong>Cache TTL</strong></td>
+<td>Lifetime of a cached prefix; a five-minute write is valid for five minutes and the read duration follows the preceding write.<sup class="cite-group"><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button></sup></td>
+</tr>
+<tr>
+<td><strong>Cache write multiplier</strong></td>
+<td>1.25x base input price for a five-minute cache write.<sup class="cite-group"><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button></sup></td>
+</tr>
+<tr>
+<td><strong>Cache read multiplier</strong></td>
+<td>0.1x base input price on most models.<sup class="cite-group"><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button></sup></td>
+</tr>
+<tr>
+<td><strong>Cache minimum length</strong></td>
+<td>Shorter prompts cannot be cached, even when marked with <code>cache_control</code>; minimums are model-specific.<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><strong>Cache hit (request-level)</strong></td>
+<td>A request whose cache read count is above zero; it does not mean every cacheable token hit.<sup class="cite-group"><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button></sup></td>
+</tr>
+<tr>
+<td><strong>Cache hit rate (request-level)</strong></td>
+<td>Requests with a nonzero cache read divided by cache-eligible requests; an application-defined ratio, not a field the API returns.</td>
+</tr>
+<tr>
+<td><strong>Cache read share</strong></td>
+<td>Cache-read input tokens divided by total input tokens processed; a volume metric.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup></td>
+</tr>
+<tr>
+<td><strong>Effective input cost</strong></td>
+<td>Input spend after splitting ordinary input, cache writes, and cache reads and applying model rates and multipliers.</td>
+</tr>
+<tr>
+<td><strong>Token price unit</strong></td>
+<td>Prices are quoted per million tokens, so divide token counts by 1,000,000 before multiplying by a rate.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="g-speed-and-cost-terms">Speed and cost terms</h3>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TTFT (time to first token)</strong></td>
+<td>Time for the model to generate the first token of the response, measured from when the prompt was sent.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button></sup></td>
+</tr>
+<tr>
+<td><strong>TTFB (time to first byte)</strong></td>
+<td>Time until the first response byte reaches the client; includes transport and proxy effects, so it is not model TTFT.</td>
+</tr>
+<tr>
+<td><strong>Generation duration</strong></td>
+<td>First generated token to final generated token; isolate it from TTFT when you measure generation rate.</td>
+</tr>
+<tr>
+<td><strong>Output tokens per second</strong></td>
+<td>Output tokens divided by a stated measurement interval; distinguish generation throughput from TTFT.<sup class="cite-group"><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button></sup></td>
+</tr>
+<tr>
+<td><strong>End-to-end latency</strong></td>
+<td>Accepted request or task to your application-defined completion, including queues, tools, retries, and model calls.</td>
+</tr>
+<tr>
+<td><strong>p50 / median latency</strong></td>
+<td>The 50th percentile, which is called the median; percentiles split ordered data into hundredths.<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button></sup></td>
+</tr>
+<tr>
+<td><strong>p95 latency</strong></td>
+<td>The 95th-percentile estimate, with about 5% of observations above it.<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button></sup></td>
+</tr>
+<tr>
+<td><strong>p99 latency</strong></td>
+<td>The 99th-percentile estimate: useful for tail behavior, noisier at small sample sizes.<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button><button type="button" class="cite" data-cite="F6" aria-label="Source 6">6</button></sup></td>
+</tr>
+<tr>
+<td><strong>Tail latency</strong></td>
+<td>Slow end of a latency distribution, usually assessed with p95/p99 instead of the mean.</td>
+</tr>
+<tr>
+<td><strong>Cost per request</strong></td>
+<td>Total metered cost divided by request count; it hides multi-turn work, failures, retries, and unequal task complexity.</td>
+</tr>
+<tr>
+<td><strong>Cost per successful task</strong></td>
+<td>Total cost for all attempts divided by tasks meeting the success criterion, so spend lines up with delivered work.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="g-reliability-evaluation-statistics-and-queueing">Reliability, evaluation, statistics, and queueing</h2>
+<p>A <strong>retry</strong> repeats a failed operation. Cap attempts. Google SRE recommends exponential backoff with jitter for remote-call retries to dampen error amplification.<sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button></sup> On Claude, the official SDK already retries transient failures such as connection errors, rate limits, and 5xx server errors with exponential backoff, twice by default, honoring the <code>retry-after</code> header when present.<sup class="cite-group"><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup> Instrument SDK retries and application retries separately, or you will read one as the other.</p>
+<p><strong>Pass@k</strong> is the probability that at least one of k generated samples passes the verifier; the original coding formulation checks whether any sample passes the unit tests.<sup class="cite-group"><button type="button" class="cite" data-cite="F33" aria-label="Source 33">33</button></sup> <strong>Pass^k</strong> is the probability that all k trials succeed, and it cannot increase as k grows because demanding consistency across more trials is a harder bar.<sup class="cite-group"><button type="button" class="cite" data-cite="F31" aria-label="Source 31">31</button></sup> Choose between them by the outcome you actually care about: selection among candidates versus repeated-run reliability.</p>
+<p><strong>Precision</strong> is true positives over true positives plus false positives; <strong>recall</strong> is true positives over true positives plus false negatives.<sup class="cite-group"><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button><button type="button" class="cite" data-cite="F37" aria-label="Source 37">37</button></sup> <strong>F1</strong> is their harmonic mean, where precision and recall contribute equally,<sup class="cite-group"><button type="button" class="cite" data-cite="F24" aria-label="Source 24">24</button></sup> which also means F1 does not represent asymmetric error costs. <strong>Cohen's kappa</strong> expresses agreement between two annotators as κ = (Po − Pe) / (1 − Pe), where Po is the observed agreement ratio and Pe is the agreement expected when both annotators assign labels randomly.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup> <strong>Little's law</strong> states that, under steady-state conditions, the mean number of items in a queueing system equals the mean arrival rate multiplied by the mean time an item spends in the system.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></p>
+<h3 id="g-retries-and-overload">Retries and overload</h3>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Retry</strong></td>
+<td>Repeated attempt after failure; cap attempts and use exponential backoff with jitter.<sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button></sup></td>
+</tr>
+<tr>
+<td><strong>SDK retry default</strong></td>
+<td>The official Claude SDK retries transient failures (connection errors, rate limits, 5xx) twice by default with exponential backoff, honoring <code>retry-after</code> when present.<sup class="cite-group"><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></td>
+</tr>
+<tr>
+<td><strong>Retry amplification</strong></td>
+<td>Total provider attempts divided by original logical operations; 1.4x means 40% extra calls.</td>
+</tr>
+<tr>
+<td><strong>Retry budget</strong></td>
+<td>Cap on retry attempts or retry traffic per request or per window, so retries cannot crowd out normal work.</td>
+</tr>
+<tr>
+<td><strong>Backpressure</strong></td>
+<td>Slowing, rejecting, or queueing incoming work when downstream capacity is constrained; bound queue growth and signal overload.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="g-evaluation-and-statistics">Evaluation and statistics</h3>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pass@k</strong></td>
+<td>Probability that at least one of k samples passes the verifier (unit tests in the original benchmark).<sup class="cite-group"><button type="button" class="cite" data-cite="F33" aria-label="Source 33">33</button></sup></td>
+</tr>
+<tr>
+<td><strong>Pass^k</strong></td>
+<td>Probability that all k trials succeed; it cannot increase as k increases.<sup class="cite-group"><button type="button" class="cite" data-cite="F31" aria-label="Source 31">31</button></sup></td>
+</tr>
+<tr>
+<td><strong>Precision</strong></td>
+<td>True positives divided by all positive predictions; in retrieval, relevant items among those returned.<sup class="cite-group"><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button></sup></td>
+</tr>
+<tr>
+<td><strong>Recall</strong></td>
+<td>True positives divided by all actually relevant items; in retrieval, the share of relevant items retrieved.<sup class="cite-group"><button type="button" class="cite" data-cite="F37" aria-label="Source 37">37</button></sup></td>
+</tr>
+<tr>
+<td><strong>F1</strong></td>
+<td>Harmonic mean of precision and recall with equal relative contribution.<sup class="cite-group"><button type="button" class="cite" data-cite="F24" aria-label="Source 24">24</button></sup></td>
+</tr>
+<tr>
+<td><strong>Recall@k</strong></td>
+<td>Relevant items inside the first k results divided by all known relevant items for that query: coverage at a fixed context budget.</td>
+</tr>
+<tr>
+<td><strong>Cohen's kappa (κ)</strong></td>
+<td>Two-rater categorical agreement adjusted for chance agreement.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup></td>
+</tr>
+<tr>
+<td><strong>Observed agreement (Po)</strong></td>
+<td>Fraction of examples where two raters chose the same category.</td>
+</tr>
+<tr>
+<td><strong>Expected agreement (Pe)</strong></td>
+<td>Agreement predicted from each rater's marginal label frequencies under independence.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup></td>
+</tr>
+<tr>
+<td><strong>Statistical power</strong></td>
+<td>Probability a test rejects its null under a specified alternative; written 1 − β.<sup class="cite-group"><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup></td>
+</tr>
+<tr>
+<td><strong>Minimum detectable effect (MDE)</strong></td>
+<td>Smallest effect that, if true, has (1 − β) chance of producing a statistically significant estimate at the chosen α.<sup class="cite-group"><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup></td>
+</tr>
+<tr>
+<td><strong>Type I / Type II error</strong></td>
+<td>Type I is a false positive at rate α; Type II misses a real effect at rate β, whose complement is power.</td>
+</tr>
+<tr>
+<td><strong>A priori power analysis</strong></td>
+<td>Analysis done before the study, typically to estimate a sufficient sample size for adequate power.<sup class="cite-group"><button type="button" class="cite" data-cite="F27" aria-label="Source 27">27</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="g-queueing">Queueing</h3>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Arrival rate (λ)</strong></td>
+<td>Mean tasks entering the queue per unit time; keep offered arrivals distinct from accepted or completed throughput.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></td>
+</tr>
+<tr>
+<td><strong>In-flight work (L)</strong></td>
+<td>Mean items inside the measured system boundary, including queued work when the queue is in scope.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></td>
+</tr>
+<tr>
+<td><strong>Residence time (W)</strong></td>
+<td>Mean time an item spends inside that boundary: queue wait plus service time when both are in scope.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></td>
+</tr>
+<tr>
+<td><strong>Little's law</strong></td>
+<td>Under steady state, mean in-system items equal mean arrival rate times mean time in system (L = λW).<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="g-operational-formulas">Operational formulas</h2>
+<p>Each formula names its units and its denominator. Numbers are illustrative arithmetic, not measured service data; prices and multipliers come from the 2026-11-19 documentation and change per model.</p>
+<ul>
+<li><strong>Request success SLI</strong> = good requests ÷ eligible total requests. 9,980 ÷ 10,000 = 99.8%.<sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></li>
+<li><strong>SLO compliance</strong>: measured SLI ≥ target over the declared window. 99.8% measured against a 99.9% 30-day objective is below target for that window.<sup class="cite-group"><button type="button" class="cite" data-cite="F1" aria-label="Source 1">1</button><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></li>
+<li><strong>Error budget</strong> = 1 − SLO for a ratio SLO. 1 − 0.999 = 0.1%, and over 10,000 equally weighted eligible requests that is 10 bad events.<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></li>
+<li><strong>Burn rate</strong> = observed bad-event ratio ÷ allowed bad-event ratio. 1% bad ÷ 0.1% allowed = 10x burn.<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></li>
+<li><strong>Percentiles</strong>: sort the durations and take the stated quantile. Sorted 100, 120, 150, 180, 220 ms gives p50 = 150 ms. Interpolation has no universally accepted method, and five points are too few for a stable tail estimate.<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button><button type="button" class="cite" data-cite="F6" aria-label="Source 6">6</button></sup></li>
+<li><strong>TTFT</strong> = timestamp(first generated token) − timestamp(prompt submitted). A prompt sent at 12:00:00.000 whose first generated token is observed at 12:00:00.420 gives 420 ms.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button></sup></li>
+<li><strong>Output tokens per second</strong> = tokens generated during a stated interval ÷ interval duration. If 240 tokens are generated after the first token in 8 seconds, throughput for that interval is 30 tokens/s. Report TTFT alongside it.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button></sup></li>
+<li><strong>Cache read share</strong> = <code>cache_read_input_tokens</code> ÷ (<code>cache_read_input_tokens</code> + <code>cache_creation_input_tokens</code> + <code>input_tokens</code>). 8,000 read + 2,000 write + 1,000 uncached gives 8,000 ÷ 11,000 = 72.7% read share, which is not a hit rate.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup></li>
+<li><strong>Request cache hit rate</strong> = requests with <code>cache_read_input_tokens</code> greater than zero ÷ cache-eligible requests. 720 read-hit requests ÷ 900 eligible repeats = 80%. Here, exclude first writes and requests that have no reusable prefix.<sup class="cite-group"><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button></sup></li>
+<li><strong>Effective input cost</strong> = [(uncached × base rate) + (write tokens × base rate × write multiplier) + (read tokens × base rate × read multiplier)] ÷ 1,000,000. At an illustrative $3/MTok, 1,000 uncached tokens, 2,000 five-minute write tokens at 1.25x, and 8,000 read tokens at 0.1x give (3,000 + 7,500 + 2,400) ÷ 1,000,000 = $0.0129. Substitute your model's actual rates and multipliers.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button></sup></li>
+<li><strong>Cost per successful task</strong> = total cost for all attempts ÷ successful tasks. $120 ÷ 800 successful tasks = $0.15 per success, with failed attempts and retries left in the numerator.</li>
+<li><strong>Retry amplification</strong> = provider attempts ÷ original logical operations. 1,400 ÷ 1,000 = 1.4x, that is 40% extra attempts; separate SDK retries from application retries before you diagnose it.<sup class="cite-group"><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></li>
+<li><strong>Pass@k</strong>, with a fixed independent per-attempt success probability p, = 1 − (1 − p)^k. p = 0.8, k = 3 gives 1 − 0.2³ = 99.2% chance that at least one attempt succeeds. Benchmark estimators may differ from this plug-in formula.<sup class="cite-group"><button type="button" class="cite" data-cite="F33" aria-label="Source 33">33</button></sup></li>
+<li><strong>Pass^k</strong> = p^k for independent runs; from n trials with c passes on one task, estimate C(c,k) ÷ C(n,k), zero when the pass count is below k, then average that ratio across tasks. p = 0.8, k = 3 gives 0.8³ = 51.2% all-three success.<sup class="cite-group"><button type="button" class="cite" data-cite="F31" aria-label="Source 31">31</button><button type="button" class="cite" data-cite="F32" aria-label="Source 32">32</button></sup></li>
+<li><strong>Precision, recall, F1</strong>: P = TP ÷ (TP+FP), R = TP ÷ (TP+FN), F1 = 2PR ÷ (P+R). TP = 8, FP = 2, FN = 4 gives P = 0.80, R = 0.667, F1 = 0.727.<sup class="cite-group"><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button><button type="button" class="cite" data-cite="F24" aria-label="Source 24">24</button><button type="button" class="cite" data-cite="F37" aria-label="Source 37">37</button></sup></li>
+<li><strong>Recall@k</strong> = relevant items in the top k ÷ all known relevant items for the query. 3 of 5 relevant passages inside the first 10 results gives Recall@10 = 0.60. Choose the unit that enters the context: document, chunk, or evidence span.</li>
+<li><strong>Cohen's κ</strong> = (Po − Pe) ÷ (1 − Pe). Po = 0.90 and Pe = 0.60 give 0.30 ÷ 0.40 = 0.75. Report prevalence and raw agreement alongside it.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup></li>
+<li><strong>Power and MDE</strong>: power = P(reject H0 given a specified alternative) = 1 − β; MDE is the smallest effect δ for which the planned power(δ; n, variance, α) reaches the target. At α = 0.05 and 80% power, a design calculator might report +5 percentage points as the MDE for its own sample size and baseline variance; that threshold is design-dependent, not universal.<sup class="cite-group"><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button><button type="button" class="cite" data-cite="F27" aria-label="Source 27">27</button></sup></li>
+<li><strong>Little's law</strong>: L = λW under steady state. 40 accepted tasks/s with 2 s average in-system time implies 80 tasks in the system on average. Use steady-state averages, one system boundary, and matching time units.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></li>
+</ul>
+<h2 id="g-api-facts-to-re-check-before-you-rely-on-them">API facts to re-check before you rely on them</h2>
+<p>Final Messages API responses expose <code>usage.input_tokens</code> and <code>usage.output_tokens</code>; under caching, total input also adds <code>cache_creation_input_tokens</code> and <code>cache_read_input_tokens</code>, so never use <code>input_tokens</code> alone as total prompt input.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup> Cache fields appear in response usage, or in <code>message_start</code> when streaming; token counts in streaming <code>message_delta</code> events are cumulative.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button></sup></p>
+<aside class="g-callout g-callout--version"><p class="g-callout__head"><span class="g-callout__kind">Version check · Version-sensitive, verified 2026-11-19</span></p><p>Prompt-cache minimum lengths vary by model — shorter prompts cannot be cached even when marked with <code>cache_control</code> — and cache read and write multipliers differ by model and may change, so consult the current prompt-caching and pricing pages before setting thresholds or forecasting spend.<sup class="cite-group"><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup> The documented SDK retry default of two retries with exponential backoff is likewise an SDK-version-dependent behavior.<sup class="cite-group"><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></p>
+</aside>
+<p>Standardize units, windows, and the aggregation method for latency histograms across services: OpenTelemetry histograms exist for statistics such as summaries and percentiles,<sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button></sup> metrics are measurements captured at runtime,<sup class="cite-group"><button type="button" class="cite" data-cite="F34" aria-label="Source 34">34</button></sup> and percentile interpolation has no universally accepted method.<sup class="cite-group"><button type="button" class="cite" data-cite="F6" aria-label="Source 6">6</button></sup></p>
+<h2 id="g-measurement-practice">Measurement practice</h2>
+<ul>
+<li><strong>Define task completion before you define the SLI.</strong> HTTP success can still be a refusal, an incomplete answer, a failed tool sequence, or a wrong extraction; keep infrastructure success and task success as separate indicators.</li>
+<li><strong>Track TTFT and end-to-end tail latency separately.</strong> Streaming can make output visible sooner while tools or generation still miss your completion objective.</li>
+<li><strong>Use cache read share for cost composition and the request-level hit rate for cache behavior,</strong> and measure only eligible repeats.</li>
+<li><strong>Specify the experiment metric, baseline, randomization unit, alpha, power, and minimum useful effect in advance.</strong> Account for correlation between user turns when estimating sample size.</li>
+<li><strong>Match the estimator to the question:</strong> pass@k when you can select among candidates, pass^k for repeated-run consistency. For capacity, pair arrival rate, residence time, and concurrency; persistent queue growth means arrivals exceed completions.</li>
+</ul>
+<h2 id="g-where-usage-connects-to-outcomes">Where usage connects to outcomes</h2>
+<p>Record timestamps and token usage on every model call, and count only validated terminal outcomes as successes. Attribute usage from retries and tool loops to the terminal outcome when calculating cost per success.</p>
+<figure class="g-figure"><div class="g-figure__body"><ol class="g-flow g-flow--horizontal" aria-label="Flow with 6 steps"><li class="g-flow__step"><span class="g-flow__label">Task received</span></li><li class="g-flow__step"><span class="g-flow__label">Queue</span></li><li class="g-flow__step"><span class="g-flow__label">Claude Messages call</span></li><li class="g-flow__step"><span class="g-flow__label">Tools and retries</span><span class="g-flow__note">loop until stop condition or task policy</span></li><li class="g-flow__step"><span class="g-flow__label">Validator</span></li><li class="g-flow__step"><span class="g-flow__label">Outcome</span><span class="g-flow__note">SLI, cost, retry metrics</span></li></ol>
+</div><figcaption>Connect Claude usage to outcomes across queues, tools, and retries: only the validator's decision feeds the SLI, cost, and retry metrics.</figcaption></figure>
+<h2 id="g-worked-example-one-day-of-an-extraction-service">Worked example: one day of an extraction service</h2>
+<p>An extraction service has a 99.9% 30-day SLO and receives 10,000 requests/day. On one day it logs 100 task failures and 1,200 provider attempts for 1,000 logical operations. Usage for that day shows 50,000 cache-read tokens, 10,000 cache-write tokens, and 5,000 uncached tokens. Assume $3/MTok with five-minute write and read multipliers of 1.25x and 0.1x. The arithmetic is hand-runnable.</p>
+<ol>
+<li>Daily task success ratio = 9,900 ÷ 10,000 = <strong>99%</strong>. One day's measurement does not determine whether a rolling 30-day SLO is met; calculate over the actual objective window.<sup class="cite-group"><button type="button" class="cite" data-cite="F1" aria-label="Source 1">1</button><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></li>
+<li>Objective error ratio = 1 − 0.999 = <strong>0.1%</strong>, so today's 1% failure ratio is <strong>10x burn</strong> relative to the allowed rate.<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></li>
+<li>Retry amplification = 1,200 ÷ 1,000 = <strong>1.2x</strong>. Attribute the extra attempts to SDK retry, application retry, or duplicate submissions before you mitigate.<sup class="cite-group"><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></li>
+<li>Cache read share = 50,000 ÷ (50,000 + 10,000 + 5,000) = <strong>76.9%</strong>.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup></li>
+<li>Effective input charge = [(5,000 × 3) + (10,000 × 3 × 1.25) + (50,000 × 3 × 0.1)] ÷ 1,000,000 = (15,000 + 37,500 + 15,000) ÷ 1,000,000 = <strong>$0.0675</strong> at these illustrative prices. Recalculate against the actual model price and applicable multipliers.<sup class="cite-group"><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button></sup></li>
+</ol>
+<h2 id="g-common-mistakes">Common mistakes</h2>
+<ul>
+<li>Calling <code>input_tokens</code> divided by total input the cache hit rate. <code>input_tokens</code> excludes both cache reads and cache writes, so compute the complete total first.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup></li>
+<li>Summing streaming usage snapshots when the <code>message_delta</code> token counts are already cumulative.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup></li>
+<li>Comparing p99 values produced by different interpolation or aggregation methods as if the difference necessarily showed a regression.<sup class="cite-group"><button type="button" class="cite" data-cite="F6" aria-label="Source 6">6</button></sup></li>
+<li>Dividing output tokens by total request duration to claim generation throughput; that denominator may include TTFT plus queue and tool delay.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button></sup></li>
+<li>Reporting pass@k as a guarantee that every repeated production run succeeds; pass^k is the all-success event.<sup class="cite-group"><button type="button" class="cite" data-cite="F31" aria-label="Source 31">31</button><button type="button" class="cite" data-cite="F33" aria-label="Source 33">33</button></sup></li>
+<li>Reporting raw rater agreement without prevalence context or chance-adjusted kappa, or treating qualitative kappa cutoffs as universal.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup></li>
+<li>Treating the MDE as the observed effect, or reading low power as evidence that no effect exists.<sup class="cite-group"><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup></li>
+<li>Applying Little's law to unstable queues, or mixing a per-second arrival rate with a millisecond residence time without unit conversion.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></li>
+<li>Routing refusals, context overflow, and transient transport errors through one generic retry path; stop reasons and API errors need distinct handling.<sup class="cite-group"><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></li>
+</ul>
+<h2 id="g-exam-lens">Exam lens</h2>
+<aside class="g-lens" aria-label="Exam lens — editorial inference, not official exam content"><p class="g-lens__head"><span class="g-lens__name">Exam lens</span><span class="g-lens__note">editorial inference</span></p><p>When a scenario defines an SLI, distinguish response success from task success before choosing the numerator. When it shows usage fields, do not read <code>input_tokens</code> or a token read share as total input or as a request hit rate. When it reports speed, separate TTFT, completion latency, and tail behavior. When it reports an agent benchmark, choose pass@k versus pass^k for the outcome actually measured, and check whether the study had the power to detect the difference it claims.</p>
+</aside>
+<h2 id="g-self-check">Self-check</h2>
+<details class="g-check"><summary><span class="g-check__badge" aria-hidden="true">Q</span><span class="g-check__q">A request has 500 uncached input tokens, 1,000 cache-write tokens, and 8,500 cache-read tokens. What are total input and read share?</span><span class="g-check__show">Show answer</span></summary><div class="g-check__a"><span class="g-check__badge a" aria-hidden="true">A</span><div><p>Total input is 500 + 1,000 + 8,500 = 10,000 tokens and the read share is 8,500 ÷ 10,000 = 85%.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup></p>
+</div></div></details>
+<details class="g-check"><summary><span class="g-check__badge" aria-hidden="true">Q</span><span class="g-check__q">A system succeeds independently 90% of the time. What are pass@2 and pass^2?</span><span class="g-check__show">Show answer</span></summary><div class="g-check__a"><span class="g-check__badge a" aria-hidden="true">A</span><div><p>Pass@2 = 1 − 0.1² = 99%: at least one of two attempts succeeds.<sup class="cite-group"><button type="button" class="cite" data-cite="F33" aria-label="Source 33">33</button></sup> Pass^2 = 0.9² = 81%: both attempts succeed.<sup class="cite-group"><button type="button" class="cite" data-cite="F31" aria-label="Source 31">31</button></sup></p>
+</div></div></details>
+<details class="g-check"><summary><span class="g-check__badge" aria-hidden="true">Q</span><span class="g-check__q">A 99.9% SLO sees 0.5% bad requests in a window. What is the burn rate, and what does it mean?</span><span class="g-check__show">Show answer</span></summary><div class="g-check__a"><span class="g-check__badge a" aria-hidden="true">A</span><div><p>0.005 ÷ 0.001 = 5x: the service is consuming its error budget five times faster than the objective allows.<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></p>
+</div></div></details>
+<section class="g-sources" aria-labelledby="g-sources"><details><summary><h2 id="g-sources">Sources</h2><span class="g-sources__count">39</span></summary><p class="muted small">Quotes are copied verbatim from each source on the access date shown. Tap a source title to open it.</p><ol><li class="g-source" data-src="F1" value="1"><div class="g-source__head"><span class="g-source__n">1</span><a href="https://docs.cloud.google.com/monitoring/api/ref_v3/rest/v3/services.serviceLevelObjectives" target="_blank" rel="noopener">REST Resource: services.serviceLevelObjectives</a><span class="g-source__tag fact">Documented</span></div><blockquote>A Service-Level Objective (SLO) describes a level of desired good service. It consists of a service-level indicator (SLI), a performance goal, and a period over which the objective is to be evaluated against that goal.</blockquote><p class="g-source__meta">docs.cloud.google.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>An SLO has an indicator, goal, and evaluation period.</p></li><li class="g-source" data-src="F2" value="2"><div class="g-source__head"><span class="g-source__n">2</span><a href="https://sre.google/workbook/implementing-slos/" target="_blank" rel="noopener">Implementing SLOs</a><span class="g-source__tag std">Standard</span></div><blockquote>While many numbers can function as an SLI, we generally recommend treating the SLI as the ratio of two numbers: the number of good events divided by the total number of events. For example: Number of successful HTTP requests / total HTTP requests (success rate)</blockquote><p class="g-source__meta">sre.google · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>An SLI is commonly defined as the ratio of good events divided by total events, such as successful requests over total requests.</p></li><li class="g-source" data-src="F3" value="3"><div class="g-source__head"><span class="g-source__n">3</span><a href="https://sre.google/workbook/alerting-on-slos/" target="_blank" rel="noopener">Prometheus Alerting: Turn SLOs into Alerts</a><span class="g-source__tag fact">Documented</span></div><blockquote>Burn rate is how fast, relative to the SLO, the service consumes the error budget.</blockquote><p class="g-source__meta">sre.google · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Burn rate measures how quickly service consumes its error budget relative to its SLO.</p></li><li class="g-source" data-src="F4" value="4"><div class="g-source__head"><span class="g-source__n">4</span><a href="https://sre.google/workbook/alerting-on-slos/" target="_blank" rel="noopener">Prometheus Alerting: Turn SLOs into Alerts</a><span class="g-source__tag fact">Documented</span></div><blockquote>With an SLO of 99.9% over a time window of 30 days, a constant 0.1% error rate uses exactly all of the error budget: a burn rate of 1.</blockquote><p class="g-source__meta">sre.google · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>A burn rate of one consumes the error budget over the SLO window.</p></li><li class="g-source" data-src="F5" value="5"><div class="g-source__head"><span class="g-source__n">5</span><a href="https://www.itl.nist.gov/div898/handbook/prc/section2/prc262.htm" target="_blank" rel="noopener">7.2.6.2. Percentiles</a><span class="g-source__tag std">Standard</span></div><blockquote>The 50th percentile is called the median. Percentiles split a set of ordered data into hundredths.</blockquote><p class="g-source__meta">itl.nist.gov · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The 50th percentile is the median.</p></li><li class="g-source" data-src="F6" value="6"><div class="g-source__head"><span class="g-source__n">6</span><a href="https://www.itl.nist.gov/div898/handbook/prc/section2/prc262.htm" target="_blank" rel="noopener">7.2.6.2. Percentiles</a><span class="g-source__tag fact">Documented</span></div><blockquote>There is not a standard univerally accepted way to perform this interpolation.</blockquote><p class="g-source__meta">itl.nist.gov · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Percentile interpolation methods differ, so percentile dashboards should state the quantile method.</p></li><li class="g-source" data-src="F7" value="7"><div class="g-source__head"><span class="g-source__n">7</span><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency" target="_blank" rel="noopener">Reducing latency</a><span class="g-source__tag fact">Documented</span></div><blockquote>Time to first token (TTFT): This metric measures the time it takes for the model to generate the first token of the response, from when the prompt was sent.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Anthropic defines TTFT as elapsed time from prompt submission until the first generated token.</p></li><li class="g-source" data-src="F8" value="8"><div class="g-source__head"><span class="g-source__n">8</span><a href="https://platform.claude.com/docs/en/build-with-claude/fast-mode" target="_blank" rel="noopener">Fast mode</a><span class="g-source__tag fact">Documented</span></div><blockquote>Speed benefits are focused on output tokens per second (OTPS), not time to first token (TTFT)</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Anthropic distinguishes output tokens per second from TTFT as separate speed measures.</p></li><li class="g-source" data-src="F9" value="9"><div class="g-source__head"><span class="g-source__n">9</span><a href="https://platform.claude.com/docs/en/build-with-claude/streaming" target="_blank" rel="noopener">Streaming messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>Stream Messages API responses incrementally with server-sent events, including text, tool use, and thinking deltas.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude streaming returns Messages API responses incrementally through server-sent events.</p></li><li class="g-source" data-src="F10" value="10"><div class="g-source__head"><span class="g-source__n">10</span><a href="https://platform.claude.com/docs/en/build-with-claude/streaming" target="_blank" rel="noopener">Streaming messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>The token counts shown in the usage field of the message_delta event are cumulative.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Streaming message_delta usage values are cumulative.</p></li><li class="g-source" data-src="F11" value="11"><div class="g-source__head"><span class="g-source__n">11</span><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Prompt caching</a><span class="g-source__tag fact">Documented</span></div><blockquote>total_input_tokens = cache_read_input_tokens + cache_creation_input_tokens + input_tokens</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Total Claude input tokens equal cache reads plus cache writes plus uncached input.</p></li><li class="g-source" data-src="F12" value="12"><div class="g-source__head"><span class="g-source__n">12</span><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Prompt caching</a><span class="g-source__tag fact">Documented</span></div><blockquote>The input_tokens field represents only the tokens that come after the last cache breakpoint in your request, not all the input tokens you sent.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude input_tokens represents tokens after the last cache breakpoint, not all submitted input.</p></li><li class="g-source" data-src="F13" value="13"><div class="g-source__head"><span class="g-source__n">13</span><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Prompt caching</a><span class="g-source__tag fact">Documented</span></div><blockquote>cache_creation_input_tokens: Number of tokens written to the cache when creating a new entry</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude usage fields distinguish tokens written to cache and retrieved from cache.</p></li><li class="g-source" data-src="F14" value="14"><div class="g-source__head"><span class="g-source__n">14</span><a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Pricing</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Cache read (hit) | 0.1x base input price on most models | Same duration as the preceding write</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Claude Platform pricing page accessed 2026-11-19; cache multipliers vary by model and may change.</p><p class="g-source__claim"><span class="sr">Supports: </span>Cache read price is a model-specific fraction of base input price.</p></li><li class="g-source" data-src="F15" value="15"><div class="g-source__head"><span class="g-source__n">15</span><a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Pricing</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>5-minute cache write | 1.25x base input price | Cache valid for 5 minutes</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Pricing page accessed 2026-11-19; prices and multipliers may change.</p><p class="g-source__claim"><span class="sr">Supports: </span>The pricing page lists 1.25x base input for a five-minute cache write.</p></li><li class="g-source" data-src="F16" value="16"><div class="g-source__head"><span class="g-source__n">16</span><a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Pricing</a><span class="g-source__tag fact">Documented</span></div><blockquote>Cache read tokens are charged when a subsequent request retrieves the cached content.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Cache reads are charged when later requests retrieve cached content.</p></li><li class="g-source" data-src="F17" value="17"><div class="g-source__head"><span class="g-source__n">17</span><a href="https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons" target="_blank" rel="noopener">Stop reasons and fallback</a><span class="g-source__tag fact">Documented</span></div><blockquote>Every Messages API response includes a stop_reason field that tells you why Claude stopped generating. Check this field to decide whether to use the response as-is, continue the conversation, retry, or fall back to another model.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Each Messages API response has a stop_reason that guides whether to use, continue, retry, or fall back.</p></li><li class="g-source" data-src="F18" value="18"><div class="g-source__head"><span class="g-source__n">18</span><a href="https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons" target="_blank" rel="noopener">Stop reasons and fallback</a><span class="g-source__tag fact">Documented</span></div><blockquote>end_turn | Claude completed its response naturally. | Use the response.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>end_turn means Claude completed its response naturally.</p></li><li class="g-source" data-src="F19" value="19"><div class="g-source__head"><span class="g-source__n">19</span><a href="https://platform.claude.com/docs/en/build-with-claude/working-with-messages" target="_blank" rel="noopener">Using the Messages API</a><span class="g-source__tag fact">Documented</span></div><blockquote>The Messages API is stateless, which means that you always send the full conversational history to the API.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The Messages API is stateless and callers send the full conversation history each turn.</p></li><li class="g-source" data-src="F20" value="20"><div class="g-source__head"><span class="g-source__n">20</span><a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Pricing</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Prompt caching reduces costs and latency by reusing previously processed portions of your prompt across API calls.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Pricing page description accessed 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>Prompt caching reuses previously processed prompt portions across API calls.</p></li><li class="g-source" data-src="F21" value="21"><div class="g-source__head"><span class="g-source__n">21</span><a href="https://sre.google/workbook/implementing-slos/" target="_blank" rel="noopener">Implementing SLOs</a><span class="g-source__tag std">Standard</span></div><blockquote>Our availability SLI is the proportion of successful requests, and our latency SLIs are the proportion of requests that are faster than defined thresholds.</blockquote><p class="g-source__meta">sre.google · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>A good request-based SLI can count successful requests or requests below a latency threshold.</p></li><li class="g-source" data-src="F22" value="22"><div class="g-source__head"><span class="g-source__n">22</span><a href="https://opentelemetry.io/docs/specs/otel/metrics/api/" target="_blank" rel="noopener">Metrics API</a><span class="g-source__tag std">Standard</span></div><blockquote>It is intended for statistics such as histograms, summaries, and percentile.</blockquote><p class="g-source__meta">opentelemetry.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>OpenTelemetry histograms are intended for statistically meaningful values such as percentiles.</p></li><li class="g-source" data-src="F23" value="23"><div class="g-source__head"><span class="g-source__n">23</span><a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html" target="_blank" rel="noopener">Precision-Recall</a><span class="g-source__tag std">Standard</span></div><blockquote>Precision (P) is defined as the number of true positives (T_p) over the number of true positives plus the number of false positives (F_p).</blockquote><p class="g-source__meta">scikit-learn.org · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Precision is true positives over true plus false positives; recall is true positives over true plus false negatives.</p></li><li class="g-source" data-src="F24" value="24"><div class="g-source__head"><span class="g-source__n">24</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html" target="_blank" rel="noopener">f1_score</a><span class="g-source__tag std">Standard</span></div><blockquote>The F1 score can be interpreted as a harmonic mean of the precision and recall, where an F1 score reaches its best value at 1 and worst score at 0. The relative contribution of precision and recall to the F1 score are equal.</blockquote><p class="g-source__meta">scikit-learn.org · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>F1 is the harmonic mean of precision and recall with equal relative contribution.</p></li><li class="g-source" data-src="F25" value="25"><div class="g-source__head"><span class="g-source__n">25</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html" target="_blank" rel="noopener">cohen_kappa_score</a><span class="g-source__tag std">Standard</span></div><blockquote>This function computes Cohen’s kappa [1], a score that expresses the level of agreement between two annotators on a classification problem. It is defined as \[\kappa = (p_o - p_e) / (1 - p_e)\] where \(p_o\) is the empirical probability of agreement on the label assigned to any sample (the observed agreement ratio), and \(p_e\) is the expected agreement when both annotators assign labels randomly.</blockquote><p class="g-source__meta">scikit-learn.org · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Cohen&#x27;s kappa adjusts observed categorical agreement by chance-expected agreement.</p></li><li class="g-source" data-src="F26" value="26"><div class="g-source__head"><span class="g-source__n">26</span><a href="https://www.povertyactionlab.org/resource/power-calculations" target="_blank" rel="noopener">Power calculations</a><span class="g-source__tag std">Standard</span></div><blockquote>Minimum detectable effect (MDE): The smallest effect that, if true, has (1-β)% chance of producing an estimate that is statistically significant at the α% level (Bloom 1995). In other words, the MDE is the effect size below which we may not be able to distinguish that the effect is different from zero, even if it is.</blockquote><p class="g-source__meta">povertyactionlab.org · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>MDE is the minimum effect distinguishable from the null under stated design assumptions.</p></li><li class="g-source" data-src="F27" value="27"><div class="g-source__head"><span class="g-source__n">27</span><a href="https://en.wikipedia.org/wiki/Power_(statistics)" target="_blank" rel="noopener">Power (statistics)</a><span class="g-source__tag std">Standard</span></div><blockquote>A priori power analysis is conducted prior to the research study, and is typically used in estimating sufficient sample sizes to achieve adequate power.</blockquote><p class="g-source__meta">en.wikipedia.org · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>A priori power analysis solves for sample size during planning.</p></li><li class="g-source" data-src="F28" value="28"><div class="g-source__head"><span class="g-source__n">28</span><a href="https://mathworld.wolfram.com/LittlesLaw.html" target="_blank" rel="noopener">Little&#x27;s Law</a><span class="g-source__tag std">Standard</span></div><blockquote>Little&#x27;s law states that, under steady state conditions, the mean number of items in a queuing system equals the mean rate at which the items arrive multiplied by the mean time that an item spends in the system.</blockquote><p class="g-source__meta">mathworld.wolfram.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Little&#x27;s law relates mean in-system work to arrival rate times mean residence time under steady state.</p></li><li class="g-source" data-src="F29" value="29"><div class="g-source__head"><span class="g-source__n">29</span><a href="https://sre.google/sre-book/service-best-practices/" target="_blank" rel="noopener">Production Services Best Practices</a><span class="g-source__tag rec">Recommended practice</span></div><blockquote>Every client that makes an RPC must implement exponential backoff (with jitter) for retries, to dampen error amplification.</blockquote><p class="g-source__meta">sre.google · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Google SRE recommends exponential backoff with jitter to dampen retry error amplification.</p></li><li class="g-source" data-src="F30" value="30"><div class="g-source__head"><span class="g-source__n">30</span><a href="https://platform.claude.com/docs/en/api/errors" target="_blank" rel="noopener">Claude API errors</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>The official SDK automatically retries transient failures (such as connection errors, rate limits, and 5xx server errors) with exponential backoff, twice by default, honoring the retry-after header when present.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Claude API errors page accessed 2026-11-19; SDK defaults may change.</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude&#x27;s SDK retries transient failures twice by default with exponential backoff and honors retry-after when present.</p></li><li class="g-source" data-src="F31" value="31"><div class="g-source__head"><span class="g-source__n">31</span><a href="https://www.anthropic.com/research/demystifying-evals-for-ai-agents" target="_blank" rel="noopener">Demystifying evals for AI agents</a><span class="g-source__tag std">Standard</span></div><blockquote>pass^k measures the probability that all k trials succeed. As k increases, pass^k falls since demanding consistency across more trials is a harder bar to clear.</blockquote><p class="g-source__meta">anthropic.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Pass^k measures the probability that all k trials succeed.</p></li><li class="g-source" data-src="F32" value="32"><div class="g-source__head"><span class="g-source__n">32</span><a href="https://arxiv.org/html/2406.12045v1" target="_blank" rel="noopener">τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains</a><span class="g-source__tag std">Standard</span></div><blockquote>\text{pass\textasciicircum k}=\mathbb{E}_{\text{task}}\left[\binom{c}{k}\middle/\binom{n}{k}\right]</blockquote><p class="g-source__meta">arxiv.org · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>An observed pass^k estimate counts all-pass k-sized combinations among all k-sized combinations, averaged across tasks.</p></li><li class="g-source" data-src="F33" value="33"><div class="g-source__head"><span class="g-source__n">33</span><a href="https://arxiv.org/pdf/2107.03374" target="_blank" rel="noopener">Evaluating Large Language Models Trained on Code</a><span class="g-source__tag std">Standard</span></div><blockquote>To solve a problem in our test set, we generate multiple samples from the models, and check if any of them pass the unit tests.</blockquote><p class="g-source__meta">arxiv.org · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Pass@k measures probability that at least one of k generated samples passes unit tests.</p></li><li class="g-source" data-src="F34" value="34"><div class="g-source__head"><span class="g-source__n">34</span><a href="https://opentelemetry.io/docs/concepts/signals/metrics/" target="_blank" rel="noopener">Metrics</a><span class="g-source__tag std">Standard</span></div><blockquote>A metric is a measurement of a service captured at runtime.</blockquote><p class="g-source__meta">opentelemetry.io · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>OpenTelemetry metrics are measurements of a service captured at runtime.</p></li><li class="g-source" data-src="F35" value="35"><div class="g-source__head"><span class="g-source__n">35</span><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Prompt caching</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Shorter prompts cannot be cached, even if marked with cache_control.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Model-specific minimum cacheable token lengths as accessed 2026-11-19; recheck for later editions.</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude prompt-cache minimum lengths vary by model.</p></li><li class="g-source" data-src="F36" value="36"><div class="g-source__head"><span class="g-source__n">36</span><a href="https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons" target="_blank" rel="noopener">Stop reasons and fallback</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>A server-tool loop reached its iteration limit.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Claude API stop-reasons guide accessed 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>The stop-reasons guide lists response outcomes and continuation procedures.</p></li><li class="g-source" data-src="F37" value="37"><div class="g-source__head"><span class="g-source__n">37</span><a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html" target="_blank" rel="noopener">Precision-Recall</a><span class="g-source__tag std">Standard</span></div><blockquote>Recall (\(R\)) is defined as the number of true positives (\(T_p\)) over the number of true positives plus the number of false negatives (\(F_n\)).</blockquote><p class="g-source__meta">scikit-learn.org · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Recall is true positives divided by true positives plus false negatives.</p></li><li class="g-source" data-src="F38" value="38"><div class="g-source__head"><span class="g-source__n">38</span><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Prompt caching</a><span class="g-source__tag fact">Documented</span></div><blockquote>cache_read_input_tokens: Number of tokens retrieved from the cache for this request</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Cache read input tokens count tokens retrieved for the request.</p></li><li class="g-source" data-src="F39" value="39"><div class="g-source__head"><span class="g-source__n">39</span><a href="https://platform.claude.com/docs/en/build-with-claude/streaming" target="_blank" rel="noopener">Streaming messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>message_start: contains a Message object with empty content.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>A stream starts with a Message object with empty content.</p></li></ol></details></section>

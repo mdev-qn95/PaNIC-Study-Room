@@ -1,0 +1,214 @@
+<p>Read this the night before as a checklist, and follow each chapter link when a line is not enough to make you confident. The decision patterns below condense each chapter's exam lens, which is editorial inference about how an objective may be examined — not official exam content.</p>
+<h2 id="g-domain-1-advanced-agent-architecture-and-orchestration-17">Domain 1 — Advanced Agent Architecture and Orchestration (17%)</h2>
+<h3 id="g-1-1-multi-agent-orchestration">1.1 Multi-Agent Orchestration</h3>
+<ul>
+<li>Consolidate tightly coupled work; isolate only independent slices or black-box verification.</li>
+<li>Enforce policy in <code>PreToolUse</code> with <code>on_failure=&quot;block&quot;</code> and <code>disallowed_tools</code>, not <code>allowed_tools</code>.</li>
+<li>Subagents for bounded delegation, Agent Teams for interactive peers, Dynamic Workflows for fan-outs of dozens or hundreds.</li>
+</ul>
+<p>Watch out: treating <code>canUseTool</code> as the security boundary; a permissive parent overriding a subagent's <code>permissionMode</code>.</p>
+<p><a href="#/guide/ccdv-p/multi-agent-orchestration">Read 1.1 →</a></p>
+<h3 id="g-1-2-durable-execution">1.2 Durable Execution</h3>
+<ul>
+<li><code>resume</code> restores the transcript, <code>rewind_files()</code> reverts tracked file edits, external effects need a step log with idempotency keys.</li>
+<li>Mid-session model change: keep the last successful <code>system</code> and <code>tools</code>, switch <code>thinking.type</code> to <code>&quot;adaptive&quot;</code>.</li>
+<li>Hosted Managed Agents and its memory stores are ineligible for ZDR and HIPAA.</li>
+</ul>
+<p>Watch out: assuming <code>resume</code> replays a crashed tool call, and treating <code>rewind_files</code> as a general undo.</p>
+<p><a href="#/guide/ccdv-p/durable-execution">Read 1.2 →</a></p>
+<h3 id="g-1-3-architecture-selection">1.3 Architecture Selection</h3>
+<ul>
+<li>Judge verified completion and cost per successful task, not the lowest per-request price.</li>
+<li>Traces decide: variable paths need model decisions, stable repeated paths justify a workflow.</li>
+<li>Distinguish an embedded harness, a tool loop, a headless CLI, and a hosted service.</li>
+</ul>
+<p>Watch out: the 15× figure is versus <strong>chat</strong>, not versus a single agent; a prompt or a hook is not the permission system.</p>
+<p><a href="#/guide/ccdv-p/architecture-selection">Read 1.3 →</a></p>
+<h3 id="g-1-4-context-and-memory">1.4 Context and Memory</h3>
+<ul>
+<li>Caching cuts repeated input cost but does not remove cached tokens from the window.</li>
+<li>Match bloat to the fix: deferred definitions, programmatic intermediate results, selective clearing, a summary.</li>
+<li>Keep durable state in application-controlled storage; expect instructions to be lost after compaction.</li>
+</ul>
+<p>Watch out: treating caching as extra capacity, and assuming an instruction survives compaction.</p>
+<p><a href="#/guide/ccdv-p/context-memory">Read 1.4 →</a></p>
+<h2 id="g-domain-2-production-integration-reliability-and-knowledge-grounding-20">Domain 2 — Production Integration, Reliability, and Knowledge Grounding (20%)</h2>
+<h3 id="g-2-1-reliability">2.1 Reliability</h3>
+<ul>
+<li>Branch on <code>stop_reason</code>, not HTTP status: a <code>200</code> can be <code>max_tokens</code>, <code>model_context_window_exceeded</code>, <code>pause_turn</code>, or <code>refusal</code>.</li>
+<li>A spend-cap <code>429</code> (<code>enforced_spend_limit_reached</code>, no <code>retry-after</code>) is not a rate or ramp <code>429</code>.</li>
+<li>Check parity before failover; Bedrock, Google-managed Vertex AI, and Foundry lack server-side fallback.</li>
+</ul>
+<p>Watch out: outer retries stacked on SDK retries, retrying a refusal on the same model, failover as a URL swap.</p>
+<p><a href="#/guide/ccdv-p/reliability">Read 2.1 →</a></p>
+<h3 id="g-2-2-scale-and-throughput">2.2 Scale and Throughput</h3>
+<ul>
+<li>Steady RPM, rising uncached prompt length, input-rate 429s: the constraint is ITPM.</li>
+<li>Deadline-tolerant work favors batch at 50 percent of standard prices; a strict SLA or <code>expired</code> items change it.</li>
+<li>A ramp 429 below ceilings means gradual growth; a spend-cap 429 means budget or tier remediation.</li>
+</ul>
+<p>Watch out: counting cache reads against ITPM — only <code>input_tokens</code> plus <code>cache_creation_input_tokens</code> count.</p>
+<p><a href="#/guide/ccdv-p/scale-throughput">Read 2.2 →</a></p>
+<h3 id="g-2-3-mcp-and-change-management">2.3 MCP and Change Management</h3>
+<ul>
+<li>A tool list that changed on upgrade fails long conversations with <code>400</code>: inspect prefix rules and tool definitions.</li>
+<li>A Foundry or Bedrock fallback that rejects the request: check deployment IDs, provider parameters, beta headers.</li>
+<li>A canary that helps the average but breaks one cohort: roll back the compatible bundle.</li>
+</ul>
+<p>Watch out: reverting only the model name, and reading a <code>401</code> as a broken tool.</p>
+<p><a href="#/guide/ccdv-p/mcp-change-management">Read 2.3 →</a></p>
+<h3 id="g-2-4-retrieval-and-grounding">2.4 Retrieval and Grounding</h3>
+<ul>
+<li>Match corpus shape: direct context, indexed retrieval, just-in-time tools, or a hybrid.</li>
+<li>Exact identifiers plus paraphrase: dense plus BM25, rank fusion, rerank after broad recall.</li>
+<li>A wrong grounded claim: prove the evidence reached the prompt before touching the prompt.</li>
+</ul>
+<p>Watch out: &quot;in the corpus&quot; is not &quot;received by Claude&quot;; citations with <code>output_config.format</code> return a 400.</p>
+<p><a href="#/guide/ccdv-p/retrieval-grounding">Read 2.4 →</a></p>
+<h2 id="g-domain-3-observability-and-production-monitoring-12">Domain 3 — Observability and Production Monitoring (12%)</h2>
+<h3 id="g-3-1-telemetry">3.1 Telemetry</h3>
+<ul>
+<li>Under ZDR choose structural telemetry; Batch, Files, the MCP connector, and cloud Managed Agents exit ZDR silently.</li>
+<li>A 2x total is double counting: SDK <code>CLIENT</code> plus API <code>SERVER</code> spans, or cache attributes on <code>gen_ai.usage.input_tokens</code>.</li>
+<li>Cache drop: <code>*_changed</code> is prefix drift, <code>diagnostics: null</code> with zero reads is expiry or a short prefix.</li>
+</ul>
+<p>Watch out: applying the Messages API token sum to OTel spans, and assuming ZDR covers your vendor.</p>
+<p><a href="#/guide/ccdv-p/telemetry">Read 3.1 →</a></p>
+<h3 id="g-3-2-monitoring-and-alerting">3.2 Monitoring and Alerting</h3>
+<ul>
+<li>Zero <code>5xx</code> with empty answers: read <code>stop_reason</code> on <code>200</code>s and count <code>api_refusal</code>.</li>
+<li>Noisy pages plus a missed slow leak: burn rates at <code>1h/5m</code> <code>14.4x</code> and <code>6h/30m</code> <code>6x</code>, ticket on <code>3d/6h</code> <code>1x</code>.</li>
+<li>Page real-time spend on OTel or <code>/cost_report</code>, not the lagging Analytics API.</li>
+</ul>
+<p>Watch out: alerting only on HTTP 4xx and 5xx, and treating a dateless 4.6+ ID as a rolling alias.</p>
+<p><a href="#/guide/ccdv-p/monitoring-alerting">Read 3.2 →</a></p>
+<h3 id="g-3-3-trace-analysis">3.3 Trace Analysis</h3>
+<ul>
+<li>Rare costly failures: explicit rare and failure coverage plus a known-probability baseline.</li>
+<li>Lost or split traces: fix trace-affine routing, <code>decision_wait</code>, buffers, collector health first.</li>
+<li>A changed failure rate: rebuild task-based denominators, then segment by model, prompt, tenant, route, tool.</li>
+</ul>
+<p>Watch out: reading the failure rate off the trace store, and treating a tool <code>ERROR</code> as a task failure.</p>
+<p><a href="#/guide/ccdv-p/trace-analysis">Read 3.3 →</a></p>
+<h2 id="g-domain-4-advanced-debugging-and-incident-response-10">Domain 4 — Advanced Debugging and Incident Response (10%)</h2>
+<h3 id="g-4-1-failure-diagnosis">4.1 Failure Diagnosis</h3>
+<ul>
+<li>A 400 after <code>tool_use</code> with a misplaced <code>tool_result</code> is transcript serialization; replay with correct block order.</li>
+<li>Continue <code>pause_turn</code> as an assistant response with the same tools.</li>
+<li>A refusal is a successful HTTP response; track it apart from HTTP errors.</li>
+<li>In RAG, inspect retrieved evidence before blaming the model.</li>
+</ul>
+<p>Watch out: rebuilding the assistant turn from rendered text, and naming a policy or network fault a model error.</p>
+<p><a href="#/guide/ccdv-p/failure-diagnosis">Read 4.1 →</a></p>
+<h3 id="g-4-2-incident-response">4.2 Incident Response</h3>
+<ul>
+<li>Contain active unauthorized tool use (key <code>&quot;inactive&quot;</code>, interrupt plus archive, <code>deniedMcpServers</code>) without deleting evidence.</li>
+<li>Separate an outage from your regression: per-component status, <code>529</code> versus <code>401</code>/<code>400</code>, pinned 4.6+ ID versus pre-4.6 alias.</li>
+<li>A block that did not work: <code>allowManagedPermissionRulesOnly</code>, parenthesized <code>mcp__</code> rules, hourly settings polling.</li>
+</ul>
+<p>Watch out: deleting evidence during triage, and assuming a fleet kill switch is instant and total.</p>
+<p><a href="#/guide/ccdv-p/incident-response">Read 4.2 →</a></p>
+<h2 id="g-domain-5-evaluation-engineering-and-quality-assurance-12">Domain 5 — Evaluation Engineering and Quality Assurance (12%)</h2>
+<h3 id="g-5-1-evaluation-design">5.1 Evaluation Design</h3>
+<ul>
+<li>With per-trial <code>p</code> and <code>k</code> trials on a customer-facing agent, gate on <code>pass^k</code>, not <code>pass@k</code>.</li>
+<li>Isolate a RAG drop on <code>Recall@k</code>, <code>Precision</code>, and <code>MRR</code> separately from groundedness.</li>
+<li>A suspicious suite: read transcripts, verify solvability, block benchmark leaks, graduate saturated tasks.</li>
+<li>A model upgrade is a contract migration: effort sweeps, re-baselined cost, replacing unsupported features such as prefill.</li>
+</ul>
+<p>Watch out: asserting an exact tool-call path, and charting partial or indicator-only runs.</p>
+<p><a href="#/guide/ccdv-p/evaluation-design">Read 5.1 →</a></p>
+<h3 id="g-5-2-llm-as-judge">5.2 LLM-as-Judge</h3>
+<ul>
+<li>A win-rate jump from slot order or a rubric change: swap order, re-measure, keep gating withheld until calibrated.</li>
+<li>A judge that refuses after you add a <code>reasoning</code> field hit <code>reasoning_extraction</code>, which has no fallback model.</li>
+<li>High agreement but low kappa means class imbalance; use Krippendorff's alpha for three or more raters.</li>
+</ul>
+<p>Watch out: trusting an unswapped win rate, and judging version over version with a moving alias.</p>
+<p><a href="#/guide/ccdv-p/llm-as-judge">Read 5.2 →</a></p>
+<h3 id="g-5-3-online-quality">5.3 Online Quality</h3>
+<ul>
+<li>An offline winner whose live completion falls: check traffic mix, missing slices, tool and retrieval context.</li>
+<li>Repeated users share agent state: assign by user or tenant and cluster the analysis.</li>
+<li>Metric by task: field correctness for extraction, rubrics for generation, outcome plus tool health for agents.</li>
+</ul>
+<p>Watch out: reading an enriched sample as representative traffic, and stopping at the first significant p-value.</p>
+<p><a href="#/guide/ccdv-p/online-quality">Read 5.3 →</a></p>
+<h2 id="g-domain-6-cost-and-latency-optimization-at-scale-8">Domain 6 — Cost and Latency Optimization at Scale (8%)</h2>
+<h3 id="g-6-1-cost-architecture">6.1 Cost Architecture</h3>
+<ul>
+<li>Spend and ITPM <code>429</code>s at constant RPM mean cache invalidation: reads are ITPM-exempt, writes consume ITPM.</li>
+<li>Before adding a model, check the <code>output_config.effort</code> sweep and truncation-driven retries.</li>
+<li>Never retry a spend cap: a tier cap is a <code>429</code>, a user-set org or workspace cap is a <code>400</code>.</li>
+</ul>
+<p>Watch out: a varying block inside the cached prefix, and reading <code>input_tokens</code> as the whole prompt.</p>
+<p><a href="#/guide/ccdv-p/cost-architecture">Read 6.1 →</a></p>
+<h3 id="g-6-2-latency-engineering">6.2 Latency Engineering</h3>
+<ul>
+<li>Separate TTFT causes from output-throughput causes: streaming changes visibility, not the generation rate.</li>
+<li>Independent <code>tool_use</code> blocks: run them concurrently, return all <code>tool_result</code> blocks in one user message.</li>
+<li>Many sequential calls dominate total latency; a higher OTPS mode cannot remove dependencies.</li>
+</ul>
+<p>Watch out: reporting TTFT as task latency, executing partial tool input, checkpointing after volatile content.</p>
+<p><a href="#/guide/ccdv-p/latency-engineering">Read 6.2 →</a></p>
+<h2 id="g-domain-7-runtime-guardrails-and-production-security-11">Domain 7 — Runtime Guardrails and Production Security (11%)</h2>
+<h3 id="g-7-1-runtime-guardrails">7.1 Runtime Guardrails</h3>
+<ul>
+<li>Private data, untrusted input, and an external sink need controls outside the model: proxy allowlists, <code>PreToolUse</code> <code>ask</code>/<code>defer</code>.</li>
+<li>Hooks run first, <code>allow</code> never overrides <code>deny</code> or <code>ask</code>, and <code>canUseTool</code> runs last.</li>
+<li>A sandbox covering only shell commands, or one left at the default <code>failIfUnavailable</code>, is the wrong answer.</li>
+</ul>
+<p>Watch out: a policy hook that fails open (exit <code>1</code> is non-blocking), and mandatory checks inside <code>canUseTool</code>.</p>
+<p><a href="#/guide/ccdv-p/runtime-guardrails">Read 7.1 →</a></p>
+<h3 id="g-7-2-threat-defense">7.2 Threat Defense</h3>
+<ul>
+<li>Trifecta of private data, untrusted input, egress: allowlists, human approval, least-privilege tokens, or remove the channel.</li>
+<li>Ask whether the action is a shell command, a built-in tool, or an MCP server, and enforce there.</li>
+<li>Name the MCP failure: passthrough, confused deputy, SSRF, rug-pull.</li>
+</ul>
+<p>Watch out: prompts and memory files are not boundaries, and a 1% attack success rate is not solved.</p>
+<p><a href="#/guide/ccdv-p/threat-defense">Read 7.2 →</a></p>
+<h3 id="g-7-3-identity-secrets-and-audit">7.3 Identity, Secrets, and Audit</h3>
+<ul>
+<li>WIF enabled but traffic still keyed: <code>ANTHROPIC_API_KEY</code> outranks the federation tiers.</li>
+<li>An MCP server that forwards a token it received: reject passthrough, validate audience, mint a downstream token.</li>
+<li>The Compliance Feed omits API-key and Console-key Claude Code sessions; use OTel and app logs.</li>
+</ul>
+<p>Watch out: federation configured while the key still wins, and reading the Feed as an execution trace.</p>
+<p><a href="#/guide/ccdv-p/identity-secrets-audit">Read 7.3 →</a></p>
+<h2 id="g-domain-8-agent-fleet-operations-for-software-delivery-10">Domain 8 — Agent Fleet Operations for Software Delivery (10%)</h2>
+<h3 id="g-8-1-parallel-agents">8.1 Parallel Agents</h3>
+<ul>
+<li>Teammates are not isolated in worktrees and <code>-p</code> does not spawn them: partition ownership or isolate.</li>
+<li>Agents colliding on one blocker: task lock files, disjoint ownership, or a known-good oracle.</li>
+<li><code>attempt=11</code> errors or a silent halt: query <code>api_refusal</code> separately, since <code>api_error</code> misses refusals.</li>
+<li>CI: <code>-p</code> skips exit cleanup, and repository-level OTel exporter variables are ignored.</li>
+</ul>
+<p>Watch out: assuming agent teams isolate files, and counting on <code>api_error</code> to see every stop.</p>
+<p><a href="#/guide/ccdv-p/parallel-agents">Read 8.1 →</a></p>
+<h3 id="g-8-2-verification-and-review">8.2 Verification and Review</h3>
+<ul>
+<li>A new AI reviewer starts in shadow or <code>observe</code> mode, calibrated against human labels before any merge blocking.</li>
+<li>Endless rounds: <code>REVIEW.md</code> exclusions and nit caps, diff-only re-review, a three-round cap.</li>
+<li>A merge despite open <code>Important</code> findings: config read from the PR head, or a gate trusting <code>neutral</code>.</li>
+</ul>
+<p>Watch out: making the review check run required, and a missing severity line is not zero findings.</p>
+<p><a href="#/guide/ccdv-p/verification-review">Read 8.2 →</a></p>
+<h3 id="g-8-3-unattended-operations">8.3 Unattended Operations</h3>
+<ul>
+<li>Goal loop for a completion condition, session schedule for periodic work, event trigger for first response.</li>
+<li>After a crash, separate history, file rewind, sandbox checkpoints, and irreversible external effects.</li>
+<li>A headless run ending on permission denied continued past it — mark it incomplete and escalate.</li>
+</ul>
+<p>Watch out: exit 0 or a Stop hook is not proof of success; <code>--allowedTools</code> is not a security boundary.</p>
+<p><a href="#/guide/ccdv-p/unattended-operations">Read 8.3 →</a></p>
+<h3 id="g-8-4-organization-wide-configuration">8.4 Organization-Wide Configuration</h3>
+<ul>
+<li>A violated rule usually lives in <code>CLAUDE.md</code>, not in managed <code>permissions.deny</code> and hook locks.</li>
+<li>A policy that missed machines: an active <code>ANTHROPIC_BASE_URL</code>, then <code>first-wins</code> shadowing.</li>
+<li>An unauthorized MCP server connected: <code>serverName</code> matching or missing <code>allowManagedMcpServersOnly: true</code>.</li>
+<li>A shared Skill needs a security review and a 3–5 query eval showing positive <code>Δ</code>.</li>
+</ul>
+<p>Watch out: an unlocked name-matching allowlist, and gateway credentials conflicting with login locks.</p>
+<p><a href="#/guide/ccdv-p/org-configuration">Read 8.4 →</a></p>
+

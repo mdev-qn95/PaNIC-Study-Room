@@ -53,5 +53,10 @@ window.PanicStore = (() => {
     return {bank:source.questions, domains:source.domains || [], translations:vi?.questions || [], keywords};
   }
 
-  return {read, write, prefs, setPref, activity, recordAnswer, touchCert, streak, today, recentDays, dayKey, certState, summary, loadBank};
+  /* Optional study guide: an index (guide.source in catalog.json) plus one HTML fragment per chapter. */
+  const loadGuide = cert => getJson(`/data/certs/${cert.id}/${cert.guide.source}`);
+  const texts = {};
+  const loadText = url => texts[url] ||= fetch(url).then(r => { if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`); return r.text(); }).catch(e => { delete texts[url]; throw e; });
+
+  return {loadGuide, loadText, read, write, prefs, setPref, activity, recordAnswer, touchCert, streak, today, recentDays, dayKey, certState, summary, loadBank};
 })();

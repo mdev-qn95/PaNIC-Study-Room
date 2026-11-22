@@ -1,0 +1,566 @@
+<p>This appendix is a lookup sheet for the Claude Messages API, <code>POST /v1/messages</code>, at <code>anthropic-version: 2026-10-21</code>: headers and transport limits, request and response shapes, content block types, the tool-use turn protocol, structured outputs, SSE streaming, usage accounting, stop reasons versus HTTP errors, model IDs, and beta headers. Use the linked documentation to check model and platform availability before deployment.</p>
+<h2 id="g-endpoint-headers-and-transport-limits">Endpoint, headers, and transport limits</h2>
+<p>The Messages API is a single <strong>stateless endpoint</strong>: <code>POST https://api.anthropic.com/v1/messages</code> serves both single queries and multi-turn conversations, so the application resends the conversation history on every call.<sup class="cite-group"><button type="button" class="cite" data-cite="F1" aria-label="Source 1">1</button></sup></p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Authorization</code></td>
+<td><code>Bearer &lt;api_key_or_wif_token&gt;</code><sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></td>
+</tr>
+<tr>
+<td><code>anthropic-version</code></td>
+<td><code>2026-10-21</code><sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></td>
+</tr>
+<tr>
+<td><code>content-type</code></td>
+<td><code>application/json</code><sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></td>
+</tr>
+<tr>
+<td><code>anthropic-workspace-id</code></td>
+<td><code>wrkspc_...</code><sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup></td>
+</tr>
+<tr>
+<td><code>anthropic-beta</code></td>
+<td><code>flag1,flag2</code><sup class="cite-group"><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p>The official SDKs send the authentication, version, and <code>content-type</code> headers automatically; you pass <code>anthropic-workspace-id</code> yourself when your key is org-wide rather than scoped to one workspace.<sup class="cite-group"><button type="button" class="cite" data-cite="F2" aria-label="Source 2">2</button></sup> Put every beta flag in one comma-separated <code>anthropic-beta</code> header, because Claude Models on Google Cloud (Google managed) reads only one such header and ignores the rest; SDKs expose the same list as <code>betas</code> on the beta client.<sup class="cite-group"><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button></sup></p>
+<p>Request size caps differ per platform. The first-party API returns HTTP <code>413</code> <code>request_too_large</code> when its limit is exceeded.<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button><button type="button" class="cite" data-cite="F44" aria-label="Source 44">44</button></sup></p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Request cap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First-party Messages and Token Counting</td>
+<td>128 MB</td>
+</tr>
+<tr>
+<td>Anthropic-operated cloud platforms</td>
+<td>32 MB</td>
+</tr>
+<tr>
+<td>Claude Models on Google Cloud (Google managed)</td>
+<td>30 MB</td>
+</tr>
+<tr>
+<td>Amazon Bedrock</td>
+<td>20 MB</td>
+</tr>
+</tbody>
+</table></div>
+<p>Two SDK behaviors matter for long calls. The SDKs reject a non-streaming <code>messages.create()</code> when <code>max_tokens &gt; 21333</code> as a client-side timeout guard, not an API limit; use <code>client.messages.stream()</code> with <code>stream.get_final_message()</code> in Python, or <code>stream.finalMessage()</code> in TypeScript.<sup class="cite-group"><button type="button" class="cite" data-cite="F6" aria-label="Source 6">6</button></sup> The same SDKs retry connection errors, <code>429</code>, and <code>5xx</code> twice by default with exponential backoff, honoring <code>retry-after</code>; the count is set by <code>max_retries</code> (<code>maxRetries</code> in TypeScript).<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></p>
+<h2 id="g-request-body">Request body</h2>
+<p>Sampling parameters are gone: <code>temperature</code>, <code>top_p</code>, and <code>top_k</code> are removed in <code>anthropic-version: 2026-10-21</code>, and sending any value returns <code>400</code> on every model.<sup class="cite-group"><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>string</td>
+<td>Pinned snapshot ID, or a pre-4.6 alias<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button></sup></td>
+</tr>
+<tr>
+<td><code>max_tokens</code></td>
+<td>integer</td>
+<td>Caps thinking plus output tokens<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button></sup></td>
+</tr>
+<tr>
+<td><code>messages</code></td>
+<td>array</td>
+<td>Alternating <code>user</code>, <code>assistant</code> turns<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button></sup></td>
+</tr>
+<tr>
+<td><code>system</code></td>
+<td>string or blocks</td>
+<td>Part of the cached prefix<sup class="cite-group"><button type="button" class="cite" data-cite="F39" aria-label="Source 39">39</button></sup></td>
+</tr>
+<tr>
+<td><code>tools</code></td>
+<td>array</td>
+<td><code>name</code> plus JSON Schema <code>input_schema</code><sup class="cite-group"><button type="button" class="cite" data-cite="F24" aria-label="Source 24">24</button></sup></td>
+</tr>
+<tr>
+<td><code>tool_choice</code></td>
+<td>object</td>
+<td>Defaults to <code>auto</code> when <code>tools</code> is set<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup></td>
+</tr>
+<tr>
+<td><code>thinking</code></td>
+<td>object</td>
+<td><code>adaptive</code> or manual <code>enabled</code> mode<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup></td>
+</tr>
+<tr>
+<td><code>output_config</code></td>
+<td>object</td>
+<td><code>effort</code> and <code>format</code><sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup></td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>object</td>
+<td>Opaque <code>user_id</code> only<sup class="cite-group"><button type="button" class="cite" data-cite="F9" aria-label="Source 9">9</button></sup></td>
+</tr>
+<tr>
+<td><code>stream</code></td>
+<td>boolean</td>
+<td>Off by default; <code>true</code> means SSE<sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button></sup></td>
+</tr>
+<tr>
+<td><code>cache_control</code></td>
+<td>object</td>
+<td><code>ephemeral</code>, with <code>ttl</code> of <code>5m</code> or <code>1h</code><sup class="cite-group"><button type="button" class="cite" data-cite="F39" aria-label="Source 39">39</button></sup></td>
+</tr>
+<tr>
+<td><code>speed</code></td>
+<td>string</td>
+<td><code>standard</code> or <code>fast</code><sup class="cite-group"><button type="button" class="cite" data-cite="F40" aria-label="Source 40">40</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>max_tokens</code> is a hard ceiling over thinking tokens and visible output together, and setting it to <code>0</code> populates the prompt cache without generating a response.<sup class="cite-group"><button type="button" class="cite" data-cite="F5" aria-label="Source 5">5</button></sup> <code>messages</code> represents alternating <code>user</code> and <code>assistant</code> turns; consecutive same-role messages in your request are combined into one turn, and each <code>content</code> field is either a string or a block array.<sup class="cite-group"><button type="button" class="cite" data-cite="F7" aria-label="Source 7">7</button></sup> Anthropic recommends a UUID, hash, or other opaque identifier for <code>metadata.user_id</code>, which has a maximum length of 512 characters and must not carry a name, email address, or phone number.<sup class="cite-group"><button type="button" class="cite" data-cite="F9" aria-label="Source 9">9</button></sup></p>
+<p>Three request shapes return <code>400</code> under <code>2026-10-21</code>: a prefilled final assistant turn on Claude 4.6 or later and on Mythos Preview, with thinking on or off;<sup class="cite-group"><button type="button" class="cite" data-cite="F8" aria-label="Source 8">8</button></sup> a <code>document</code> block placed in an <code>assistant</code> message;<sup class="cite-group"><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup> and non-empty <code>citations</code> in a <code>user</code> message.<sup class="cite-group"><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></p>
+<p>The response <strong>Message</strong> is the generated assistant turn. It returns <code>id</code> (<code>msg_...</code>), <code>type: &quot;message&quot;</code>, <code>role: &quot;assistant&quot;</code>, <code>model</code>, the <code>content</code> block array, <code>stop_reason</code>, <code>stop_sequence</code>, and <code>usage</code>. In a non-streaming response <code>stop_reason</code> is always non-null.<sup class="cite-group"><button type="button" class="cite" data-cite="F34" aria-label="Source 34">34</button></sup></p>
+<h2 id="g-content-block-types">Content block types</h2>
+<p>A <strong>content block</strong> is one typed member of a message's <code>content</code> array. Blocks marked &quot;echo&quot; must be sent back inside the assistant message when you continue a tool-use turn.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th><code>type</code></th>
+<th>Direction</th>
+<th>Key fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td>In, out</td>
+<td><code>text</code>, optional <code>cache_control</code>, <code>citations</code><sup class="cite-group"><button type="button" class="cite" data-cite="F4" aria-label="Source 4">4</button></sup></td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td>In: <code>user</code>, <code>tool_result</code></td>
+<td><code>source</code>, optional <code>cache_control</code><sup class="cite-group"><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button></sup></td>
+</tr>
+<tr>
+<td><code>document</code></td>
+<td>In: <code>user</code>, <code>tool_result</code></td>
+<td><code>source</code>, optional <code>citations: {enabled}</code><sup class="cite-group"><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button></sup></td>
+</tr>
+<tr>
+<td><code>search_result</code></td>
+<td>In: <code>user</code>, <code>tool_result</code></td>
+<td><code>source</code>, <code>title</code>, <code>content</code><sup class="cite-group"><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button></sup></td>
+</tr>
+<tr>
+<td><code>thinking</code></td>
+<td>Out, echo</td>
+<td><code>thinking</code> text, <code>signature</code><sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup></td>
+</tr>
+<tr>
+<td><code>redacted_thinking</code></td>
+<td>Out, echo</td>
+<td><code>data</code><sup class="cite-group"><button type="button" class="cite" data-cite="F18" aria-label="Source 18">18</button></sup></td>
+</tr>
+<tr>
+<td><code>tool_use</code></td>
+<td>Out, echo</td>
+<td><code>id</code>, <code>name</code>, <code>input</code><sup class="cite-group"><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></td>
+</tr>
+<tr>
+<td><code>tool_result</code></td>
+<td>In: <code>user</code> only</td>
+<td><code>tool_use_id</code>, <code>content</code>, <code>is_error</code><sup class="cite-group"><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup></td>
+</tr>
+<tr>
+<td><code>server_tool_use</code></td>
+<td>Out, echo</td>
+<td><code>id</code>, <code>name</code>, <code>input</code><sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button></sup></td>
+</tr>
+<tr>
+<td><code>web_search_tool_result</code></td>
+<td>Out, echo</td>
+<td><code>tool_use_id</code>, <code>content</code><sup class="cite-group"><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p>Image blocks accept <code>image/jpeg</code>, <code>image/png</code>, <code>image/gif</code>, and <code>image/webp</code>, and animations are flattened to the first frame.<sup class="cite-group"><button type="button" class="cite" data-cite="F14" aria-label="Source 14">14</button></sup> Once a request carries more than 20 images — history turns and images nested in <code>tool_result</code> content included — a stricter per-image dimension limit applies to every image in that request.<sup class="cite-group"><button type="button" class="cite" data-cite="F15" aria-label="Source 15">15</button></sup> PDF <code>document</code> blocks allow up to 600 pages per request, or 100 pages when the request's context window is under 1M tokens.<sup class="cite-group"><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button></sup> A <code>search_result</code> block holds text only: images and other media are not supported inside its <code>content</code> array.<sup class="cite-group"><button type="button" class="cite" data-cite="F17" aria-label="Source 17">17</button></sup></p>
+<p><code>thinking</code> carries readable summary text (empty when <code>display</code> is <code>&quot;omitted&quot;</code>) plus the encrypted <code>signature</code>; <code>redacted_thinking</code> carries only encrypted <code>data</code> with no readable text. Both must be passed back to the API unchanged when you continue a multi-turn conversation with tools.<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button><button type="button" class="cite" data-cite="F18" aria-label="Source 18">18</button></sup> <code>tool_use.input</code> is always an object in the finished message even though it streams as string fragments.<sup class="cite-group"><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup></p>
+<p>Server tools produce two more block types. <code>server_tool_use</code> (ids starting <code>srvtoolu_</code>) records a call Claude ran itself, and <code>web_search_tool_result</code> carries either result blocks — <code>url</code>, <code>title</code>, <code>encrypted_content</code> — or an error block. A failed web search is not an HTTP failure: the API still returns <code>200</code>, so branch on the block type, and echo <code>encrypted_content</code> unchanged in later turns.<sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button></sup></p>
+<h2 id="g-tool-use-turn-rules">Tool-use turn rules</h2>
+<p>A <strong>tool loop</strong> sends tool calls to the application and returns their results to Claude. Message ordering is part of that contract.<sup class="cite-group"><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button><button type="button" class="cite" data-cite="F20" aria-label="Source 20">20</button></sup></p>
+<ol>
+<li>The API returns an assistant message whose <code>stop_reason</code> is <code>&quot;tool_use&quot;</code>.</li>
+<li>Append that assistant <code>content</code> array to <code>messages</code> unchanged, keeping <code>thinking</code> and <code>redacted_thinking</code> blocks in place.<sup class="cite-group"><button type="button" class="cite" data-cite="F18" aria-label="Source 18">18</button></sup></li>
+<li>Send one <code>role: &quot;user&quot;</code> message immediately after it; you cannot place any message between the assistant <code>tool_use</code> turn and the <code>tool_result</code> turn.<sup class="cite-group"><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button></sup></li>
+<li>Put every <code>tool_result</code> block before any <code>text</code> block in that user message.<sup class="cite-group"><button type="button" class="cite" data-cite="F20" aria-label="Source 20">20</button></sup></li>
+<li>For parallel calls, return one <code>tool_result</code> for each <code>tool_use</code> block in that single user message, matched by <code>tool_use_id</code> — including an <code>is_error: true</code> result for a call you skipped after an earlier failure.<sup class="cite-group"><button type="button" class="cite" data-cite="F21" aria-label="Source 21">21</button></sup></li>
+<li>If the assistant turn also contains a <code>server_tool_use</code> whose result block has not arrived yet, the user message must contain only <code>tool_result</code> blocks: text after the results ends the turn early, and for a server tool Claude called directly the request fails with a <code>400</code> naming the unresolved server tool.<sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button></sup></li>
+</ol>
+<p><code>tool_choice</code> has these shapes:</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th><code>tool_choice</code></th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{&quot;type&quot;: &quot;auto&quot;}</code></td>
+<td>Default whenever <code>tools</code> is present<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup></td>
+</tr>
+<tr>
+<td><code>{&quot;type&quot;: &quot;any&quot;}</code></td>
+<td>Forces at least one tool call<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup></td>
+</tr>
+<tr>
+<td><code>{&quot;type&quot;: &quot;tool&quot;, &quot;name&quot;: &quot;...&quot;}</code></td>
+<td>Forces that one tool<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p>Add <code>&quot;disable_parallel_tool_use&quot;: true</code> inside the <code>tool_choice</code> object to cap the turn at one call; it is not a top-level request parameter.<sup class="cite-group"><button type="button" class="cite" data-cite="F10" aria-label="Source 10">10</button></sup> The two forced forms return <code>400</code> under manual extended thinking (<code>thinking.type: &quot;enabled&quot;</code>) and are rejected unconditionally on Opus 5.5, Sonnet 5.5, Fable 5.1/5.2, and Mythos 5.1/5.2.<sup class="cite-group"><button type="button" class="cite" data-cite="F11" aria-label="Source 11">11</button></sup> Recommended practice in agent loops is therefore <code>tool_choice: {&quot;type&quot;: &quot;auto&quot;}</code> paired with strict schemas and explicit prompting, not forced choice.</p>
+<aside class="g-callout g-callout--mistake"><p class="g-callout__head"><span class="g-callout__kind">Common mistake</span> <span class="g-callout__name">Dropping blocks while filtering history</span></p><p>Code that rebuilds history by keeping &quot;only <code>text</code> and <code>tool_use</code>&quot; deletes <code>redacted_thinking</code>, strips <code>encrypted_content</code>, or reorders <code>tool_result</code> behind <code>text</code>. <code>redacted_thinking</code> must be returned unchanged,<sup class="cite-group"><button type="button" class="cite" data-cite="F18" aria-label="Source 18">18</button></sup> <code>tool_result</code> must lead the content array,<sup class="cite-group"><button type="button" class="cite" data-cite="F20" aria-label="Source 20">20</button></sup> and <code>encrypted_content</code> must be echoed verbatim.<sup class="cite-group"><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button></sup></p>
+</aside>
+<figure class="g-figure"><div class="g-figure__body"><div class="g-seq"><p class="g-seq__actors" aria-label="Participants"><span>Client App</span><span>Messages API</span><span>Client Tools</span></p><ol class="g-seq__rows"><li class="g-seq__msg"><span class="g-seq__ends"><b>Client App</b><span class="g-seq__arrow" aria-label="to">→</span><b>Messages API</b></span><span class="g-seq__label">POST /v1/messages (stream)</span></li><li class="g-seq__msg dashed"><span class="g-seq__ends"><b>Messages API</b><span class="g-seq__arrow" aria-label="replies to">⇢</span><b>Client App</b></span><span class="g-seq__label">message_start, null stop</span></li><li class="g-seq__msg dashed"><span class="g-seq__ends"><b>Messages API</b><span class="g-seq__arrow" aria-label="replies to">⇢</span><b>Client App</b></span><span class="g-seq__label">tool_use deltas ×2</span></li><li class="g-seq__msg dashed"><span class="g-seq__ends"><b>Messages API</b><span class="g-seq__arrow" aria-label="replies to">⇢</span><b>Client App</b></span><span class="g-seq__label">message_delta, tool_use</span></li><li class="g-seq__msg"><span class="g-seq__ends"><b>Client App</b><span class="g-seq__arrow" aria-label="to">→</span><b>Client Tools</b></span><span class="g-seq__label">dispatch both calls</span></li><li class="g-seq__msg"><span class="g-seq__ends"><b>Client Tools</b><span class="g-seq__arrow" aria-label="to">→</span><b>Client App</b></span><span class="g-seq__label">one ok, one error</span></li><li class="g-seq__msg"><span class="g-seq__ends"><b>Client App</b><span class="g-seq__arrow" aria-label="to">→</span><b>Messages API</b></span><span class="g-seq__label">tool_results first</span></li><li class="g-seq__msg dashed"><span class="g-seq__ends"><b>Messages API</b><span class="g-seq__arrow" aria-label="replies to">⇢</span><b>Client App</b></span><span class="g-seq__label">end_turn, message_stop</span></li></ol></div>
+</div><figcaption>Single-turn tool loop over SSE: echo assistant blocks unchanged, group matching tool results first in one user message, and branch control flow on the stop reason from message delta.</figcaption></figure>
+<h3 id="g-worked-example-streaming-tool-loop">Worked example: streaming tool loop</h3>
+<p>The following Python example uses the Anthropic SDK and simulated prices, not live market data. It streams, echoes assistant content, processes client tool calls sequentially, and groups results in one user message.<sup class="cite-group"><button type="button" class="cite" data-cite="F19" aria-label="Source 19">19</button><button type="button" class="cite" data-cite="F20" aria-label="Source 20">20</button><button type="button" class="cite" data-cite="F21" aria-label="Source 21">21</button><button type="button" class="cite" data-cite="F42" aria-label="Source 42">42</button></sup> Install a current SDK, configure credentials, and replace the lookup with your own implementation for production.</p>
+<pre><code class="language-python">import anthropic
+
+client = anthropic.Anthropic()  # sends anthropic-version automatically
+
+tools = [
+    {
+        &quot;name&quot;: &quot;get_stock&quot;,
+        &quot;description&quot;: &quot;Return a simulated price for a ticker symbol.&quot;,
+        &quot;strict&quot;: True,
+        &quot;input_schema&quot;: {
+            &quot;type&quot;: &quot;object&quot;,
+            &quot;properties&quot;: {&quot;ticker&quot;: {&quot;type&quot;: &quot;string&quot;}},
+            &quot;required&quot;: [&quot;ticker&quot;],
+            &quot;additionalProperties&quot;: False,
+        },
+    }
+]
+
+messages = [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Compare AAPL and MSFT prices.&quot;}]
+
+while True:
+    # SDK requires .stream() when max_tokens &gt; 21333; also exposes incremental deltas.
+    with client.messages.stream(
+        model=&quot;claude-sonnet-5-5&quot;,
+        max_tokens=32000,
+        tools=tools,
+        tool_choice={&quot;type&quot;: &quot;auto&quot;},  # forced &quot;any&quot;/&quot;tool&quot; returns 400 on Sonnet 5.5
+        output_config={&quot;effort&quot;: &quot;medium&quot;},
+        messages=messages,
+    ) as stream:
+        for event in stream:
+            if event.type == &quot;content_block_delta&quot; and event.delta.type == &quot;text_delta&quot;:
+                print(event.delta.text, end=&quot;&quot;, flush=True)
+        resp = stream.get_final_message()
+
+    # Always echo full assistant content (including thinking / redacted_thinking blocks).
+    messages.append({&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: resp.content})
+
+    if resp.stop_reason == &quot;tool_use&quot;:
+        tool_results = []
+        for block in resp.content:
+            if block.type == &quot;tool_use&quot;:
+                try:
+                    price = {&quot;AAPL&quot;: &quot;228.50&quot;, &quot;MSFT&quot;: &quot;415.10&quot;}[block.input[&quot;ticker&quot;]]
+                    tool_results.append({
+                        &quot;type&quot;: &quot;tool_result&quot;,
+                        &quot;tool_use_id&quot;: block.id,
+                        &quot;content&quot;: price,
+                    })
+                except Exception as exc:
+                    tool_results.append({
+                        &quot;type&quot;: &quot;tool_result&quot;,
+                        &quot;tool_use_id&quot;: block.id,
+                        &quot;content&quot;: f&quot;Lookup failed: {exc}&quot;,
+                        &quot;is_error&quot;: True,
+                    })
+        # All parallel tool_results go in ONE user message, BEFORE any text.
+        messages.append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: tool_results})
+    elif resp.stop_reason == &quot;pause_turn&quot;:
+        # Server tool loop paused; re-send the assistant turn with no user message.
+        continue
+    else:
+        print(f&quot;\n[stop={resp.stop_reason} in={resp.usage.input_tokens} out={resp.usage.output_tokens}]&quot;)
+        break
+</code></pre>
+<h2 id="g-input-schema-strict-tools-and-structured-outputs"><code>input_schema</code>, strict tools, and structured outputs</h2>
+<p><strong>Strict tool use</strong> is a per-tool output guarantee set with <code>&quot;strict&quot;: true</code> on an individual client tool. <strong>Structured outputs</strong> is the response-level guarantee, set with <code>output_config: {format: {type: &quot;json_schema&quot;, schema: ...}}</code>, which is generally available and needs no beta header.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup> The deprecated top-level <code>output_format</code> parameter only works with <code>anthropic-beta: structured-outputs-2025-11-13</code>, and Python SDK v1.0 or later raises <code>TypeError</code> for a plain dict passed as <code>output_format</code> to <code>client.beta.messages.create()</code> or <code>count_tokens</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup></p>
+<p>A strict schema must set <code>additionalProperties: false</code> on every object, and the compiler rejects recursive schemas, <code>oneOf</code>, <code>not</code>, numeric bounds such as <code>minimum</code>, string length bounds such as <code>minLength</code>, and any other <code>additionalProperties</code> value with a <code>400</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F27" aria-label="Source 27">27</button></sup> Limits are counted across the sum of all strict tools plus the output schema in one request: at most 20 strict tools, 24 optional (non-<code>required</code>) parameters, and 16 union-type parameters, with an internal grammar size cap and a 180-second compilation timeout; compiled grammars are cached for 24 hours.<sup class="cite-group"><button type="button" class="cite" data-cite="F27" aria-label="Source 27">27</button></sup> That is why a request whose strict tools each look simple can still fail to compile.</p>
+<p>Three output behaviors need defensive code. Required properties are always emitted before optional ones, whatever order the schema declares.<sup class="cite-group"><button type="button" class="cite" data-cite="F26" aria-label="Source 26">26</button></sup> Capitalization of string <code>enum</code> and <code>const</code> values is not guaranteed, so compare case-insensitively.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup> A safety <code>refusal</code> or a <code>max_tokens</code> truncation still returns HTTP <code>200</code> and can produce output that violates the schema, so parse and validate only after checking <code>stop_reason</code>; structured output is also incompatible with <code>citations</code> (which returns <code>400</code>) and with message prefill.<sup class="cite-group"><button type="button" class="cite" data-cite="F28" aria-label="Source 28">28</button></sup></p>
+<h2 id="g-streaming-sse-event-sequence">Streaming SSE event sequence</h2>
+<p><strong>Server-sent events (SSE)</strong> deliver a response as a stream of events. With <code>stream: true</code> the sequence is:<sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button></sup></p>
+<ol>
+<li><code>message_start</code> — the <code>Message</code> skeleton, with <code>content: []</code>, <code>stop_reason: null</code>, and initial <code>usage</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button><button type="button" class="cite" data-cite="F34" aria-label="Source 34">34</button></sup></li>
+<li>Per content block, indexed from 0: <code>content_block_start</code>, then zero or more <code>content_block_delta</code>, then <code>content_block_stop</code> for that index.<sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button></sup></li>
+<li>One or more <code>message_delta</code> events carry top-level changes to the final message; usage counts are cumulative.<sup class="cite-group"><button type="button" class="cite" data-cite="F32" aria-label="Source 32">32</button><button type="button" class="cite" data-cite="F42" aria-label="Source 42">42</button></sup></li>
+<li><code>message_stop</code> — the terminal event; there is no <code>data: [DONE]</code> sentinel.<sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button></sup></li>
+<li>Anywhere in the stream: <code>ping</code> keepalives, and <code>error</code> for a failure that arrives after the HTTP 200 headers were sent, for example an <code>overloaded_error</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button></sup></li>
+</ol>
+<p>Delta types inside <code>content_block_delta</code> are <code>text_delta</code> (field <code>text</code>), <code>thinking_delta</code> (field <code>thinking</code>, empty when <code>display</code> is <code>&quot;omitted&quot;</code>), <code>signature_delta</code> (field <code>signature</code>, emitted just before the block stops), <code>input_json_delta</code> (field <code>partial_json</code>), and <code>citations_delta</code> (field <code>citation</code>).<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup> Tool arguments stream as <code>partial_json</code> fragments that you accumulate and parse; the final <code>tool_use.input</code> is always an object.<sup class="cite-group"><button type="button" class="cite" data-cite="F30" aria-label="Source 30">30</button></sup> Some blocks arrive whole with no deltas at all, including <code>redacted_thinking</code> and server tool results such as <code>web_search_tool_result</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button></sup></p>
+<p>Set <code>eager_input_streaming: true</code> on a tool to skip server-side JSON buffering; it replaces the <code>fine-grained-tool-streaming-2025-05-14</code> beta. The trade-off is that partial or invalid JSON can reach your client, and a <code>max_tokens</code> stop can cut a parameter mid-value, so guard <code>json.loads()</code> and wait for <code>content_block_stop</code> before executing a side-effecting tool.<sup class="cite-group"><button type="button" class="cite" data-cite="F31" aria-label="Source 31">31</button></sup></p>
+<p>Read usage and control fields only from the end of the stream: token counts in <code>message_delta.usage</code> are cumulative, so take the last value rather than summing events,<sup class="cite-group"><button type="button" class="cite" data-cite="F32" aria-label="Source 32">32</button></sup> and <code>stop_reason</code> is <code>null</code> in <code>message_start</code> and becomes non-null in later events.<sup class="cite-group"><button type="button" class="cite" data-cite="F34" aria-label="Source 34">34</button></sup></p>
+<h2 id="g-usage-accounting">Usage accounting</h2>
+<p><code>usage.input_tokens</code> counts non-cached input after the final cache breakpoint, and total input tokens for a request equal <code>input_tokens + cache_creation_input_tokens + cache_read_input_tokens</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F33" aria-label="Source 33">33</button></sup> Prompt caching covers the full prefix in one fixed order — <code>tools</code>, then <code>system</code>, then <code>messages</code> — up to and including the block marked with <code>cache_control</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F39" aria-label="Source 39">39</button></sup> Because that hashing is prefix-based, keep tool definitions and system instructions first with explicit breakpoints, keep thinking mode and <code>output_config.effort</code> constant across turns, and push volatile content such as timestamps and user state to the tail of <code>messages</code>.</p>
+<p><code>usage.server_tool_use</code> reports <code>web_search_requests</code> and <code>web_fetch_requests</code> counters for the turn.<sup class="cite-group"><button type="button" class="cite" data-cite="F23" aria-label="Source 23">23</button></sup></p>
+<h2 id="g-stop-reason-versus-http-errors"><code>stop_reason</code> versus HTTP errors</h2>
+<p><code>stop_reason</code> describes a successful HTTP <code>200</code> response; HTTP error statuses describe request-processing failures. Branch on them separately.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th><code>stop_reason</code></th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;end_turn&quot;</code></td>
+<td>Natural completion<sup class="cite-group"><button type="button" class="cite" data-cite="F41" aria-label="Source 41">41</button></sup></td>
+<td>Use the content</td>
+</tr>
+<tr>
+<td><code>&quot;max_tokens&quot;</code></td>
+<td>Hit the ceiling; JSON may be truncated<sup class="cite-group"><button type="button" class="cite" data-cite="F41" aria-label="Source 41">41</button></sup></td>
+<td>Raise <code>max_tokens</code> or continue</td>
+</tr>
+<tr>
+<td><code>&quot;stop_sequence&quot;</code></td>
+<td>Matched one of your <code>stop_sequences</code><sup class="cite-group"><button type="button" class="cite" data-cite="F41" aria-label="Source 41">41</button></sup></td>
+<td>Inspect <code>stop_sequence</code> and use the content</td>
+</tr>
+<tr>
+<td><code>&quot;tool_use&quot;</code></td>
+<td>Client <code>tool_use</code> block(s) emitted<sup class="cite-group"><button type="button" class="cite" data-cite="F41" aria-label="Source 41">41</button></sup></td>
+<td>Run tools, reply per ordering rules</td>
+</tr>
+<tr>
+<td><code>&quot;pause_turn&quot;</code></td>
+<td>A server-tool loop hit its iteration cap<sup class="cite-group"><button type="button" class="cite" data-cite="F41" aria-label="Source 41">41</button></sup></td>
+<td>Resume by echoing the assistant turn</td>
+</tr>
+<tr>
+<td><code>&quot;refusal&quot;</code></td>
+<td>A classifier intervened; tokens are billed<sup class="cite-group"><button type="button" class="cite" data-cite="F41" aria-label="Source 41">41</button></sup></td>
+<td>Route to your safety path</td>
+</tr>
+<tr>
+<td><code>&quot;model_context_window_exceeded&quot;</code></td>
+<td>Context limit hit before <code>max_tokens</code><sup class="cite-group"><button type="button" class="cite" data-cite="F41" aria-label="Source 41">41</button></sup></td>
+<td>Compact history, retry</td>
+</tr>
+</tbody>
+</table></div>
+<p>A <code>&quot;tool_use&quot;</code> stop can arrive alongside an unresolved <code>server_tool_use</code>, which changes the reply shape described above.<sup class="cite-group"><button type="button" class="cite" data-cite="F22" aria-label="Source 22">22</button></sup> To resume a <code>&quot;pause_turn&quot;</code>, send the assistant <code>content</code> back unchanged (plus <code>container.id</code> if present) with the same tools and no trailing <code>user</code> message.<sup class="cite-group"><button type="button" class="cite" data-cite="F41" aria-label="Source 41">41</button></sup> On <code>&quot;refusal&quot;</code>, inspect <code>stop_details</code> for the policy category.<sup class="cite-group"><button type="button" class="cite" data-cite="F41" aria-label="Source 41">41</button></sup></p>
+<p>Error responses have the shape <code>{&quot;type&quot;: &quot;error&quot;, &quot;error&quot;: {&quot;type&quot;, &quot;message&quot;}, &quot;request_id&quot;}</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Status</th>
+<th><code>error.type</code></th>
+<th>Typical cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>400</code></td>
+<td><code>invalid_request_error</code></td>
+<td>Bad schema, removed sampling parameters, unsupported thinking or <code>tool_choice</code><sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><code>401</code></td>
+<td><code>authentication_error</code></td>
+<td>Invalid or expired key<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><code>402</code></td>
+<td><code>billing_error</code></td>
+<td>Billing problem<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><code>403</code></td>
+<td><code>permission_error</code></td>
+<td>Key lacks permission<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><code>404</code></td>
+<td><code>not_found_error</code></td>
+<td>Unknown resource or model<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td><code>conflict_error</code></td>
+<td>Conflicting resource state<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><code>413</code></td>
+<td><code>request_too_large</code></td>
+<td>Exceeded the platform payload cap<sup class="cite-group"><button type="button" class="cite" data-cite="F3" aria-label="Source 3">3</button><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><code>429</code></td>
+<td><code>rate_limit_error</code></td>
+<td>RPM, TPM, or ramp limit; a spend cap can arrive without <code>retry-after</code><sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><code>500</code></td>
+<td><code>api_error</code></td>
+<td>Server-side failure<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><code>504</code></td>
+<td><code>timeout_error</code></td>
+<td>Request timed out while processing<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+<tr>
+<td><code>529</code></td>
+<td><code>overloaded_error</code></td>
+<td>Capacity; may also arrive mid-stream as an SSE <code>error</code><sup class="cite-group"><button type="button" class="cite" data-cite="F29" aria-label="Source 29">29</button><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p>For transient errors, prefer bounded retries with jittered backoff and honor <code>retry-after</code> when present. Inspect the error first: a spend-cap <code>429</code> can persist until access resumes, and a stream error may require recovery of partial output.<sup class="cite-group"><button type="button" class="cite" data-cite="F35" aria-label="Source 35">35</button><button type="button" class="cite" data-cite="F42" aria-label="Source 42">42</button></sup> Branch on <code>stop_reason</code> for completed responses; handle a refusal separately from a length stop.</p>
+<h2 id="g-model-ids-and-context-windows">Model IDs and context windows</h2>
+<p>From the Claude 4.6 generation onward the dateless model ID is the canonical ID and maps to one fixed snapshot rather than a rolling alias; pre-4.6 models keep a dated snapshot plus a dateless alias.<sup class="cite-group"><button type="button" class="cite" data-cite="F36" aria-label="Source 36">36</button></sup> The following IDs are listed in the model documentation; check availability for your platform.<sup class="cite-group"><button type="button" class="cite" data-cite="F43" aria-label="Source 43">43</button></sup></p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>ID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Fable 5.2</td>
+<td><code>claude-fable-5-2</code><sup class="cite-group"><button type="button" class="cite" data-cite="F43" aria-label="Source 43">43</button></sup></td>
+</tr>
+<tr>
+<td>Claude Mythos 5.2 (limited availability)</td>
+<td><code>claude-mythos-5-2</code></td>
+</tr>
+<tr>
+<td>Claude Opus 5.5</td>
+<td><code>claude-opus-5-5</code></td>
+</tr>
+<tr>
+<td>Claude Sonnet 5.5</td>
+<td><code>claude-sonnet-5-5</code></td>
+</tr>
+<tr>
+<td>Claude Haiku 5.5</td>
+<td><code>claude-haiku-5-5</code></td>
+</tr>
+<tr>
+<td>Claude Opus 5</td>
+<td><code>claude-opus-5</code></td>
+</tr>
+<tr>
+<td>Claude Sonnet 5</td>
+<td><code>claude-sonnet-5</code></td>
+</tr>
+<tr>
+<td>Claude Opus 4.8 / 4.7 / 4.6</td>
+<td><code>claude-opus-4-8</code>, <code>claude-opus-4-7</code>, <code>claude-opus-4-6</code></td>
+</tr>
+<tr>
+<td>Claude Sonnet 4.6</td>
+<td><code>claude-sonnet-4-6</code></td>
+</tr>
+<tr>
+<td>Earlier 5.x releases</td>
+<td><code>claude-fable-5-1</code>, <code>claude-mythos-5-1</code>, <code>claude-fable-5</code>, <code>claude-mythos-5</code></td>
+</tr>
+<tr>
+<td>Claude Opus 4.5</td>
+<td><code>claude-opus-4-5-20251101</code> (alias <code>claude-opus-4-5</code>)</td>
+</tr>
+<tr>
+<td>Claude Sonnet 4.5</td>
+<td><code>claude-sonnet-4-5-20250929</code> (alias <code>claude-sonnet-4-5</code>)</td>
+</tr>
+<tr>
+<td>Claude Haiku 4.5</td>
+<td><code>claude-haiku-4-5-20251001</code> (alias <code>claude-haiku-4-5</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>The models listed in Anthropic’s current overview have 1M-token context windows and 128K maximum output tokens; on the Message Batches API, Opus 5.5, Opus 5, Sonnet 5.5, Sonnet 5, Haiku 5.5, Opus 4.8, Opus 4.7, Opus 4.6, and Sonnet 4.6 reach 300K output tokens with <code>anthropic-beta: output-300k-2026-03-24</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F37" aria-label="Source 37">37</button><button type="button" class="cite" data-cite="F43" aria-label="Source 43">43</button></sup> Effort defaults are not uniform: Opus 5.5 and Haiku 5.5 default to <code>medium</code> effort, while other effort-capable models default to <code>high</code>.<sup class="cite-group"><button type="button" class="cite" data-cite="F13" aria-label="Source 13">13</button></sup> Models whose context window is under 1M tokens also carry the lower document ceilings noted above, such as 100 PDF pages per request.<sup class="cite-group"><button type="button" class="cite" data-cite="F16" aria-label="Source 16">16</button></sup></p>
+<h2 id="g-beta-headers-versus-ga">Beta headers versus GA</h2>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Header</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thinking progress updates (<code>display: &quot;updates&quot;</code>)</td>
+<td><code>thinking-display-updates-2026-08-18</code></td>
+<td>Beta; <code>400</code> without it<sup class="cite-group"><button type="button" class="cite" data-cite="F12" aria-label="Source 12">12</button></sup></td>
+</tr>
+<tr>
+<td>Preserved-thinking binding (<code>thinking.block_binding</code>)</td>
+<td><code>thinking-binding-controls-2026-08-01</code></td>
+<td>Beta; header required<sup class="cite-group"><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button></sup></td>
+</tr>
+<tr>
+<td>Context editing (<code>clear_tool_uses_...</code>, <code>clear_thinking_20251015</code>)</td>
+<td><code>context-management-2025-06-27</code></td>
+<td>Beta; header required<sup class="cite-group"><button type="button" class="cite" data-cite="F38" aria-label="Source 38">38</button></sup></td>
+</tr>
+<tr>
+<td>Fast mode (<code>speed: &quot;fast&quot;</code>)</td>
+<td><code>fast-mode-2026-02-01</code></td>
+<td>Only on Opus 5 and Opus 4.8<sup class="cite-group"><button type="button" class="cite" data-cite="F40" aria-label="Source 40">40</button></sup></td>
+</tr>
+<tr>
+<td>300K output on the Batches API</td>
+<td><code>output-300k-2026-03-24</code></td>
+<td>Required for the raised ceiling<sup class="cite-group"><button type="button" class="cite" data-cite="F37" aria-label="Source 37">37</button></sup></td>
+</tr>
+<tr>
+<td>Deprecated <code>output_format</code></td>
+<td><code>structured-outputs-2025-11-13</code></td>
+<td>Only for that parameter<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup></td>
+</tr>
+<tr>
+<td>Fine-grained tool streaming</td>
+<td><code>fine-grained-tool-streaming-2025-05-14</code></td>
+<td>Legacy; use <code>eager_input_streaming</code><sup class="cite-group"><button type="button" class="cite" data-cite="F31" aria-label="Source 31">31</button></sup></td>
+</tr>
+<tr>
+<td><code>output_config.format</code></td>
+<td>None</td>
+<td>Generally available<sup class="cite-group"><button type="button" class="cite" data-cite="F25" aria-label="Source 25">25</button></sup></td>
+</tr>
+</tbody>
+</table></div>
+<p>Fast mode needs no header on Opus 5.5 and on Fable/Mythos 5.2, where it is generally available; <code>fast-mode-2026-02-01</code> is required only on Opus 5 and Opus 4.8.<sup class="cite-group"><button type="button" class="cite" data-cite="F40" aria-label="Source 40">40</button></sup></p>
+<aside class="g-lens" aria-label="Exam lens — editorial inference, not official exam content"><p class="g-lens__head"><span class="g-lens__name">Exam lens</span><span class="g-lens__note">editorial inference</span></p><p>Editorial decision patterns: distinguish a completed response’s stop reason from an HTTP or stream error. Preserve tool-use blocks and match results by ID. Choose streaming for long calls, and check model and platform support before selecting a beta feature.</p>
+</aside>
+<section class="g-sources" aria-labelledby="g-sources"><details><summary><h2 id="g-sources">Sources</h2><span class="g-sources__count">44</span></summary><p class="muted small">Quotes are copied verbatim from each source on the access date shown. Tap a source title to open it.</p><ol><li class="g-source" data-src="F1" value="1"><div class="g-source__head"><span class="g-source__n">1</span><a href="https://platform.claude.com/docs/en/api/messages" target="_blank" rel="noopener">Messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>The Messages API can be used for either single queries or stateless multi-turn conversations.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Messages API supports single queries and stateless multi-turn conversations via POST /v1/messages.</p></li><li class="g-source" data-src="F2" value="2"><div class="g-source__head"><span class="g-source__n">2</span><a href="https://platform.claude.com/docs/en/api/overview" target="_blank" rel="noopener">API overview</a><span class="g-source__tag fact">Documented</span></div><blockquote>If you are using the Client SDKs, the SDK sends the authentication, version, and content-type headers automatically; you pass anthropic-workspace-id yourself when your key needs it.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Official SDKs automatically send authentication, anthropic-version, and content-type headers, while anthropic-workspace-id is passed explicitly when needed.</p></li><li class="g-source" data-src="F3" value="3"><div class="g-source__head"><span class="g-source__n">3</span><a href="https://platform.claude.com/docs/en/api/overview" target="_blank" rel="noopener">API overview</a><span class="g-source__tag fact">Documented</span></div><blockquote>Partner-operated platforms have their own request size limits: Bedrock limits requests to 20 MB, and Claude Models on Google Cloud (Google managed) limits requests to 30 MB. Claude Platform on AWS, Claude Models on Google Cloud (Anthropic managed), and Microsoft Foundry support Messages and Token Counting requests of up to 32 MB.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>First-party Messages and Token Counting requests are capped at 128 MB (returning 413 request_too_large if exceeded), while Bedrock caps at 20 MB and Google-managed Vertex at 30 MB.</p></li><li class="g-source" data-src="F4" value="4"><div class="g-source__head"><span class="g-source__n">4</span><a href="https://platform.claude.com/docs/en/api/versioning" target="_blank" rel="noopener">API versions</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>The temperature, top_p, and top_k request parameters are removed. A request that sends any of them returns a 400 error on every model.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Applies to anthropic-version: 2026-10-21.</p><p class="g-source__claim"><span class="sr">Supports: </span>API version 2026-10-21 removes temperature, top_p, and top_k on every model and rejects them with a 400 error.</p></li><li class="g-source" data-src="F5" value="5"><div class="g-source__head"><span class="g-source__n">5</span><a href="https://platform.claude.com/docs/en/api/messages" target="_blank" rel="noopener">Messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>Set to 0 to populate the prompt cache without generating a response.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Setting max_tokens to 0 populates the prompt cache without generating output tokens.</p></li><li class="g-source" data-src="F6" value="6"><div class="g-source__head"><span class="g-source__n">6</span><a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noopener">Thinking</a><span class="g-source__tag fact">Documented</span></div><blockquote>The SDK requires streaming when max_tokens is greater than 21,333, to avoid HTTP timeouts on long-running requests. This is a client-side validation, not an API restriction.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Anthropic SDKs require streaming when max_tokens exceeds 21,333 as a client-side timeout safeguard.</p></li><li class="g-source" data-src="F7" value="7"><div class="g-source__head"><span class="g-source__n">7</span><a href="https://platform.claude.com/docs/en/api/messages" target="_blank" rel="noopener">Messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>Our models are trained to operate on alternating user and assistant conversational turns. When creating a new Message, you specify the prior conversational turns with the messages parameter, and the model then generates the next Message in the conversation. Consecutive user or assistant turns in your request will be combined into a single turn.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Messages alternate user and assistant turns, and consecutive same-role messages are merged into a single turn.</p></li><li class="g-source" data-src="F8" value="8"><div class="g-source__head"><span class="g-source__n">8</span><a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noopener">Thinking</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Claude 4.6 and later models and Claude Mythos Preview reject a prefilled final assistant turn with a 400 error, whether or not thinking is on (see Prefill not supported).</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Claude 4.6+ models and Claude Mythos Preview.</p><p class="g-source__claim"><span class="sr">Supports: </span>Claude 4.6 and later models reject assistant-message prefill with a 400 error.</p></li><li class="g-source" data-src="F9" value="9"><div class="g-source__head"><span class="g-source__n">9</span><a href="https://platform.claude.com/docs/en/api/messages" target="_blank" rel="noopener">Messages</a><span class="g-source__tag rec">Recommended practice</span></div><blockquote>This should be a uuid, hash value, or other opaque identifier. Anthropic may use this id to help detect abuse. Do not include any identifying information such as name, email address, or phone number.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>metadata.user_id must be an opaque identifier (UUID or hash, max 512 chars) with no PII.</p></li><li class="g-source" data-src="F10" value="10"><div class="g-source__head"><span class="g-source__n">10</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/parallel-tool-use" target="_blank" rel="noopener">Parallel tool use</a><span class="g-source__tag fact">Documented</span></div><blockquote>Parallel tool use is on by default. To turn it off, set disable_parallel_tool_use: true inside the tool_choice object. It is not a top-level request parameter.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>tool_choice defaults to auto when tools are provided; disable_parallel_tool_use lives inside tool_choice rather than at top level.</p></li><li class="g-source" data-src="F11" value="11"><div class="g-source__head"><span class="g-source__n">11</span><a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noopener">Thinking</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Forced tool use (tool_choice: {&quot;type&quot;: &quot;any&quot;} or {&quot;type&quot;: &quot;tool&quot;, ...}) is incompatible with manual extended thinking but works with adaptive thinking. The exceptions are Claude Opus 5.5, Claude Sonnet 5.5, Claude Fable 5.2, Claude Mythos 5.2, Claude Fable 5.1, and Claude Mythos 5.1, which reject forced tool use on every request with a 400 error.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Applies to Claude 5.x/5.5 lineup as documented 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>Forced tool_choice (any or tool) is rejected with 400 under manual extended thinking and unconditionally on Opus 5.5, Sonnet 5.5, Fable 5.1/5.2, and Mythos 5.1/5.2.</p></li><li class="g-source" data-src="F12" value="12"><div class="g-source__head"><span class="g-source__n">12</span><a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noopener">Thinking</a><span class="g-source__tag fact">Documented</span></div><blockquote>The display field on the thinking configuration controls how thinking content is returned in API responses. display works in both modes: set it alongside type: &quot;adaptive&quot; or type: &quot;enabled&quot;.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>thinking.display controls whether thinking blocks return summarized text, omitted empty strings with signatures, or beta progress updates.</p></li><li class="g-source" data-src="F13" value="13"><div class="g-source__head"><span class="g-source__n">13</span><a href="https://platform.claude.com/docs/en/build-with-claude/effort" target="_blank" rel="noopener">Effort</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Most Claude models default to high effort, spending as many tokens as needed for excellent results; Claude Opus 5.5 and Claude Haiku 5.5 default to medium.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Claude 4.5-5.5 effort defaults as documented 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>output_config.effort defaults to medium on Claude Opus 5.5 and Claude Haiku 5.5, and high on other effort-supporting models.</p></li><li class="g-source" data-src="F14" value="14"><div class="g-source__head"><span class="g-source__n">14</span><a href="https://platform.claude.com/docs/en/build-with-claude/vision" target="_blank" rel="noopener">Vision</a><span class="g-source__tag fact">Documented</span></div><blockquote>Claude supports JPEG, PNG, GIF, and WebP images (image/jpeg, image/png, image/gif, image/webp). Animations are unsupported, and only the first frame is used.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Image blocks accept JPEG, PNG, GIF, and WebP (max 8000x8000 px), with animations flattened to the first frame.</p></li><li class="g-source" data-src="F15" value="15"><div class="g-source__head"><span class="g-source__n">15</span><a href="https://platform.claude.com/docs/en/build-with-claude/vision" target="_blank" rel="noopener">Vision</a><span class="g-source__tag fact">Documented</span></div><blockquote>If a single API request contains more than 20 images, a stricter per-image dimension limit applies to every image in that request. All image blocks in the request count toward this threshold, including images from earlier conversation turns that you resend and images nested inside tool_result content (for example, screenshots returned to the computer use tool).</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Requests with more than 20 images trigger a stricter per-image dimension limit across all image blocks, including history and tool results.</p></li><li class="g-source" data-src="F16" value="16"><div class="g-source__head"><span class="g-source__n">16</span><a href="https://platform.claude.com/docs/en/build-with-claude/pdf-support" target="_blank" rel="noopener">PDF support</a><span class="g-source__tag fact">Documented</span></div><blockquote>Maximum pages per request | 600 (100 when the request&#x27;s context window is under 1M tokens)</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>PDF document blocks support up to 600 pages per request (100 pages when the context window is under 1M tokens) and must not be password-encrypted.</p></li><li class="g-source" data-src="F17" value="17"><div class="g-source__head"><span class="g-source__n">17</span><a href="https://platform.claude.com/docs/en/build-with-claude/search-results" target="_blank" rel="noopener">Search results</a><span class="g-source__tag fact">Documented</span></div><blockquote>Search results hold text only. Images and other media are not supported inside the content array.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>search_result blocks accept only text blocks in their content array and carry source, title, optional citations.enabled, and cache_control.</p></li><li class="g-source" data-src="F18" value="18"><div class="g-source__head"><span class="g-source__n">18</span><a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noopener">Thinking</a><span class="g-source__tag fact">Documented</span></div><blockquote>As with the signature field on regular thinking blocks, pass redacted_thinking blocks back to the API unchanged when continuing a multi-turn conversation with tools.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Both thinking blocks (with signature) and redacted_thinking blocks (with encrypted data) must be passed back unmodified during tool-use turns.</p></li><li class="g-source" data-src="F19" value="19"><div class="g-source__head"><span class="g-source__n">19</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls" target="_blank" rel="noopener">Handle tool calls</a><span class="g-source__tag fact">Documented</span></div><blockquote>Tool result blocks must immediately follow their corresponding tool use blocks in the message history. You cannot include any messages between the assistant&#x27;s tool use message and the user&#x27;s tool result message.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>tool_result blocks must go in a user message immediately following the assistant tool_use message with no intervening messages.</p></li><li class="g-source" data-src="F20" value="20"><div class="g-source__head"><span class="g-source__n">20</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls" target="_blank" rel="noopener">Handle tool calls</a><span class="g-source__tag fact">Documented</span></div><blockquote>In the user message containing tool results, the tool_result blocks must come FIRST in the content array. Any text must come AFTER all tool results.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Within the user message, tool_result blocks must come first in the content array before any text blocks.</p></li><li class="g-source" data-src="F21" value="21"><div class="g-source__head"><span class="g-source__n">21</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/parallel-tool-use" target="_blank" rel="noopener">Parallel tool use</a><span class="g-source__tag fact">Documented</span></div><blockquote>Whichever strategy you use, return one tool_result for each tool_use block, all together in the next user message. Match each result to its call with tool_use_id, and put every tool_result block before any text content in that message.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>For parallel tool_use blocks, return one matching tool_result per tool_use_id in a single user message.</p></li><li class="g-source" data-src="F22" value="22"><div class="g-source__head"><span class="g-source__n">22</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls" target="_blank" rel="noopener">Handle tool calls</a><span class="g-source__tag fact">Documented</span></div><blockquote>If the assistant turn also called a server tool that has no result block yet, the user message must contain only tool_result blocks. Text after the results ends the turn early; for a server tool Claude called directly, the request then fails with a 400 error that names the unresolved server tool.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>When an assistant response mixes client tool_use with an unresolved server_tool_use, the follow-up user message must contain only tool_result blocks with no trailing text.</p></li><li class="g-source" data-src="F23" value="23"><div class="g-source__head"><span class="g-source__n">23</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool" target="_blank" rel="noopener">Web search tool</a><span class="g-source__tag fact">Documented</span></div><blockquote>When the web search tool encounters an error (such as hitting rate limits), the Claude API still returns a 200 (success) response.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Server web search errors return HTTP 200 with a web_search_tool_result_error block, and encrypted_content must be echoed unchanged in multi-turn history.</p></li><li class="g-source" data-src="F24" value="24"><div class="g-source__head"><span class="g-source__n">24</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools" target="_blank" rel="noopener">Define tools</a><span class="g-source__tag fact">Documented</span></div><blockquote>name | The name of the tool. Must match the regex ^[a-zA-Z0-9_-]{1,128}$.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Client tool names must match ^[a-zA-Z0-9_-]{1,128}$ and define parameters via JSON Schema input_schema.</p></li><li class="g-source" data-src="F25" value="25"><div class="g-source__head"><span class="g-source__n">25</span><a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank" rel="noopener">Structured outputs</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>The output_format parameter has moved to output_config.format, and beta headers are no longer required. The output_format parameter is deprecated. To use it anyway, add the structured-outputs-2025-11-13 beta header.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Python SDK v1.0+ raises TypeError if a schema dict is passed to output_format.</p><p class="g-source__claim"><span class="sr">Supports: </span>JSON structured outputs moved from output_format to output_config.format with no beta header; deprecated output_format requires structured-outputs-2025-11-13.</p></li><li class="g-source" data-src="F26" value="26"><div class="g-source__head"><span class="g-source__n">26</span><a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank" rel="noopener">Structured outputs</a><span class="g-source__tag fact">Documented</span></div><blockquote>When using structured outputs, properties in objects maintain their defined ordering from your schema, with one important caveat: required properties appear first, followed by optional properties.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Structured outputs emit required object properties before optional properties regardless of declaration order.</p></li><li class="g-source" data-src="F27" value="27"><div class="g-source__head"><span class="g-source__n">27</span><a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank" rel="noopener">Structured outputs</a><span class="g-source__tag fact">Documented</span></div><blockquote>Strict tools per request | 20 | Maximum number of tools with strict: true. Non-strict tools don&#x27;t count toward this limit.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Strict schemas are capped at 20 strict tools, 24 optional parameters, 16 union-type parameters per request, and a 180-second grammar compilation timeout.</p></li><li class="g-source" data-src="F28" value="28"><div class="g-source__head"><span class="g-source__n">28</span><a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank" rel="noopener">Structured outputs</a><span class="g-source__tag fact">Documented</span></div><blockquote>Structured outputs don&#x27;t guarantee the capitalization of string enum and const values: Claude might return a value that differs from your schema only in capitalization, typically in the first letter of a word following a space.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Structured outputs do not guarantee case matching on string enum/const values and may violate the schema on refusal or max_tokens stops.</p></li><li class="g-source" data-src="F29" value="29"><div class="g-source__head"><span class="g-source__n">29</span><a href="https://platform.claude.com/docs/en/build-with-claude/streaming" target="_blank" rel="noopener">Streaming messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>Some blocks arrive whole, with no deltas: redacted_thinking blocks, server tool results such as web_search_tool_result, and the fallback block at each model boundary of a server-side fallback.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>SSE streams flow message_start, content_block_start/delta/stop per block, message_delta, and message_stop, with whole blocks like redacted_thinking and web_search_tool_result emitting no deltas.</p></li><li class="g-source" data-src="F30" value="30"><div class="g-source__head"><span class="g-source__n">30</span><a href="https://platform.claude.com/docs/en/build-with-claude/streaming" target="_blank" rel="noopener">Streaming messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>The deltas for tool_use content blocks correspond to updates for the input field of the block. To support maximum granularity, the deltas are partial JSON strings, whereas the final tool_use.input is always an object.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Tool input streams as input_json_delta partial_json strings that must be accumulated and parsed into an object.</p></li><li class="g-source" data-src="F31" value="31"><div class="g-source__head"><span class="g-source__n">31</span><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/fine-grained-tool-streaming" target="_blank" rel="noopener">Fine-grained tool streaming</a><span class="g-source__tag fact">Documented</span></div><blockquote>Because the API does not buffer or validate a tool&#x27;s input before streaming it, you might receive partial or invalid JSON. A response that ends with the stop reason max_tokens can also cut a parameter off midway.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Enabling eager_input_streaming skips server-side JSON buffering and validation, so partial or truncated JSON can reach the client.</p></li><li class="g-source" data-src="F32" value="32"><div class="g-source__head"><span class="g-source__n">32</span><a href="https://platform.claude.com/docs/en/build-with-claude/streaming" target="_blank" rel="noopener">Streaming messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>The token counts shown in the usage field of the message_delta event are cumulative.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Token counts in message_delta.usage are cumulative across the stream.</p></li><li class="g-source" data-src="F33" value="33"><div class="g-source__head"><span class="g-source__n">33</span><a href="https://platform.claude.com/docs/en/api/messages" target="_blank" rel="noopener">Messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>Total input tokens in a request is the summation of input_tokens, cache_creation_input_tokens, and cache_read_input_tokens.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Total input tokens equal input_tokens plus cache_creation_input_tokens plus cache_read_input_tokens.</p></li><li class="g-source" data-src="F34" value="34"><div class="g-source__head"><span class="g-source__n">34</span><a href="https://platform.claude.com/docs/en/api/messages" target="_blank" rel="noopener">Messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>In non-streaming mode this value is always non-null. In streaming mode, it is null in the message_start event and non-null otherwise.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>stop_reason is always non-null in non-streaming responses and appears in message_delta (after null in message_start) during streaming.</p></li><li class="g-source" data-src="F35" value="35"><div class="g-source__head"><span class="g-source__n">35</span><a href="https://platform.claude.com/docs/en/api/errors" target="_blank" rel="noopener">Claude API errors</a><span class="g-source__tag fact">Documented</span></div><blockquote>The official SDK automatically retries transient failures (such as connection errors, rate limits, and 5xx server errors) with exponential backoff, twice by default, honoring the retry-after header when present.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Official SDKs automatically retry transient errors (connection, 429, 5xx) twice with exponential backoff, honoring retry-after.</p></li><li class="g-source" data-src="F36" value="36"><div class="g-source__head"><span class="g-source__n">36</span><a href="https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions" target="_blank" rel="noopener">Model IDs and versioning</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>For the 4.6 generation and later, the dateless ID is the canonical model ID for that release. It maps to a single, fixed model snapshot.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Applies to Claude 4.6+ models; pre-4.6 models use dated snapshots plus dateless aliases.</p><p class="g-source__claim"><span class="sr">Supports: </span>Starting with Claude 4.6, dateless model IDs are pinned snapshots rather than rolling aliases.</p></li><li class="g-source" data-src="F37" value="37"><div class="g-source__head"><span class="g-source__n">37</span><a href="https://platform.claude.com/docs/en/models/overview" target="_blank" rel="noopener">Models overview</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>On the Message Batches API, Claude Opus 5.5, Claude Opus 5, Claude Sonnet 5.5, Claude Sonnet 5, Claude Haiku 5.5, Claude Opus 4.8, Claude Opus 4.7, Claude Opus 4.6, and Claude Sonnet 4.6 support up to 300k output tokens with the output-300k-2026-03-24 beta header.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Current lineup as of 2026-11-19.</p><p class="g-source__claim"><span class="sr">Supports: </span>Current 5.x/4.6+ models have 1M-token context windows and 128K synchronous max output (up to 300K on Batches API with output-300k-2026-03-24).</p></li><li class="g-source" data-src="F38" value="38"><div class="g-source__head"><span class="g-source__n">38</span><a href="https://platform.claude.com/docs/en/api/beta-headers" target="_blank" rel="noopener">Beta headers</a><span class="g-source__tag fact">Documented</span></div><blockquote>To send several betas, put their names in one header, separated by commas: Claude Models on Google Cloud (Google managed) reads only one anthropic-beta header and ignores the rest, so betas in the others don&#x27;t take effect.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Multiple beta headers can be comma-separated in one anthropic-beta header; Google-managed Vertex reads only the first header.</p></li><li class="g-source" data-src="F39" value="39"><div class="g-source__head"><span class="g-source__n">39</span><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Prompt caching</a><span class="g-source__tag fact">Documented</span></div><blockquote>Prompt caching covers the full prefix: tools, system, and messages (in that order), up to and including the block designated with cache_control.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Prompt caching evaluates prefixes in fixed order: tools, then system, then messages, up to each cache_control breakpoint.</p></li><li class="g-source" data-src="F40" value="40"><div class="g-source__head"><span class="g-source__n">40</span><a href="https://platform.claude.com/docs/en/build-with-claude/fast-mode" target="_blank" rel="noopener">Fast mode</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Fast mode is in research preview on Claude Opus 5 and deprecated on Claude Opus 4.8, and needs the fast-mode-2026-02-01 beta header on both models.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Opus 4.8 fast mode removal scheduled November 30, 2026.</p><p class="g-source__claim"><span class="sr">Supports: </span>Fast mode (speed: fast) needs no beta header on Opus 5.5 or Fable/Mythos 5.2, but requires fast-mode-2026-02-01 on Opus 5 and Opus 4.8.</p></li><li class="g-source" data-src="F41" value="41"><div class="g-source__head"><span class="g-source__n">41</span><a href="https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons" target="_blank" rel="noopener">Stop reasons and fallback</a><span class="g-source__tag fact">Documented</span></div><blockquote>Send the request with the same tools as before and no user message after the assistant message.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Resume a paused server-tool turn with the same tools and unchanged assistant content; inspect stop details on a refusal.</p></li><li class="g-source" data-src="F42" value="42"><div class="g-source__head"><span class="g-source__n">42</span><a href="https://platform.claude.com/docs/en/build-with-claude/streaming" target="_blank" rel="noopener">Streaming messages</a><span class="g-source__tag fact">Documented</span></div><blockquote>One or more message_delta events, indicating top-level changes to the final Message object.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>Streams contain content block events, message deltas, and a final message stop.</p></li><li class="g-source" data-src="F43" value="43"><div class="g-source__head"><span class="g-source__n">43</span><a href="https://platform.claude.com/docs/en/models/overview" target="_blank" rel="noopener">Models overview</a><span class="g-source__tag ver">Version-sensitive</span></div><blockquote>Claude Fable 5.2 | 1M tokens | 128K tokens</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19 · Model overview as of 2026-11-19; limits vary by model and API.</p><p class="g-source__claim"><span class="sr">Supports: </span>The current model overview lists model IDs, context windows, and output limits.</p></li><li class="g-source" data-src="F44" value="44"><div class="g-source__head"><span class="g-source__n">44</span><a href="https://platform.claude.com/docs/en/api/overview" target="_blank" rel="noopener">API overview</a><span class="g-source__tag fact">Documented</span></div><blockquote>If you exceed these limits, you’ll receive a 413 request_too_large error.</blockquote><p class="g-source__meta">platform.claude.com · Accessed 2026-11-19</p><p class="g-source__claim"><span class="sr">Supports: </span>The first-party Messages and Token Counting APIs have a 128 MB request size limit and return 413 when exceeded.</p></li></ol></details></section>
