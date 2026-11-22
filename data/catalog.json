@@ -103,12 +103,8 @@
    "level": "Foundations",
    "status": "live",
    "summary": "Your starting point for foundational Claude knowledge.",
-   "credit": {
-    "name": "Matthew Purcell",
-    "url": "https://www.linkedin.com/in/purcellmatthew"
-   },
-   "updated": "2026-11-12",
-   "questions": 60,
+   "updated": "2026-11-22",
+   "questions": 193,
    "bank": {
     "source": "questions.en.json",
     "translations": {
@@ -118,9 +114,9 @@
    "exam": {
     "questions": 60,
     "minutes": 120,
-    "note": "Practice preset: all 60 questions in 120 minutes. This is not an official exam specification."
+    "note": "Practice preset: 60 questions in 120 minutes. This is not an official exam specification."
    },
-   "storageKey": "panic-ccaof-v1"
+   "storageKey": "panic-ccaof-v2"
   },
   {
    "id": "ccdv-f",
